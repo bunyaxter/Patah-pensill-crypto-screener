@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Patah Pensill Live Screener</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#080B10">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PP Screener">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#080B10;
+    --surface:#10141C;
+    --surface-2:#161B26;
+    --border:#232C3B;
+    --border-soft:#1A2130;
+    --text-1:#E9ECF2;
+    --text-2:#8993A6;
+    --text-3:#5B6478;
+    --mint:#21F1A8;
+    --mint-dim:#134737;
+    --crimson:#FF4D6A;
+    --crimson-dim:#4A1723;
+    --amber:#F5B942;
+    --amber-dim:#4A3A14;
+  }
+  *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
+  html,body{background:var(--bg); color:var(--text-1); font-family:'Inter',sans-serif;}
+  body{
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(33,241,168,0.06), transparent),
+      radial-gradient(ellipse 700px 400px at 100% 5%, rgba(255,77,106,0.05), transparent),
+      var(--bg);
+    min-height:100vh;
+    padding-bottom:50px;
+    font-size:15px;
+  }
+  .mono{font-family:'JetBrains Mono',monospace;}
+
+  :root{ --container-max:1180px; --side-pad:clamp(14px, 3vw, 28px); }
+
+  /* ===== TICKER TAPE ===== */
+  .ticker-wrap{background:#000; border-bottom:1px solid var(--border); overflow:hidden; white-space:nowrap; padding:8px 0;}
+  .ticker{display:inline-block; animation:scroll 22s linear infinite;}
+  .ticker span{font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600; padding:0 22px; color:var(--text-2);}
+  .ticker span b{color:var(--text-1); font-weight:700;}
+  .up{color:var(--mint) !important;}
+  .down{color:var(--crimson) !important;}
+  @keyframes scroll{0%{transform:translateX(0);} 100%{transform:translateX(-50%);}}
+
+  /* ===== HEADER ===== */
+  .masthead{max-width:var(--container-max); margin:0 auto; padding:clamp(18px,3vw,28px) var(--side-pad) 16px; border-bottom:1px solid var(--border-soft);}
+  .brand-eyebrow{font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:0.16em; color:var(--mint); text-transform:uppercase; margin-bottom:6px; display:flex; align-items:center; gap:8px;}
+  .brand-eyebrow::before{content:''; width:6px;height:6px;border-radius:50%; background:var(--mint); box-shadow:0 0 8px var(--mint); animation:pulse 1.6s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:1;} 50%{opacity:0.35;}}
+  .masthead h1{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(22px,3.4vw,34px); letter-spacing:-0.01em;}
+  .masthead .meta{font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--text-3); margin-top:6px;}
+
+  /* ===== STATUS / CONTROLS ===== */
+  .panel{max-width:var(--container-max); margin:16px auto 0; padding:0 var(--side-pad);}
+  .status-row{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:12px;}
+  .btn{
+    font-family:'JetBrains Mono',monospace; font-size:11.5px; font-weight:700; letter-spacing:0.04em;
+    background:var(--surface-2); color:var(--text-1); border:1px solid var(--border);
+    padding:10px 16px; cursor:pointer; text-transform:uppercase;
+  }
+  .btn:active{transform:scale(0.98);}
+  .btn-primary{background:var(--mint-dim); border-color:var(--mint); color:var(--mint);}
+  .btn-primary:disabled{opacity:0.5;}
+  .btn.active{background:var(--mint-dim); border-color:var(--mint); color:var(--mint);}
+  #statusText{font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-3);}
+  #statusText.err{color:var(--crimson);}
+  #statusText.ok{color:var(--mint);}
+
+  .searchbar{
+    width:100%;
+    background:var(--surface); border:1px solid var(--border); color:var(--text-1);
+    font-family:'JetBrains Mono',monospace; font-size:13px;
+    padding:11px 14px; margin-bottom:12px;
+  }
+  .searchbar::placeholder{color:var(--text-3);}
+
+  .filter-row{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;}
+
+  /* scoreboard */
+  .scoreboard{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border-soft); border:1px solid var(--border-soft); margin-bottom:16px;}
+  .sb-cell{background:var(--surface); padding:12px 14px;}
+  .sb-cell .lbl{font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--text-3); letter-spacing:0.08em;}
+  .sb-cell .val{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:18px; margin-top:2px;}
+  @media(max-width:560px){ .scoreboard{grid-template-columns:repeat(2,1fr);} }
+
+  /* ===== TABLE ===== */
+  .tbl-wrap{border:1px solid var(--border); background:var(--surface); overflow-x:auto; -webkit-overflow-scrolling:touch;}
+  table{width:100%; border-collapse:collapse; min-width:640px;}
+  thead th{
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.08em; color:var(--text-3);
+    text-align:left; padding:10px 12px; border-bottom:1px solid var(--border); white-space:nowrap;
+    cursor:pointer; user-select:none; background:var(--surface-2);
+  }
+  thead th.active{color:var(--mint);}
+  thead th .arrow{opacity:0.5; margin-left:3px;}
+  tbody tr{border-bottom:1px solid var(--border-soft);}
+  tbody tr:last-child{border-bottom:none;}
+  tbody tr:active{background:var(--surface-2);}
+  td{padding:11px 12px; font-family:'JetBrains Mono',monospace; font-size:12.5px; white-space:nowrap;}
+  .sym-cell{display:flex; flex-direction:column; gap:2px;}
+  .sym-cell .s{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:13.5px; color:var(--text-1);}
+  .sym-cell .p{font-size:10px; color:var(--text-3);}
+  .chg-pos{color:var(--mint); font-weight:700;}
+  .chg-neg{color:var(--crimson); font-weight:700;}
+  .rangebar{position:relative; width:90px; height:6px; background:var(--surface-2); border:1px solid var(--border-soft);}
+  .rangebar .fill{position:absolute; top:0; bottom:0; width:2px; background:var(--amber);}
+  .rangebar-lbl{font-size:9px; color:var(--text-3); margin-top:3px;}
+  .score-pill{
+    display:inline-flex; align-items:center; justify-content:center;
+    min-width:34px; padding:3px 7px; font-weight:700; font-size:12px;
+    border:1px solid;
+  }
+  .score-hi{color:var(--mint); border-color:var(--mint); background:var(--mint-dim);}
+  .score-mid{color:var(--amber); border-color:var(--amber); background:var(--amber-dim);}
+  .score-lo{color:var(--crimson); border-color:var(--crimson); background:var(--crimson-dim);}
+  .deep-cell{color:var(--text-3); font-size:11px;}
+  .deep-cell.mint{color:var(--mint);}
+  .deep-cell.crimson{color:var(--crimson);}
+  .deep-cell.amber{color:var(--amber);}
+  .row-scan-btn{
+    font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700;
+    background:transparent; border:1px solid var(--border); color:var(--text-3);
+    padding:4px 8px; cursor:pointer;
+  }
+  .row-scan-btn:disabled{opacity:0.4;}
+
+  .empty-state{padding:50px 20px; text-align:center; color:var(--text-3); font-family:'JetBrains Mono',monospace; font-size:12.5px; line-height:1.8;}
+  .empty-state b{color:var(--text-1);}
+  .loader{
+    width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--mint);
+    border-radius:50%; display:inline-block; animation:spin 0.7s linear infinite; vertical-align:middle; margin-right:8px;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  footer{max-width:var(--container-max); margin:30px auto 0; padding:18px var(--side-pad); border-top:1px solid var(--border-soft);
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;}
+  footer .fbrand{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:14px;}
+  footer .fbrand span{color:var(--mint);}
+  footer .fdisc{width:100%; font-size:10.5px; color:var(--text-3); line-height:1.6; margin-top:4px;}
+
+  /* ===== RESPONSIVE TWEAKS ===== */
+  @media(min-width:1400px){
+    :root{ --container-max:1320px; }
+    body{font-size:16px;}
+  }
+  @media(max-width:480px){
+    .status-row .btn{flex:1 1 auto; text-align:center;}
+    .filter-row .btn{flex:1 1 calc(50% - 4px); text-align:center;}
+    td, thead th{padding:9px 8px; font-size:11.5px;}
+    .modal{max-width:100%;}
+  }
+  @media(min-width:820px){
+    .modal{max-width:680px;}
+    .ind-grid{grid-template-columns:repeat(4,1fr);}
+  }
+
+  tbody tr{cursor:pointer;}
+
+  /* ===== MODAL ===== */
+  .modal-backdrop{
+    position:fixed; inset:0; background:rgba(3,5,8,0.82);
+    display:none; align-items:flex-start; justify-content:center;
+    z-index:100; overflow-y:auto; padding:16px 10px 40px;
+    backdrop-filter:blur(2px);
+  }
+  .modal-backdrop.show{display:flex;}
+  .modal{
+    background:var(--surface); border:1px solid var(--border);
+    width:100%; max-width:620px; margin-top:10px;
+  }
+  .modal-head{
+    padding:18px 20px; border-bottom:1px solid var(--border-soft);
+    display:flex; justify-content:space-between; align-items:flex-start;
+  }
+  .modal-head .mh-sym{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:22px;}
+  .modal-head .mh-price{font-family:'JetBrains Mono',monospace; font-size:14px; color:var(--text-2); margin-top:3px;}
+  .modal-close{
+    background:none; border:1px solid var(--border); color:var(--text-2);
+    width:30px; height:30px; font-size:16px; cursor:pointer; flex-shrink:0;
+  }
+  .tf-switch{display:flex; gap:6px; padding:14px 20px 0; flex-wrap:wrap;}
+  .tf-btn{
+    font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700;
+    background:var(--surface-2); border:1px solid var(--border); color:var(--text-2);
+    padding:7px 13px; cursor:pointer; flex:1 1 auto; min-width:52px; text-align:center;
+  }
+  .tf-btn.active{background:var(--mint-dim); border-color:var(--mint); color:var(--mint);}
+
+  .modal-body{padding:16px 20px 20px;}
+  .modal-loading{padding:40px 0; text-align:center; color:var(--text-3); font-family:'JetBrains Mono',monospace; font-size:12px;}
+
+  .ind-section-title{
+    font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:0.1em; color:var(--text-3);
+    margin:16px 0 8px;
+  }
+  .ind-section-title:first-child{margin-top:0;}
+
+  .ind-grid{display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--border-soft); border:1px solid var(--border-soft);}
+  .ind-cell{background:var(--surface); padding:11px 13px;}
+  .ind-cell .il{font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text-3); letter-spacing:0.05em;}
+  .ind-cell .iv{font-family:'JetBrains Mono',monospace; font-size:13.5px; font-weight:700; margin-top:3px;}
+  .ind-cell .ib{font-size:10px; margin-top:3px; font-weight:600;}
+  .pos-above{color:var(--mint);}
+  .pos-below{color:var(--crimson);}
+
+  .fib-list{border:1px solid var(--border-soft);}
+  .fib-row{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:9px 13px; border-bottom:1px solid var(--border-soft);
+    font-family:'JetBrains Mono',monospace; font-size:12px;
+  }
+  .fib-row:last-child{border-bottom:none;}
+  .fib-row.current{background:var(--surface-2);}
+  .fib-ratio{color:var(--text-3); width:60px;}
+  .fib-price{color:var(--text-1); font-weight:600; flex:1; text-align:right; padding-right:10px;}
+  .fib-marker{width:56px; text-align:right; font-size:10px;}
+
+  .modal-gauge-wrap{margin-top:4px;}
+  .modal-gauge-labels{display:flex; justify-content:space-between; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.06em; margin-bottom:7px;}
+  .modal-gauge-track{position:relative; height:10px; background:linear-gradient(90deg, var(--mint-dim), var(--surface-2) 48%, var(--surface-2) 52%, var(--crimson-dim)); border:1px solid var(--border-soft);}
+  .modal-gauge-fill-l{position:absolute; left:0; top:0; height:100%; background:var(--mint);}
+  .modal-gauge-fill-r{position:absolute; right:0; top:0; height:100%; background:var(--crimson);}
+  .modal-gauge-mid{position:absolute; left:50%; top:-3px; bottom:-3px; width:2px; background:var(--text-3);}
+  .modal-gauge-scores{display:flex; justify-content:space-between; margin-top:7px; font-family:'JetBrains Mono',monospace; font-size:18px; font-weight:700;}
+
+  .bd-row2{display:flex; justify-content:space-between; gap:8px; font-size:11.5px; padding:7px 0; border-bottom:1px dashed var(--border-soft);}
+  .bd-row2:last-child{border-bottom:none;}
+  .bd-factor2{color:var(--text-2); flex-shrink:0; width:80px;}
+  .bd-reason2{color:var(--text-3); flex:1; line-height:1.4;}
+  .bd-num2{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:11.5px; flex-shrink:0; width:34px; text-align:right;}
+
+  /* entry plan */
+  .entry-cols{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:4px;}
+  @media(max-width:520px){ .entry-cols{grid-template-columns:1fr;} }
+  .entry-card{border:1px solid var(--border-soft); background:var(--surface-2);}
+  .entry-card-head{
+    padding:9px 12px; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:12.5px;
+    display:flex; justify-content:space-between; align-items:center;
+    border-bottom:1px solid var(--border-soft);
+  }
+  .entry-card.long .entry-card-head{color:var(--mint); background:var(--mint-dim);}
+  .entry-card.short .entry-card-head{color:var(--crimson); background:var(--crimson-dim);}
+  .entry-row{display:flex; justify-content:space-between; padding:8px 12px; font-family:'JetBrains Mono',monospace; font-size:11.5px; border-bottom:1px dashed var(--border-soft);}
+  .entry-row:last-child{border-bottom:none;}
+  .entry-row .el{color:var(--text-3);}
+  .entry-row .ev{color:var(--text-1); font-weight:700; text-align:right;}
+  .entry-row .ez{color:var(--text-3); font-size:9.5px; display:block; text-align:right; font-weight:400; margin-top:1px;}
+  .entry-caveat{padding:9px 12px; font-size:10.5px; color:var(--text-3); line-height:1.5; border-top:1px solid var(--border-soft);}
+  .sop-note{
+    margin-top:12px; padding:11px 13px; border:1px solid var(--border-soft); background:var(--surface);
+    font-size:10.5px; color:var(--text-3); line-height:1.7;
+  }
+  .sop-note b{color:var(--text-2);}
+</style>
+</head>
+<body>
+
+  <div class="ticker-wrap"><div class="ticker" id="ticker"><span class="mono">MEMUAT DATA BINANCE FUTURES…</span></div></div>
+
+  <div class="masthead">
+    <div class="brand-eyebrow">Patah Pensill Live Screener</div>
+    <h1>Binance USDT-M Futures Screener</h1>
+    <div class="meta" id="metaInfo">Menghubungkan ke fapi.binance.com…</div>
+  </div>
+
+  <div class="panel">
+    <div class="status-row">
+      <button class="btn btn-primary" id="refreshBtn">↻ Refresh Data</button>
+      <button class="btn" id="autoBtn">Auto-Refresh: OFF</button>
+      <button class="btn" id="scanTopBtn">⚡ Deep Scan Top 20</button>
+      <span id="statusText"></span>
+    </div>
+
+    <input type="text" class="searchbar" id="searchBox" placeholder="Cari pair… (contoh: BTC, HYPE, INJ)">
+
+    <div class="filter-row">
+      <button class="btn active" data-filter="all">Semua</button>
+      <button class="btn" data-filter="gainers">🟢 Top Gainers</button>
+      <button class="btn" data-filter="losers">🔴 Top Losers</button>
+      <button class="btn" data-filter="volume">💠 Volume Tertinggi</button>
+      <button class="btn" data-filter="nearhigh">📈 Dekat 24H High</button>
+      <button class="btn" data-filter="nearlow">📉 Dekat 24H Low</button>
+    </div>
+
+    <div class="scoreboard" id="scoreboard"></div>
+
+    <div class="tbl-wrap">
+      <table id="mainTable">
+        <thead>
+          <tr>
+            <th data-sort="symbol">PAIR</th>
+            <th data-sort="lastPrice">HARGA</th>
+            <th data-sort="priceChangePercent">24H %</th>
+            <th data-sort="quoteVolume">VOLUME (USDT)</th>
+            <th data-sort="rangePos">POSISI RANGE 24H</th>
+            <th data-sort="quickScore">QUICK SCORE</th>
+            <th data-sort="deepScore">DEEP SIGNAL</th>
+          </tr>
+        </thead>
+        <tbody id="tbody">
+          <tr><td colspan="7" class="empty-state"><span class="loader"></span>Mengambil data dari Binance…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer>
+    <div class="fbrand">Patah<span>Pensill</span> Live Screener</div>
+    <div class="fdisc">
+      Data diambil langsung dari endpoint publik Binance Futures (fapi.binance.com) tanpa API key — semua proses berjalan di browser lo, bukan di server saya. "Quick Score" dihitung dari data 24 jam (volume, volatilitas, posisi harga dalam range). "Deep Signal" dihitung dari RSI(14) 1H dan tren EMA21 vs EMA50 di 4H, hanya untuk pair yang di-scan manual — untuk membatasi jumlah request dari HP lo. Tap baris pair untuk lihat indikator lengkap (EMA21, EMA30, MA200, VWAP, Fibonacci) dan skor Long/Short. Ini bukan rekomendasi finansial, hasil dari struktur teknikal murni. Kalau data gagal dimuat, kemungkinan ISP/provider lo memblokir akses ke domain Binance — coba pakai VPN atau jaringan lain.
+    </div>
+  </footer>
+
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <div>
+          <div class="mh-sym" id="mhSym">-</div>
+          <div class="mh-price" id="mhPrice">-</div>
+        </div>
+        <button class="modal-close" id="modalCloseBtn">✕</button>
+      </div>
+      <div class="tf-switch" id="tfSwitch">
+        <button class="tf-btn" data-tf="1h">1H</button>
+        <button class="tf-btn active" data-tf="4h">4H</button>
+        <button class="tf-btn" data-tf="12h">12H</button>
+        <button class="tf-btn" data-tf="1d">Daily</button>
+        <button class="tf-btn" data-tf="1w">Weekly</button>
+        <button class="tf-btn" data-tf="1M">Monthly</button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <div class="modal-loading">Memuat indikator…</div>
+      </div>
+    </div>
+  </div>
+
+<script>
+const FAPI = "https://fapi.binance.com";
+let allSymbols = [];      // from exchangeInfo: perpetual USDT pairs
+let tickerData = [];      // merged 24hr data
+let deepData = {};        // symbol -> {rsi1h, trend4h, deepScore, label}
+let currentFilter = "all";
+let sortKey = "quoteVolume";
+let sortDir = -1;
+let autoTimer = null;
+
+const statusEl = document.getElementById('statusText');
+const tbody = document.getElementById('tbody');
+const metaInfo = document.getElementById('metaInfo');
+
+function setStatus(msg, type){
+  statusEl.textContent = msg;
+  statusEl.className = type || "";
+}
+
+function fmtNum(n, digits){
+  if(n===undefined || n===null || isNaN(n)) return "-";
+  if(Math.abs(n) >= 1e9) return (n/1e9).toFixed(2)+"B";
+  if(Math.abs(n) >= 1e6) return (n/1e6).toFixed(2)+"M";
+  if(Math.abs(n) >= 1e3) return (n/1e3).toFixed(2)+"K";
+  return n.toFixed(digits!==undefined?digits:2);
+}
+function fmtPrice(p){
+  const n = parseFloat(p);
+  if(n >= 100) return n.toFixed(2);
+  if(n >= 1) return n.toFixed(4);
+  return n.toFixed(6);
+}
+
+async function loadExchangeInfo(){
+  const res = await fetch(FAPI + "/fapi/v1/exchangeInfo");
+  if(!res.ok) throw new Error("exchangeInfo gagal: " + res.status);
+  const j = await res.json();
+  return j.symbols
+    .filter(s => s.quoteAsset === "USDT" && s.contractType === "PERPETUAL" && s.status === "TRADING")
+    .map(s => s.symbol);
+}
+
+async function loadTicker24h(){
+  const res = await fetch(FAPI + "/fapi/v1/ticker/24hr");
+  if(!res.ok) throw new Error("ticker/24hr gagal: " + res.status);
+  return await res.json();
+}
+
+function computeQuickScore(row){
+  const high = parseFloat(row.highPrice), low = parseFloat(row.lowPrice), last = parseFloat(row.lastPrice);
+  const range = Math.max(high - low, 1e-9);
+  const rangePos = ((last - low) / range) * 100; // 0 = at low, 100 = at high
+  const volatility = (range / low) * 100;
+  const chg = parseFloat(row.priceChangePercent);
+  row.rangePos = rangePos;
+  row.volatility = volatility;
+  // quick score: blend of |change| momentum + volatility, capped 0-10
+  let s = Math.min(10, (Math.abs(chg)/2) + Math.min(volatility/3, 4));
+  row.quickScore = Math.round(s*10)/10;
+  return row;
+}
+
+async function refreshAll(){
+  setStatus("Mengambil data…");
+  document.getElementById('refreshBtn').disabled = true;
+  try{
+    if(allSymbols.length === 0){
+      allSymbols = await loadExchangeInfo();
+    }
+    const raw = await loadTicker24h();
+    const symSet = new Set(allSymbols);
+    tickerData = raw
+      .filter(r => symSet.has(r.symbol))
+      .map(r => computeQuickScore({
+        symbol:r.symbol,
+        lastPrice:r.lastPrice,
+        priceChangePercent:r.priceChangePercent,
+        highPrice:r.highPrice,
+        lowPrice:r.lowPrice,
+        quoteVolume:parseFloat(r.quoteVolume),
+      }));
+    metaInfo.textContent = `${tickerData.length} pair USDT-M Perpetual · Update: ${new Date().toLocaleTimeString('id-ID')} WITA`;
+    setStatus(`✓ ${tickerData.length} pair dimuat`, "ok");
+    renderTicker();
+    renderScoreboard();
+    renderTable();
+  }catch(err){
+    console.error(err);
+    setStatus("Gagal memuat: mungkin domain Binance diblokir jaringan/ISP kamu. Coba VPN.", "err");
+    tbody.innerHTML = `<tr><td colspan="7" class="empty-state">
+      ⚠️ <b>Gagal terhubung ke Binance API.</b><br>
+      Kemungkinan penyebab: koneksi internet, atau ISP/provider memblokir domain fapi.binance.com (pernah terjadi sebelumnya dengan Telkomsel).<br>
+      Coba: aktifkan VPN (mis. Cloudflare WARP), lalu tekan Refresh lagi.
+    </td></tr>`;
+  }finally{
+    document.getElementById('refreshBtn').disabled = false;
+  }
+}
+
+function renderTicker(){
+  const sorted = [...tickerData].sort((a,b)=> parseFloat(b.priceChangePercent) - parseFloat(a.priceChangePercent));
+  const top = sorted.slice(0,8).concat(sorted.slice(-8));
+  let html = "";
+  [...top, ...top].forEach(d=>{
+    const up = parseFloat(d.priceChangePercent) >= 0;
+    html += `<span>${d.symbol} <b>${fmtPrice(d.lastPrice)}</b> <span class="${up?'up':'down'}">${up?'▲':'▼'} ${d.priceChangePercent}%</span></span>`;
+  });
+  document.getElementById('ticker').innerHTML = html;
+}
+
+function renderScoreboard(){
+  const gainers = tickerData.filter(d=>parseFloat(d.priceChangePercent) > 0).length;
+  const losers = tickerData.filter(d=>parseFloat(d.priceChangePercent) < 0).length;
+  const totalVol = tickerData.reduce((a,d)=>a+d.quoteVolume,0);
+  const avgVola = tickerData.reduce((a,d)=>a+d.volatility,0) / (tickerData.length||1);
+  document.getElementById('scoreboard').innerHTML = `
+    <div class="sb-cell"><div class="lbl">TOTAL PAIR</div><div class="val">${tickerData.length}</div></div>
+    <div class="sb-cell"><div class="lbl">GAINERS / LOSERS</div><div class="val"><span style="color:var(--mint)">${gainers}</span> / <span style="color:var(--crimson)">${losers}</span></div></div>
+    <div class="sb-cell"><div class="lbl">TOTAL VOLUME 24H</div><div class="val">$${fmtNum(totalVol)}</div></div>
+    <div class="sb-cell"><div class="lbl">RATA² VOLATILITAS</div><div class="val">${avgVola.toFixed(1)}%</div></div>
+  `;
+}
+
+function scoreClass(n, max){
+  const pct = n/max;
+  if(pct >= 0.66) return "score-hi";
+  if(pct >= 0.33) return "score-mid";
+  return "score-lo";
+}
+
+function getFiltered(){
+  let list = [...tickerData];
+  const q = document.getElementById('searchBox').value.trim().toUpperCase();
+  if(q) list = list.filter(d => d.symbol.includes(q));
+
+  if(currentFilter === "gainers") list = list.filter(d=>parseFloat(d.priceChangePercent)>0).sort((a,b)=>parseFloat(b.priceChangePercent)-parseFloat(a.priceChangePercent));
+  else if(currentFilter === "losers") list = list.filter(d=>parseFloat(d.priceChangePercent)<0).sort((a,b)=>parseFloat(a.priceChangePercent)-parseFloat(b.priceChangePercent));
+  else if(currentFilter === "volume") list = list.sort((a,b)=>b.quoteVolume-a.quoteVolume);
+  else if(currentFilter === "nearhigh") list = list.sort((a,b)=>b.rangePos-a.rangePos);
+  else if(currentFilter === "nearlow") list = list.sort((a,b)=>a.rangePos-b.rangePos);
+  else {
+    list.sort((a,b)=>{
+      let va = a[sortKey], vb = b[sortKey];
+      if(sortKey==="symbol") return sortDir * va.localeCompare(vb);
+      va = parseFloat(va); vb = parseFloat(vb);
+      return sortDir * (va - vb);
+    });
+  }
+  return list;
+}
+
+function renderTable(){
+  const list = getFiltered();
+  if(list.length === 0){
+    tbody.innerHTML = `<tr><td colspan="7" class="empty-state">Tidak ada pair yang cocok dengan filter/pencarian ini.</td></tr>`;
+    return;
+  }
+  let html = "";
+  list.slice(0,150).forEach(d=>{
+    const up = parseFloat(d.priceChangePercent) >= 0;
+    const deep = deepData[d.symbol];
+    let deepCell = `<button class="row-scan-btn" onclick="scanOne('${d.symbol}')">SCAN</button>`;
+    if(deep === "loading"){
+      deepCell = `<span class="deep-cell"><span class="loader" style="width:11px;height:11px;"></span></span>`;
+    } else if(deep){
+      const cls = deep.bias === "long" ? "mint" : deep.bias === "short" ? "crimson" : "amber";
+      deepCell = `<span class="deep-cell ${cls}">RSI ${deep.rsi.toFixed(0)} · ${deep.trendLabel}</span>`;
+    }
+    html += `
+      <tr onclick="openDetail('${d.symbol}')">
+        <td><div class="sym-cell"><span class="s">${d.symbol.replace('USDT','')}</span><span class="p">USDT-M PERP</span></div></td>
+        <td>${fmtPrice(d.lastPrice)}</td>
+        <td class="${up?'chg-pos':'chg-neg'}">${up?'+':''}${d.priceChangePercent}%</td>
+        <td>$${fmtNum(d.quoteVolume)}</td>
+        <td>
+          <div class="rangebar"><div class="fill" style="left:${d.rangePos}%"></div></div>
+          <div class="rangebar-lbl">${d.rangePos.toFixed(0)}% dari range</div>
+        </td>
+        <td><span class="score-pill ${scoreClass(d.quickScore,10)}">${d.quickScore}</span></td>
+        <td onclick="event.stopPropagation()">${deepCell}</td>
+      </tr>`;
+  });
+  tbody.innerHTML = html;
+}
+
+// ===== DEEP SCAN (RSI 1H + EMA trend 4H) =====
+function ema(values, period){
+  const k = 2/(period+1);
+  let emaArr = [values[0]];
+  for(let i=1;i<values.length;i++){
+    emaArr.push(values[i]*k + emaArr[i-1]*(1-k));
+  }
+  return emaArr;
+}
+function rsi(closes, period){
+  let gains=0, losses=0;
+  for(let i=1;i<=period;i++){
+    const diff = closes[i]-closes[i-1];
+    if(diff>=0) gains+=diff; else losses -= diff;
+  }
+  let avgGain = gains/period, avgLoss = losses/period;
+  for(let i=period+1;i<closes.length;i++){
+    const diff = closes[i]-closes[i-1];
+    const g = diff>0?diff:0, l = diff<0?-diff:0;
+    avgGain = (avgGain*(period-1)+g)/period;
+    avgLoss = (avgLoss*(period-1)+l)/period;
+  }
+  if(avgLoss===0) return 100;
+  const rs = avgGain/avgLoss;
+  return 100 - (100/(1+rs));
+}
+
+async function fetchKlines(symbol, interval, limit){
+  const res = await fetch(`${FAPI}/fapi/v1/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`);
+  if(!res.ok) throw new Error("klines gagal");
+  const raw = await res.json();
+  return raw.map(k => parseFloat(k[4])); // close price
+}
+
+async function scanOne(symbol){
+  deepData[symbol] = "loading";
+  renderTable();
+  try{
+    const [closes1h, closes4h] = await Promise.all([
+      fetchKlines(symbol, "1h", 60),
+      fetchKlines(symbol, "4h", 60),
+    ]);
+    const rsi1h = rsi(closes1h, 14);
+    const emaFast = ema(closes4h, 21);
+    const emaSlow = ema(closes4h, 50);
+    const lastFast = emaFast[emaFast.length-1], lastSlow = emaSlow[emaSlow.length-1];
+    const trendUp = lastFast > lastSlow;
+
+    let bias = "neutral", trendLabel = "Sideways";
+    if(trendUp && rsi1h < 70){ bias="long"; trendLabel="Bullish 4H"; }
+    else if(!trendUp && rsi1h > 30){ bias="short"; trendLabel="Bearish 4H"; }
+    else if(trendUp && rsi1h >= 70){ bias="neutral"; trendLabel="Bullish·OB"; }
+    else if(!trendUp && rsi1h <= 30){ bias="neutral"; trendLabel="Bearish·OS"; }
+
+    deepData[symbol] = { rsi: rsi1h, trendLabel, bias };
+  }catch(err){
+    console.error(err);
+    deepData[symbol] = { rsi:0, trendLabel:"Gagal", bias:"neutral" };
+  }
+  renderTable();
+}
+
+async function scanTopVisible(n){
+  const list = getFiltered().slice(0, n);
+  setStatus(`Deep scan ${list.length} pair…`);
+  document.getElementById('scanTopBtn').disabled = true;
+  const CONCURRENCY = 4;
+  let idx = 0;
+  async function worker(){
+    while(idx < list.length){
+      const item = list[idx++];
+      await scanOne(item.symbol);
+    }
+  }
+  await Promise.all(Array.from({length:CONCURRENCY}, worker));
+  setStatus(`✓ Deep scan selesai untuk ${list.length} pair`, "ok");
+  document.getElementById('scanTopBtn').disabled = false;
+}
+
+// ===== EVENTS =====
+document.getElementById('refreshBtn').addEventListener('click', refreshAll);
+document.getElementById('scanTopBtn').addEventListener('click', ()=>scanTopVisible(20));
+document.getElementById('searchBox').addEventListener('input', renderTable);
+
+document.querySelectorAll('.filter-row .btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.filter-row .btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    renderTable();
+  });
+});
+
+document.querySelectorAll('thead th').forEach(th=>{
+  th.addEventListener('click', ()=>{
+    const key = th.dataset.sort;
+    if(sortKey === key) sortDir *= -1; else { sortKey = key; sortDir = -1; }
+    currentFilter = "custom";
+    document.querySelectorAll('.filter-row .btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('thead th').forEach(t=>t.classList.remove('active'));
+    th.classList.add('active');
+    renderTable();
+  });
+});
+
+document.getElementById('autoBtn').addEventListener('click', function(){
+  if(autoTimer){
+    clearInterval(autoTimer);
+    autoTimer = null;
+    this.textContent = "Auto-Refresh: OFF";
+    this.classList.remove('active');
+  }else{
+    autoTimer = setInterval(refreshAll, 45000);
+    this.textContent = "Auto-Refresh: 45s";
+    this.classList.add('active');
+  }
+});
+
+// ===== DETAIL MODAL: EMA21/EMA30/MA200/VWAP/Fibonacci + Long/Short Score =====
+let currentDetailSymbol = null;
+let currentDetailTf = "4h";
+
+function sma(values, period){
+  const out = [];
+  for(let i=0;i<values.length;i++){
+    if(i < period-1){ out.push(null); continue; }
+    let sum=0;
+    for(let j=i-period+1;j<=i;j++) sum+=values[j];
+    out.push(sum/period);
+  }
+  return out;
+}
+
+async function fetchKlinesFull(symbol, interval, limit){
+  const res = await fetch(`${FAPI}/fapi/v1/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`);
+  if(!res.ok) throw new Error("klines gagal: " + res.status);
+  const raw = await res.json();
+  return raw.map(k => ({
+    open:parseFloat(k[1]), high:parseFloat(k[2]), low:parseFloat(k[3]),
+    close:parseFloat(k[4]), volume:parseFloat(k[5]),
+  }));
+}
+
+function computeVWAP(candles){
+  let cumPV = 0, cumV = 0;
+  candles.forEach(c=>{
+    const tp = (c.high + c.low + c.close)/3;
+    cumPV += tp * c.volume;
+    cumV += c.volume;
+  });
+  return cumV > 0 ? cumPV/cumV : null;
+}
+
+function computeFibonacci(candles, lookback){
+  const slice = candles.slice(-lookback);
+  let maxHigh = -Infinity, minLow = Infinity, iMax=0, iMin=0;
+  slice.forEach((c,i)=>{
+    if(c.high > maxHigh){ maxHigh=c.high; iMax=i; }
+    if(c.low < minLow){ minLow=c.low; iMin=i; }
+  });
+  const direction = iMax > iMin ? "up" : "down"; // low terjadi duluan = leg naik
+  const ratios = [0, 0.236, 0.382, 0.5, 0.618, 0.786, 1];
+  const levels = ratios.map(r => ({
+    ratio:r,
+    price: maxHigh - (maxHigh - minLow) * r
+  }));
+  return { levels, maxHigh, minLow, direction };
+}
+
+function scoreClassModal(bias){
+  if(bias==="long") return "pos-above";
+  if(bias==="short") return "pos-below";
+  return "";
+}
+
+async function openDetail(symbol){
+  currentDetailSymbol = symbol;
+  document.getElementById('mhSym').textContent = symbol.replace('USDT','') + " / USDT";
+  const live = tickerData.find(d=>d.symbol===symbol);
+  document.getElementById('mhPrice').textContent = live ? `${fmtPrice(live.lastPrice)}  ${live.priceChangePercent>=0?'▲':'▼'} ${live.priceChangePercent}%` : "-";
+  document.getElementById('modalBody').innerHTML = `<div class="modal-loading"><span class="loader"></span>Memuat indikator ${currentDetailTf.toUpperCase()}…</div>`;
+  document.getElementById('modalBackdrop').classList.add('show');
+  document.querySelectorAll('.tf-btn').forEach(b=>b.classList.toggle('active', b.dataset.tf===currentDetailTf));
+  await loadDetail(symbol, currentDetailTf);
+}
+
+async function loadDetail(symbol, tf){
+  document.getElementById('modalBody').innerHTML = `<div class="modal-loading"><span class="loader"></span>Memuat indikator ${tf.toUpperCase()}…</div>`;
+  try{
+    const candles = await fetchKlinesFull(symbol, tf, 250);
+    const closes = candles.map(c=>c.close);
+    const lastPrice = closes[closes.length-1];
+
+    const ema21arr = ema(closes, 21);
+    const ema30arr = ema(closes, 30);
+    const sma200arr = sma(closes, 200);
+    const ema21 = ema21arr[ema21arr.length-1];
+    const ema30 = ema30arr[ema30arr.length-1];
+    const ma200 = sma200arr[sma200arr.length-1];
+    const vwap = computeVWAP(candles.slice(-100));
+    const rsiVal = rsi(closes, 14);
+    const fib = computeFibonacci(candles, 90);
+
+    renderDetail({symbol, tf, lastPrice, ema21, ema30, ma200, vwap, rsiVal, fib});
+  }catch(err){
+    console.error(err);
+    document.getElementById('modalBody').innerHTML = `<div class="modal-loading">⚠️ Gagal memuat indikator. Coba lagi atau ganti timeframe.</div>`;
+  }
+}
+
+function renderDetail(d){
+  const posBadge = (val) => {
+    if(val===null || val===undefined) return `<span class="ib">-</span>`;
+    const above = d.lastPrice > val;
+    return `<span class="ib ${above?'pos-above':'pos-below'}">${above?'▲ Harga di atas':'▼ Harga di bawah'}</span>`;
+  };
+
+  // ==== SCORING (heuristik -1..+1 per faktor) ====
+  let trendScore = 0, n = 0;
+  if(d.ma200){ trendScore += d.lastPrice > d.ma200 ? 1 : -1; n++; }
+  if(d.ema21 && d.ema30){ trendScore += d.ema21 > d.ema30 ? 0.6 : -0.6; n++; }
+  trendScore = n>0 ? trendScore/n : 0;
+
+  let momScore = 0;
+  if(d.rsiVal >= 50) momScore = Math.min((d.rsiVal-50)/30, 1);
+  else momScore = Math.max((d.rsiVal-50)/30, -1);
+
+  let vwapScore = 0;
+  if(d.vwap){
+    const distPct = (d.lastPrice - d.vwap) / d.vwap * 100;
+    vwapScore = Math.max(-1, Math.min(1, distPct/2));
+  }
+
+  let fibScore = 0;
+  if(d.fib){
+    const fibPos = (d.lastPrice - d.fib.minLow) / Math.max(d.fib.maxHigh - d.fib.minLow, 1e-9); // 0=low,1=high
+    fibScore = (1 - fibPos*2); // dekat low -> +1 (zona bounce), dekat high -> -1 (zona resistance)
+  }
+
+  const avg = (trendScore + momScore + vwapScore + fibScore) / 4;
+  const longScore = Math.max(0, Math.min(10, 5 + 5*avg));
+  const shortScore = 10 - longScore;
+  const longPct = (longScore/10)*100, shortPct = (shortScore/10)*100;
+
+  const entryPlan = computeEntryPlan(d);
+
+  const factorLabel = (s) => s > 0.25 ? "Bullish" : s < -0.25 ? "Bearish" : "Netral";
+  const trendReason = d.ma200
+    ? `Harga ${d.lastPrice > d.ma200 ? "di atas" : "di bawah"} MA200, EMA21 ${d.ema21>d.ema30?"di atas":"di bawah"} EMA30`
+    : "Data MA200 belum cukup (butuh 200 candle)";
+  const momReason = `RSI(14) ${tf_note(d.rsiVal)} — nilai ${d.rsiVal.toFixed(1)}`;
+  const vwapReason = d.vwap ? `Harga ${((d.lastPrice-d.vwap)/d.vwap*100).toFixed(2)}% ${d.lastPrice>d.vwap?"di atas":"di bawah"} VWAP` : "VWAP tidak tersedia";
+  const fibReason = d.fib ? `Posisi harga ${((d.lastPrice-d.fib.minLow)/(d.fib.maxHigh-d.fib.minLow)*100).toFixed(0)}% dalam range swing (${d.fib.direction==="up"?"leg naik":"leg turun"})` : "-";
+
+  const fibRows = d.fib.levels.map(l=>{
+    const isCurrent = Math.abs(d.lastPrice - l.price) / d.lastPrice < 0.004;
+    return `<div class="fib-row ${isCurrent?'current':''}">
+      <span class="fib-ratio">${(l.ratio*100).toFixed(1)}%</span>
+      <span class="fib-price">${fmtPrice(l.price)}</span>
+      <span class="fib-marker ${isCurrent?'pos-above':''}">${isCurrent?'◄ HARGA':''}</span>
+    </div>`;
+  }).join('');
+
+  document.getElementById('modalBody').innerHTML = `
+    <div class="ind-section-title">INDIKATOR TREN & VOLUME (${d.tf.toUpperCase()})</div>
+    <div class="ind-grid">
+      <div class="ind-cell"><div class="il">EMA 21</div><div class="iv">${fmtPrice(d.ema21)}</div>${posBadge(d.ema21)}</div>
+      <div class="ind-cell"><div class="il">EMA 30</div><div class="iv">${fmtPrice(d.ema30)}</div>${posBadge(d.ema30)}</div>
+      <div class="ind-cell"><div class="il">MA 200</div><div class="iv">${d.ma200?fmtPrice(d.ma200):'Data kurang'}</div>${posBadge(d.ma200)}</div>
+      <div class="ind-cell"><div class="il">VWAP (rolling 100 candle)</div><div class="iv">${d.vwap?fmtPrice(d.vwap):'-'}</div>${posBadge(d.vwap)}</div>
+    </div>
+
+    <div class="ind-section-title">FIBONACCI RETRACEMENT (swing 90 candle, ${d.fib.direction==="up"?"leg naik":"leg turun"})</div>
+    <div class="fib-list">${fibRows}</div>
+
+    <div class="ind-section-title">SKOR LONG VS SHORT</div>
+    <div class="modal-gauge-wrap">
+      <div class="modal-gauge-labels"><span style="color:var(--mint); font-weight:700;">LONG</span><span style="color:var(--crimson); font-weight:700;">SHORT</span></div>
+      <div class="modal-gauge-track">
+        <div class="modal-gauge-fill-l" style="width:${longPct}%"></div>
+        <div class="modal-gauge-fill-r" style="width:${shortPct}%"></div>
+        <div class="modal-gauge-mid"></div>
+      </div>
+      <div class="modal-gauge-scores">
+        <span style="color:var(--mint)">${longScore.toFixed(1)}</span>
+        <span style="color:var(--crimson)">${shortScore.toFixed(1)}</span>
+      </div>
+    </div>
+
+    <div class="ind-section-title">RINCIAN FAKTOR</div>
+    <div class="bd-row2"><span class="bd-factor2">Trend</span><span class="bd-reason2">${trendReason}</span><span class="bd-num2" style="color:${trendScore>0?'var(--mint)':'var(--crimson)'}">${factorLabel(trendScore)}</span></div>
+    <div class="bd-row2"><span class="bd-factor2">Momentum</span><span class="bd-reason2">${momReason}</span><span class="bd-num2" style="color:${momScore>0?'var(--mint)':'var(--crimson)'}">${factorLabel(momScore)}</span></div>
+    <div class="bd-row2"><span class="bd-factor2">VWAP</span><span class="bd-reason2">${vwapReason}</span><span class="bd-num2" style="color:${vwapScore>0?'var(--mint)':'var(--crimson)'}">${factorLabel(vwapScore)}</span></div>
+    <div class="bd-row2"><span class="bd-factor2">Fibonacci</span><span class="bd-reason2">${fibReason}</span><span class="bd-num2" style="color:${fibScore>0?'var(--mint)':'var(--crimson)'}">${factorLabel(fibScore)}</span></div>
+
+    <div class="ind-section-title">RENCANA ENTRY (SOP) — ${d.tf.toUpperCase()}</div>
+    <div class="entry-cols">
+      <div class="entry-card long">
+        <div class="entry-card-head"><span>LONG</span><span>${longScore>=5.5?'✓ Bias mendukung':'⚠ Bias lemah'}</span></div>
+        <div class="entry-row"><span class="el">Entry</span><span class="ev">${fmtPrice(entryPlan.long.entry)}<span class="ez">${entryPlan.long.entryLabel}</span></span></div>
+        <div class="entry-row"><span class="el">Stop Loss</span><span class="ev">${fmtPrice(entryPlan.long.sl)}<span class="ez">${entryPlan.long.slLabel}</span></span></div>
+        <div class="entry-row"><span class="el">Take Profit</span><span class="ev">${fmtPrice(entryPlan.long.tp)}<span class="ez">${entryPlan.long.tpLabel}</span></span></div>
+        <div class="entry-row"><span class="el">Risk : Reward</span><span class="ev" style="color:${entryPlan.long.rr>=1.5?'var(--mint)':'var(--amber)'}">1 : ${entryPlan.long.rr.toFixed(2)}</span></div>
+        <div class="entry-caveat">${longScore<5.5?'Bias struktural saat ini kurang mendukung Long — tunggu konfirmasi tambahan sebelum eksekusi.':'Tunggu retest & candle konfirmasi di zona entry sebelum eksekusi, jangan market order langsung.'}</div>
+      </div>
+      <div class="entry-card short">
+        <div class="entry-card-head"><span>SHORT</span><span>${shortScore>=5.5?'✓ Bias mendukung':'⚠ Bias lemah'}</span></div>
+        <div class="entry-row"><span class="el">Entry</span><span class="ev">${fmtPrice(entryPlan.short.entry)}<span class="ez">${entryPlan.short.entryLabel}</span></span></div>
+        <div class="entry-row"><span class="el">Stop Loss</span><span class="ev">${fmtPrice(entryPlan.short.sl)}<span class="ez">${entryPlan.short.slLabel}</span></span></div>
+        <div class="entry-row"><span class="el">Take Profit</span><span class="ev">${fmtPrice(entryPlan.short.tp)}<span class="ez">${entryPlan.short.tpLabel}</span></span></div>
+        <div class="entry-row"><span class="el">Risk : Reward</span><span class="ev" style="color:${entryPlan.short.rr>=1.5?'var(--mint)':'var(--amber)'}">1 : ${entryPlan.short.rr.toFixed(2)}</span></div>
+        <div class="entry-caveat">${shortScore<5.5?'Bias struktural saat ini kurang mendukung Short — tunggu konfirmasi tambahan sebelum eksekusi.':'Tunggu reject & candle konfirmasi di zona entry sebelum eksekusi, jangan market order langsung.'}</div>
+      </div>
+    </div>
+
+    <div class="sop-note">
+      <b>Dasar SOP:</b> Entry ditempatkan di zona konfluensi indikator (EMA21/30, MA200, VWAP, Fibonacci), bukan harga sembarangan. SL wajib di luar level struktural berikutnya sebagai invalidation — bukan jarak tetap. Ukuran posisi ditentukan dari jarak SL ini (risk % dari modal), bukan sebaliknya. RR di bawah 1:1.5 sebaiknya dilewati kecuali ada alasan kuat lain. Ini bukan sinyal otomatis — tetap tunggu konfirmasi price action sebelum eksekusi.
+    </div>
+  `;
+}
+
+function tf_note(rsiVal){
+  if(rsiVal>=70) return "overbought";
+  if(rsiVal<=30) return "oversold";
+  return "netral";
+}
+
+// ===== ENTRY PLAN (SOP): entry di zona konfluensi, SL berbasis struktur, TP di level berikutnya =====
+function computeEntryPlan(d){
+  const levels = {};
+  if(d.ema21) levels['EMA 21'] = d.ema21;
+  if(d.ema30) levels['EMA 30'] = d.ema30;
+  if(d.ma200) levels['MA 200'] = d.ma200;
+  if(d.vwap) levels['VWAP'] = d.vwap;
+  if(d.fib){
+    levels['Fib 23.6%'] = d.fib.levels[1].price;
+    levels['Fib 38.2%'] = d.fib.levels[2].price;
+    levels['Fib 50.0%'] = d.fib.levels[3].price;
+    levels['Fib 61.8%'] = d.fib.levels[4].price;
+    levels['Fib 78.6%'] = d.fib.levels[5].price;
+    levels['Swing High'] = d.fib.maxHigh;
+    levels['Swing Low'] = d.fib.minLow;
+  }
+  const entries = Object.entries(levels).filter(([k,v]) => v && !isNaN(v));
+  const supports = entries.filter(([k,v]) => v < d.lastPrice).sort((a,b) => b[1]-a[1]); // nearest below dulu
+  const resistances = entries.filter(([k,v]) => v > d.lastPrice).sort((a,b) => a[1]-b[1]); // nearest atas dulu
+
+  // ---- LONG PLAN ----
+  let longEntryLabel, longEntry, longSlLabel, longSl, longTpLabel, longTp;
+  if(supports.length > 0){
+    longEntryLabel = supports[0][0]; longEntry = supports[0][1];
+    if(supports.length > 1){ longSlLabel = supports[1][0]; longSl = supports[1][1]*0.997; }
+    else { longSlLabel = 'Di bawah Swing Low'; longSl = (d.fib?d.fib.minLow:longEntry*0.97)*0.99; }
+  } else {
+    longEntryLabel = 'Harga saat ini'; longEntry = d.lastPrice;
+    longSlLabel = 'Di bawah Swing Low'; longSl = (d.fib?d.fib.minLow:longEntry*0.97)*0.99;
+  }
+  if(resistances.length > 0){ longTpLabel = resistances[0][0]; longTp = resistances[0][1]; }
+  else { longTpLabel = 'Swing High'; longTp = d.fib ? d.fib.maxHigh : longEntry*1.03; }
+  const longRR = Math.abs(longTp-longEntry) / Math.max(Math.abs(longEntry-longSl), 1e-9);
+
+  // ---- SHORT PLAN ----
+  let shortEntryLabel, shortEntry, shortSlLabel, shortSl, shortTpLabel, shortTp;
+  if(resistances.length > 0){
+    shortEntryLabel = resistances[0][0]; shortEntry = resistances[0][1];
+    if(resistances.length > 1){ shortSlLabel = resistances[1][0]; shortSl = resistances[1][1]*1.003; }
+    else { shortSlLabel = 'Di atas Swing High'; shortSl = (d.fib?d.fib.maxHigh:shortEntry*1.03)*1.01; }
+  } else {
+    shortEntryLabel = 'Harga saat ini'; shortEntry = d.lastPrice;
+    shortSlLabel = 'Di atas Swing High'; shortSl = (d.fib?d.fib.maxHigh:shortEntry*1.03)*1.01;
+  }
+  if(supports.length > 0){ shortTpLabel = supports[0][0]; shortTp = supports[0][1]; }
+  else { shortTpLabel = 'Swing Low'; shortTp = d.fib ? d.fib.minLow : shortEntry*0.97; }
+  const shortRR = Math.abs(shortEntry-shortTp) / Math.max(Math.abs(shortSl-shortEntry), 1e-9);
+
+  return {
+    long:{entryLabel:longEntryLabel, entry:longEntry, slLabel:longSlLabel, sl:longSl, tpLabel:longTpLabel, tp:longTp, rr:longRR},
+    short:{entryLabel:shortEntryLabel, entry:shortEntry, slLabel:shortSlLabel, sl:shortSl, tpLabel:shortTpLabel, tp:shortTp, rr:shortRR},
+  };
+}
+
+document.getElementById('modalCloseBtn').addEventListener('click', ()=>{
+  document.getElementById('modalBackdrop').classList.remove('show');
+});
+document.getElementById('modalBackdrop').addEventListener('click', (e)=>{
+  if(e.target.id === 'modalBackdrop') document.getElementById('modalBackdrop').classList.remove('show');
+});
+document.querySelectorAll('.tf-btn').forEach(btn=>{
+  btn.addEventListener('click', async ()=>{
+    document.querySelectorAll('.tf-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    currentDetailTf = btn.dataset.tf;
+    if(currentDetailSymbol) await loadDetail(currentDetailSymbol, currentDetailTf);
+  });
+});
+
+// init
+refreshAll();
+
+// ===== PWA: register service worker =====
+if ('serviceWorker' in navigator){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(err => console.warn('SW register gagal:', err));
+  });
+}
+</script>
+</body>
+</html>
