@@ -83,6 +83,18 @@
   }
   .brand-live::before{content:''; width:5px;height:5px;border-radius:50%; background:var(--mint); box-shadow:0 0 6px var(--mint); animation:pulse 1.6s ease-in-out infinite;}
   @keyframes pulse{0%,100%{opacity:1;} 50%{opacity:0.35;}}
+
+  /* ===== ALARM BANNER (muncul di paling atas layar pas ada pair mayoritas timeframe selaras) ===== */
+  .alarm-flash{
+    position:fixed; top:0; left:0; right:0; z-index:200;
+    background:var(--crimson); color:#fff; font-family:'JetBrains Mono',monospace; font-weight:800; font-size:12.5px;
+    text-align:center; padding:0; max-height:0; overflow:hidden; letter-spacing:0.02em;
+    transition:max-height 0.25s ease, padding 0.25s ease;
+  }
+  .alarm-flash.show{
+    max-height:60px; padding:11px 16px; animation:alarmPulse 0.9s ease-in-out infinite;
+  }
+  @keyframes alarmPulse{0%,100%{background:var(--crimson);} 50%{background:#ff8095;}}
   .masthead h1{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(16px,2.6vw,21px); letter-spacing:-0.005em; color:var(--text-2);}
 
   /* ===== HERO STAT CARD (Est. Total Value style) ===== */
@@ -107,6 +119,36 @@
   .hero-cta:active{transform:scale(0.97);}
   .hero-cta:disabled{opacity:0.5;}
   .hero-meta{font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-3); margin-top:14px; padding-top:14px; border-top:1px dashed var(--border-soft); width:100%;}
+
+  /* ===== MODE TRADING (halaman depan, satu section sama Total Volume 24H) ===== */
+  .hero-mode-block{width:100%; margin-top:16px; padding-top:16px; border-top:1px dashed var(--border-soft);}
+  .hero-mode-title{
+    font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:15px; letter-spacing:0.03em;
+    text-transform:uppercase; color:var(--text-1); margin-bottom:10px;
+  }
+  .hero-mode-pills{display:flex; gap:8px; flex-wrap:wrap;}
+  .hero-mode-pill{
+    font-family:'JetBrains Mono',monospace; font-weight:700; font-size:11.5px; text-align:left;
+    background:var(--surface-2); border:1px solid var(--border); color:var(--text-2);
+    padding:10px 14px; border-radius:var(--r-md); cursor:pointer; text-transform:uppercase; flex:1; min-width:100px;
+  }
+  .hero-mode-pill.active{background:var(--mint-dim); border-color:var(--mint); color:var(--mint);}
+  .hero-mode-pill .hmp-sub{display:block; font-size:9px; font-weight:500; color:var(--text-3); margin-top:3px; text-transform:none; letter-spacing:0;}
+  .hero-mode-pill.active .hmp-sub{color:var(--mint); opacity:0.8;}
+  .hero-mode-status{font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--text-3); margin-bottom:12px; display:none;}
+  .hero-mode-status.show{display:block;}
+
+  /* ===== MODE RESULTS SECTION (muncul di bawah hero card pas salah satu mode di-tap) ===== */
+  .mode-results-section{
+    max-width:var(--container-max); margin:16px auto 0; padding:0 var(--side-pad);
+    display:none;
+  }
+  .mode-results-section.show{display:block;}
+  .mode-results-close{
+    font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:700;
+    background:var(--surface-2); border:1px solid var(--border); color:var(--text-2);
+    padding:6px 12px; border-radius:var(--r-pill); cursor:pointer;
+  }
 
   /* ===== QUICK ACTION CARDS (P2P/USD/Send Money/BNB style grid) ===== */
   .quick-grid{
@@ -240,12 +282,6 @@
   }
   @keyframes spin{to{transform:rotate(360deg);}}
 
-  footer{max-width:var(--container-max); margin:30px auto 0; padding:18px var(--side-pad); border-top:1px solid var(--border-soft);
-    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;}
-  footer .fbrand{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:14px;}
-  footer .fbrand span{color:var(--mint);}
-  footer .fdisc{width:100%; font-size:10.5px; color:var(--text-3); line-height:1.6; margin-top:4px;}
-
   /* ===== RESPONSIVE TWEAKS ===== */
   @media(min-width:1400px){
     :root{ --container-max:1320px; }
@@ -318,13 +354,20 @@
   .fib-price{color:var(--text-1); font-weight:600; flex:1; text-align:right; padding-right:10px;}
   .fib-marker{width:56px; text-align:right; font-size:10px;}
 
-  .modal-gauge-wrap{margin-top:4px;}
-  .modal-gauge-labels{display:flex; justify-content:space-between; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.06em; margin-bottom:7px;}
-  .modal-gauge-track{position:relative; height:10px; background:linear-gradient(90deg, var(--mint-dim), var(--surface-2) 48%, var(--surface-2) 52%, var(--crimson-dim)); border:1px solid var(--border-soft);}
-  .modal-gauge-fill-l{position:absolute; left:0; top:0; height:100%; background:var(--mint);}
-  .modal-gauge-fill-r{position:absolute; right:0; top:0; height:100%; background:var(--crimson);}
-  .modal-gauge-mid{position:absolute; left:50%; top:-3px; bottom:-3px; width:2px; background:var(--text-3);}
-  .modal-gauge-scores{display:flex; justify-content:space-between; margin-top:7px; font-family:'JetBrains Mono',monospace; font-size:18px; font-weight:700;}
+  .score-points-row{display:flex; gap:10px; margin-bottom:8px;}
+  .score-points-box{flex:1; border:1px solid; border-radius:var(--r-md); padding:12px 14px; text-align:center;}
+  .score-points-box.long{border-color:var(--mint); background:var(--mint-dim);}
+  .score-points-box.short{border-color:var(--crimson); background:var(--crimson-dim);}
+  .spb-label{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.08em; font-weight:700;}
+  .score-points-box.long .spb-label{color:var(--mint);}
+  .score-points-box.short .spb-label{color:var(--crimson);}
+  .spb-value{font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:26px; margin-top:4px;}
+  .score-points-box.long .spb-value{color:var(--mint);}
+  .score-points-box.short .spb-value{color:var(--crimson);}
+  .spb-max{font-size:14px; font-weight:500; color:var(--text-3);}
+  .score-points-bar{position:relative; height:10px; background:var(--surface-2); border:1px solid var(--border-soft); overflow:hidden;}
+  .spbar-long{position:absolute; left:0; top:0; height:100%; background:var(--mint);}
+  .spbar-short{position:absolute; right:0; top:0; height:100%; background:var(--crimson);}
 
   .bd-row2{display:flex; justify-content:space-between; gap:8px; font-size:11.5px; padding:7px 0; border-bottom:1px dashed var(--border-soft);}
   .bd-row2:last-child{border-bottom:none;}
@@ -375,10 +418,42 @@
   .drawer-title{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.08em; color:var(--text-2); margin-bottom:12px; text-transform:uppercase;}
   .settings-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; margin-bottom:14px;}
   .setting-field label{display:block; font-size:10px; color:var(--text-3); margin-bottom:5px; font-family:'JetBrains Mono',monospace;}
-  .setting-field input{
+  .setting-field input, .setting-field select, .setting-field textarea{
     width:100%; background:var(--surface-2); border:1px solid var(--border); color:var(--text-1);
     font-family:'JetBrains Mono',monospace; font-size:12.5px; padding:9px 12px; border-radius:var(--r-sm);
   }
+  .setting-field textarea{resize:vertical; font-family:'Inter',sans-serif; line-height:1.5;}
+  .setting-field select{appearance:none; -webkit-appearance:none; cursor:pointer;}
+
+  /* ===== JURNAL TRADING (footer, input manual, gaya Notion) ===== */
+  .journal-section{max-width:var(--container-max); margin:24px auto 0; padding:0 var(--side-pad);}
+  .journal-add-btn{
+    font-family:'JetBrains Mono',monospace; font-weight:700; font-size:11px;
+    background:var(--mint-dim); border:1px solid var(--mint); color:var(--mint);
+    padding:8px 14px; border-radius:var(--r-pill); cursor:pointer;
+  }
+  .journal-clear-btn{
+    font-family:'JetBrains Mono',monospace; font-weight:700; font-size:11px;
+    background:var(--surface-2); border:1px solid var(--border); color:var(--text-3);
+    padding:8px 14px; border-radius:var(--r-pill); cursor:pointer;
+  }
+  .journal-clear-btn:active{color:var(--crimson); border-color:var(--crimson);}
+  .journal-stats{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:14px;}
+  @media(max-width:560px){ .journal-stats{grid-template-columns:repeat(2,1fr);} }
+  .journal-list{background:var(--surface); border:1px solid var(--border-soft); border-radius:var(--r-lg); overflow:hidden;}
+  .journal-entry{padding:13px 16px; border-bottom:1px solid var(--border-soft); cursor:pointer;}
+  .journal-entry:last-child{border-bottom:none;}
+  .journal-entry:active{background:var(--surface-2);}
+  .je-top{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:6px;}
+  .je-symbol{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:14px; color:var(--text-1);}
+  .je-date{font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text-3); margin-left:auto;}
+  .je-delete{background:none; border:none; color:var(--text-3); font-size:14px; cursor:pointer; padding:2px 0 2px 6px; line-height:1; flex-shrink:0;}
+  .je-delete:active{color:var(--crimson); transform:scale(0.9);}
+  .je-row{display:flex; gap:14px; flex-wrap:wrap; font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--text-3);}
+  .je-row b{color:var(--text-1);}
+  .je-pnl{font-weight:700; margin-left:auto;}
+  .je-setup{font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--text-3); margin-top:6px; font-style:italic;}
+
   .alert-log{max-height:260px; overflow-y:auto; border:1px solid var(--border-soft); margin-top:6px; border-radius:var(--r-md);}
   .alert-row{
     display:flex; justify-content:space-between; gap:10px; padding:9px 12px;
@@ -391,22 +466,33 @@
   .notif-status.granted{color:var(--mint);}
   .notif-status.denied{color:var(--crimson);}
 
-  /* ===== CONFLUENCE ===== */
-  .confluence-row{display:flex; gap:8px; flex-wrap:wrap; margin-top:2px;}
-  .confluence-chip{
-    flex:1; min-width:90px; border:1px solid var(--border-soft); background:var(--surface-2);
-    padding:9px 10px; text-align:center; border-radius:var(--r-md);
+  /* ===== TREND ALIGNMENT BANNER (paling penting, tampil paling atas) ===== */
+  .trend-banner{
+    padding:14px 16px; border-radius:var(--r-md); border:1px solid; margin-bottom:14px;
   }
-  .confluence-chip .cf-tf{font-size:9.5px; color:var(--text-3); letter-spacing:0.06em;}
-  .confluence-chip .cf-bias{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:13px; margin-top:3px;}
+  .trend-banner.score-hi{background:var(--mint-dim); border-color:var(--mint);}
+  .trend-banner.score-lo{background:var(--crimson-dim); border-color:var(--crimson);}
+  .trend-banner.score-mid{background:var(--amber-dim); border-color:var(--amber);}
+  .tb-title{font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:14.5px; letter-spacing:0.01em;}
+  .trend-banner.score-hi .tb-title{color:var(--mint);}
+  .trend-banner.score-lo .tb-title{color:var(--crimson);}
+  .trend-banner.score-mid .tb-title{color:var(--amber);}
+  .tb-sub{font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-2); margin-top:5px; line-height:1.5;}
+
+  /* ===== AREA PENTING PER TIMEFRAME ===== */
+  .mtf-zone-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:8px;}
+  .mtf-zone-card{border:1px solid var(--border-soft); background:var(--surface-2); padding:10px 12px; border-radius:var(--r-md);}
+  .mzc-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;}
+  .mzc-tf{font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--text-3); letter-spacing:0.06em; font-weight:700;}
+  .mzc-row{display:flex; justify-content:space-between; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-3); margin-top:3px;}
+  .mzc-row b{color:var(--text-1); font-weight:700;}
+  .mzc-event{font-family:'JetBrains Mono',monospace; font-size:9.5px; margin-top:5px; font-weight:700;}
+  .cf-bias{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:12px;}
   .cf-bullish{color:var(--mint);}
   .cf-bearish{color:var(--crimson);}
   .cf-neutral{color:var(--amber);}
   .cf-mixed{color:var(--text-2);}
-  .confluence-summary{
-    margin-top:10px; padding:9px 12px; text-align:center; font-family:'JetBrains Mono',monospace;
-    font-size:12px; font-weight:700; border:1px solid var(--border-soft); border-radius:var(--r-md);
-  }
+  @media(min-width:520px){ .mtf-zone-grid{grid-template-columns:repeat(4,1fr);} }
 
   /* ===== AI COPY BUTTON ===== */
   .ai-row{padding:12px 20px 0;}
@@ -444,6 +530,8 @@
 </head>
 <body>
 
+  <div class="alarm-flash" id="alarmFlash"></div>
+
   <div class="ticker-wrap"><div class="ticker-pill"><div class="ticker" id="ticker"><span class="mono">MEMUAT DATA BINANCE FUTURES…</span></div></div></div>
 
   <div class="masthead">
@@ -462,8 +550,25 @@
         <div class="hero-delta" id="heroDelta"><span class="hd-label">Memuat data…</span></div>
       </div>
       <button class="hero-cta" id="refreshBtn">↻ Refresh</button>
+      <div class="hero-mode-block">
+        <div class="hero-mode-title">MODE TRADING</div>
+        <div class="hero-mode-pills">
+          <button class="hero-mode-pill" id="modeScalpingBtn" data-mode="scalping">Scalping<span class="hmp-sub">15m · 30m · 1H</span></button>
+          <button class="hero-mode-pill" id="modeIntradayBtn" data-mode="intraday">Intraday<span class="hmp-sub">1H · 2H · 4H</span></button>
+          <button class="hero-mode-pill" id="modeSwingBtn" data-mode="swing">Swing<span class="hmp-sub">4H · 12H · 1D · 1W</span></button>
+        </div>
+      </div>
       <div class="hero-meta"><span id="metaInfo">Menghubungkan ke fapi.binance.com…</span> <span id="statusText"></span></div>
     </div>
+  </div>
+
+  <div class="mode-results-section" id="modeResultsSection">
+    <div class="section-head">
+      <span id="modeResultsTitle">Layak Entry</span>
+      <button class="mode-results-close" id="modeResultsClose">✕ Tutup</button>
+    </div>
+    <div class="hero-mode-status" id="heroModeStatus"></div>
+    <div class="coin-list" id="modeResultsList"></div>
   </div>
 
   <div class="quick-grid">
@@ -485,7 +590,17 @@
 
     <div class="panel-drawer" id="settingsDrawer">
       <div class="drawer-box">
-        <div class="drawer-title">Pengaturan Alert Otomatis</div>
+        <div class="drawer-title">🚨 Alarm Mayoritas Timeframe Selaras (Semua Pair)</div>
+        <div class="settings-grid">
+          <div class="setting-field">
+            <label>Status Alarm</label>
+            <button class="btn quick-card" id="toggleMarketAlignBtn" style="width:100%; min-height:auto; padding:9px 12px;">ON</button>
+          </div>
+          <div class="setting-field"><label>Jumlah Pair Dipantau (paling likuid)</label><input type="number" id="setMarketAlignPool" value="30" min="5" max="100" step="5"></div>
+        </div>
+        <div class="sop-note" style="margin-top:0; margin-bottom:14px;">Cek tren 1H/4H/1D tiap pair paling likuid tiap 3 menit (waktu Auto-Refresh nyala). Kalau ketiganya kompak satu arah — bullish semua atau bearish semua — langsung alarm (getar + bunyi + notifikasi persisten), <b>walaupun pair itu nggak ada di Watchlist kamu</b>.</div>
+
+        <div class="drawer-title">Pengaturan Alert Watchlist</div>
         <div class="settings-grid">
           <div class="setting-field"><label>RSI Oversold ≤</label><input type="number" id="setRsiOs" value="30"></div>
           <div class="setting-field"><label>RSI Overbought ≥</label><input type="number" id="setRsiOb" value="70"></div>
@@ -495,7 +610,7 @@
         <button class="btn btn-primary" id="saveSettingsBtn">Simpan Pengaturan</button>
         <button class="btn" id="notifPermBtn" style="margin-left:8px;">Izinkan Notifikasi Browser</button>
         <div class="notif-status" id="notifStatus"></div>
-        <div class="drawer-title" style="margin-top:16px;">Alert otomatis dicek untuk pair di Watchlist (⭐) setiap Auto-Refresh: RSI ekstrem (1H), funding rate ekstrem, harga mendekati EMA21/EMA30/MA200/AVWAP+Band/Fibonacci (4H), dan Change of Character (CHoCH) struktur market di 4H.</div>
+        <div class="drawer-title" style="margin-top:16px;">Alert Watchlist dicek tiap Auto-Refresh: RSI ekstrem (1H), funding rate ekstrem, harga mendekati EMA21/EMA30/MA200/AVWAP+Band/Fibonacci (4H), dan Change of Character (CHoCH) struktur market di 4H — khusus pair yang kamu tandai ⭐.</div>
       </div>
     </div>
 
@@ -541,12 +656,54 @@
     </div>
   </div>
 
-  <footer>
-    <div class="fbrand">Patah<span>Pensill</span> Live Screener</div>
-    <div class="fdisc">
-      Data diambil langsung dari endpoint publik Binance Futures (fapi.binance.com) tanpa API key — semua proses berjalan di browser lo, bukan di server saya. "Quick Score" dihitung dari data 24 jam (volume, volatilitas, posisi harga dalam range). "Deep Signal" dihitung dari RSI(14) 1H dan tren EMA21 vs EMA50 di 4H, hanya untuk pair yang di-scan manual — untuk membatasi jumlah request dari HP lo. Tap baris pair untuk lihat indikator lengkap: EMA21/30, MA200, Anchored VWAP + Band (0.5σ), Fibonacci, MACD, StochRSI, ATR, Bollinger Bands, ADX (kekuatan tren), Struktur Market (swing HH/HL vs LH/LL + BOS/CHoCH — dibobot 2x sebagai penilaian utama), Funding Rate, Open Interest, dan konfluensi multi-timeframe (trend + struktur, 1H/4H/1D), plus skor Long/Short. Kolom FUNDING menampilkan funding rate terkini tiap pair. Tandai pair dengan ⭐ untuk masuk Watchlist — pair di Watchlist otomatis dicek untuk alert RSI ekstrem, funding ekstrem, harga mendekati level struktural (EMA21/EMA30/MA200/AVWAP+Band/Fibonacci di 4H), dan Change of Character (CHoCH) struktur market di 4H, tiap Auto-Refresh. Semua data (watchlist, riwayat alert, pengaturan) tersimpan lokal di HP/browser lo saja. Ini bukan rekomendasi finansial, hasil dari struktur teknikal murni. Kalau data gagal dimuat, kemungkinan ISP/provider lo memblokir akses ke domain Binance — coba pakai VPN atau jaringan lain.
+  <div class="journal-section">
+    <div class="section-head">
+      <span>📓 Jurnal Trading</span>
+      <div style="display:flex; gap:8px;">
+        <button class="btn journal-clear-btn" id="journalClearBtn" style="display:none;">Hapus Semua</button>
+        <button class="btn journal-add-btn" id="journalAddBtn">+ Tambah Entry</button>
+      </div>
     </div>
-  </footer>
+    <div class="journal-stats" id="journalStats"></div>
+    <div class="journal-list" id="journalList"></div>
+  </div>
+
+  <div class="modal-backdrop" id="journalModalBackdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <div><div class="mh-sym" id="journalModalTitle">Tambah Entry Jurnal</div></div>
+        <button class="modal-close" id="journalModalClose">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="journalForm">
+          <input type="hidden" id="jfId">
+          <div class="settings-grid">
+            <div class="setting-field"><label>Pair *</label><input type="text" id="jfSymbol" placeholder="BTC / BTCUSDT" required></div>
+            <div class="setting-field">
+              <label>Arah *</label>
+              <select id="jfDirection"><option value="long">Long</option><option value="short">Short</option></select>
+            </div>
+            <div class="setting-field"><label>Tanggal</label><input type="date" id="jfDate"></div>
+            <div class="setting-field">
+              <label>Status</label>
+              <select id="jfStatus"><option value="open">Open</option><option value="win">Win</option><option value="loss">Loss</option><option value="breakeven">Breakeven</option></select>
+            </div>
+            <div class="setting-field"><label>Entry Price</label><input type="number" id="jfEntry" step="any"></div>
+            <div class="setting-field"><label>Exit Price</label><input type="number" id="jfExit" step="any"></div>
+            <div class="setting-field"><label>Stop Loss</label><input type="number" id="jfSl" step="any"></div>
+            <div class="setting-field"><label>Take Profit</label><input type="number" id="jfTp" step="any"></div>
+            <div class="setting-field"><label>PnL ($)</label><input type="number" id="jfPnlUsd" step="any"></div>
+            <div class="setting-field"><label>PnL (%)</label><input type="number" id="jfPnlPct" step="any"></div>
+          </div>
+          <div class="setting-field" style="margin-bottom:12px;"><label>Setup / Strategi</label><input type="text" id="jfSetup" placeholder="Break & retest 4H, dll"></div>
+          <div class="setting-field" style="margin-bottom:12px;"><label>Kondisi Emosi</label><input type="text" id="jfEmotion" placeholder="Tenang / FOMO / ragu-ragu, dll"></div>
+          <div class="setting-field" style="margin-bottom:14px;"><label>Catatan / Pelajaran</label><textarea id="jfNotes" rows="3" placeholder="Apa yang bisa diperbaiki dari trade ini?"></textarea></div>
+          <button type="submit" class="btn btn-primary" style="width:100%;">Simpan Entry</button>
+          <button type="button" class="btn" id="journalDeleteBtn" style="width:100%; margin-top:8px; display:none; color:var(--crimson); border-color:var(--crimson);">🗑 Hapus Entry</button>
+        </form>
+      </div>
+    </div>
+  </div>
 
   <div class="modal-backdrop" id="modalBackdrop">
     <div class="modal">
@@ -558,7 +715,10 @@
         <button class="modal-close" id="modalCloseBtn">✕</button>
       </div>
       <div class="tf-switch" id="tfSwitch">
+        <button class="tf-btn" data-tf="15m">15M</button>
+        <button class="tf-btn" data-tf="30m">30M</button>
         <button class="tf-btn" data-tf="1h">1H</button>
+        <button class="tf-btn" data-tf="2h">2H</button>
         <button class="tf-btn active" data-tf="4h">4H</button>
         <button class="tf-btn" data-tf="12h">12H</button>
         <button class="tf-btn" data-tf="1d">Daily</button>
@@ -606,10 +766,12 @@ let allSymbols = [];      // from exchangeInfo: perpetual USDT pairs
 let tickerData = [];      // merged 24hr data
 let deepData = {};        // symbol -> {rsi1h, trend4h, deepScore, label}
 let fundingData = {};     // symbol -> fundingRate (decimal, e.g. 0.0001)
+let modeQualifyData = {}; // symbol -> {bias, rsi, reason} — hasil scan "layak entry" per Mode Trading
 let currentFilter = "all";
 let sortKey = "quoteVolume";
 let sortDir = -1;
 let autoTimer = null;
+let marketAlignTimer = null;
 
 // ===== LOCAL STORAGE: WATCHLIST, ALERT LOG, ALERT SETTINGS =====
 const LS_WATCHLIST = "pp_watchlist";
@@ -630,10 +792,124 @@ function toggleWatchlist(symbol){
   return list.includes(symbol);
 }
 
+// Escape teks input manual pengguna sebelum disisipkan ke innerHTML — jaga-jaga (defense-in-depth),
+// biar karakter kayak < > & nggak ngerusak tampilan atau ke-render sebagai HTML.
+function escapeHtml(str){
+  if(str===null || str===undefined) return '';
+  return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// ===== JURNAL TRADING (manual, gaya Notion) — tersimpan lokal di HP/browser, nggak dikirim ke mana pun =====
+const LS_JOURNAL = "pp_trade_journal";
+function loadJournal(){
+  try{ return JSON.parse(localStorage.getItem(LS_JOURNAL) || "[]"); }catch(e){ return []; }
+}
+function saveJournalEntries(entries){ localStorage.setItem(LS_JOURNAL, JSON.stringify(entries)); }
+
+function computeJournalStats(entries){
+  const closed = entries.filter(e => e.status==='win' || e.status==='loss' || e.status==='breakeven');
+  const wins = closed.filter(e => e.status==='win').length;
+  const winRate = closed.length>0 ? (wins/closed.length)*100 : 0;
+  const totalPnl = entries.reduce((sum,e) => sum + (parseFloat(e.pnlUsd)||0), 0);
+  return { total: entries.length, closedCount: closed.length, wins, winRate, totalPnl };
+}
+
+function renderJournal(){
+  const entries = loadJournal().sort((a,b) => (b.date||'').localeCompare(a.date||'') || b.createdAt-a.createdAt);
+  const stats = computeJournalStats(entries);
+  const clearBtn = document.getElementById('journalClearBtn');
+  if(clearBtn) clearBtn.style.display = entries.length > 0 ? 'block' : 'none';
+  const statsEl = document.getElementById('journalStats');
+  if(statsEl){
+    statsEl.innerHTML = `
+      <div class="sb-cell"><div class="lbl">TOTAL ENTRY</div><div class="val">${stats.total}</div></div>
+      <div class="sb-cell"><div class="lbl">TRADE CLOSED</div><div class="val">${stats.closedCount}</div></div>
+      <div class="sb-cell"><div class="lbl">WIN RATE</div><div class="val" style="color:${stats.winRate>=50?'var(--mint)':'var(--crimson)'}">${stats.closedCount>0?stats.winRate.toFixed(0)+'%':'-'}</div></div>
+      <div class="sb-cell"><div class="lbl">TOTAL PNL ($)</div><div class="val" style="color:${stats.totalPnl>=0?'var(--mint)':'var(--crimson)'}">${stats.totalPnl>=0?'+':''}${stats.totalPnl.toFixed(2)}</div></div>
+    `;
+  }
+  const listEl = document.getElementById('journalList');
+  if(!listEl) return;
+  if(entries.length === 0){
+    listEl.innerHTML = `<div class="empty-state">Belum ada entry jurnal. Tap "+ Tambah Entry" buat mulai nyatet trade kamu.</div>`;
+    return;
+  }
+  listEl.innerHTML = entries.map(e=>{
+    const dirCls = e.direction==='long' ? 'score-hi' : 'score-lo';
+    const statusMap = { win:{label:'WIN', cls:'score-hi'}, loss:{label:'LOSS', cls:'score-lo'}, breakeven:{label:'BE', cls:'score-mid'}, open:{label:'OPEN', cls:'score-mid'} };
+    const st = statusMap[e.status] || statusMap.open;
+    const pnlUsd = parseFloat(e.pnlUsd);
+    const pnlPct = parseFloat(e.pnlPct);
+    const hasPnl = !isNaN(pnlUsd) || !isNaN(pnlPct);
+    const pnlCls = (pnlUsd>0 || pnlPct>0) ? 'chg-pos' : (pnlUsd<0 || pnlPct<0) ? 'chg-neg' : '';
+    return `
+    <div class="journal-entry" onclick="openJournalForm('${e.id}')">
+      <div class="je-top">
+        <span class="je-symbol">${escapeHtml(e.symbol)}</span>
+        <span class="badge-pill ${dirCls}">${e.direction==='long'?'LONG':'SHORT'}</span>
+        <span class="badge-pill ${st.cls}">${st.label}</span>
+        <span class="je-date">${escapeHtml(e.date)||''}</span>
+        <button class="je-delete" onclick="event.stopPropagation(); deleteJournalEntryConfirm('${e.id}')" title="Hapus entry">🗑</button>
+      </div>
+      <div class="je-row">
+        <span>Entry: <b>${e.entry!=null && e.entry!==''?fmtPrice(parseFloat(e.entry)):'-'}</b></span>
+        <span>Exit: <b>${e.exit!=null && e.exit!==''?fmtPrice(parseFloat(e.exit)):'-'}</b></span>
+        ${hasPnl ? `<span class="je-pnl ${pnlCls}">${!isNaN(pnlUsd)?(pnlUsd>=0?'+':'')+pnlUsd.toFixed(2)+'$':''}${!isNaN(pnlPct)?' ('+(pnlPct>=0?'+':'')+pnlPct.toFixed(2)+'%)':''}</span>` : ''}
+      </div>
+      ${e.setup ? `<div class="je-setup">${escapeHtml(e.setup)}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+// Hapus 1 entry langsung dari list (nggak perlu buka form edit dulu) — tetap minta konfirmasi karena ini aksi permanen.
+function deleteJournalEntryConfirm(id){
+  const entries = loadJournal();
+  const entry = entries.find(e=>e.id===id);
+  if(!entry) return;
+  const label = `${entry.symbol||'Entry'}${entry.date?' ('+entry.date+')':''}`;
+  if(!confirm(`Hapus entry jurnal ${label}? Tindakan ini nggak bisa dibatalkan.`)) return;
+  saveJournalEntries(entries.filter(e=>e.id!==id));
+  renderJournal();
+  setStatus('✓ Entry jurnal dihapus', 'ok');
+}
+
+function openJournalForm(id){
+  const form = document.getElementById('journalForm');
+  form.reset();
+  document.getElementById('jfId').value = '';
+  document.getElementById('journalDeleteBtn').style.display = 'none';
+  if(id){
+    const entry = loadJournal().find(e=>e.id===id);
+    if(entry){
+      document.getElementById('journalModalTitle').textContent = 'Edit Entry Jurnal';
+      document.getElementById('jfId').value = entry.id;
+      document.getElementById('jfSymbol').value = entry.symbol || '';
+      document.getElementById('jfDirection').value = entry.direction || 'long';
+      document.getElementById('jfDate').value = entry.date || '';
+      document.getElementById('jfStatus').value = entry.status || 'open';
+      document.getElementById('jfEntry').value = entry.entry ?? '';
+      document.getElementById('jfExit').value = entry.exit ?? '';
+      document.getElementById('jfSl').value = entry.sl ?? '';
+      document.getElementById('jfTp').value = entry.tp ?? '';
+      document.getElementById('jfPnlUsd').value = entry.pnlUsd ?? '';
+      document.getElementById('jfPnlPct').value = entry.pnlPct ?? '';
+      document.getElementById('jfSetup').value = entry.setup || '';
+      document.getElementById('jfEmotion').value = entry.emotion || '';
+      document.getElementById('jfNotes').value = entry.notes || '';
+      document.getElementById('journalDeleteBtn').style.display = 'block';
+    }
+  } else {
+    document.getElementById('journalModalTitle').textContent = 'Tambah Entry Jurnal';
+    document.getElementById('jfDate').value = new Date().toISOString().slice(0,10);
+  }
+  document.getElementById('journalModalBackdrop').classList.add('show');
+}
+
 function loadAlertSettings(){
+  const defaults = { rsiOs:30, rsiOb:70, fundingExt:0.05, levelProximity:0.5, marketAlignEnabled:true, marketAlignPool:30 };
   try{
-    return Object.assign({ rsiOs:30, rsiOb:70, fundingExt:0.05, levelProximity:0.5 }, JSON.parse(localStorage.getItem(LS_ALERTSETTINGS) || "{}"));
-  }catch(e){ return { rsiOs:30, rsiOb:70, fundingExt:0.05, levelProximity:0.5 }; }
+    return Object.assign({}, defaults, JSON.parse(localStorage.getItem(LS_ALERTSETTINGS) || "{}"));
+  }catch(e){ return defaults; }
 }
 function saveAlertSettings(s){ localStorage.setItem(LS_ALERTSETTINGS, JSON.stringify(s)); }
 
@@ -641,14 +917,54 @@ function loadAlertLog(){
   try{ return JSON.parse(localStorage.getItem(LS_ALERTLOG) || "[]"); }catch(e){ return []; }
 }
 function saveAlertLog(log){ localStorage.setItem(LS_ALERTLOG, JSON.stringify(log.slice(0,100))); }
-function pushAlert(msg, symbol){
+
+// ===== ALARM: bunyi beep (Web Audio, nggak butuh file audio eksternal) + getar + banner kedip di layar =====
+let alarmAudioCtx = null;
+function playAlarmBeep(){
+  try{
+    if(!alarmAudioCtx) alarmAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if(alarmAudioCtx.state === 'suspended') alarmAudioCtx.resume();
+    const ctx = alarmAudioCtx;
+    const now = ctx.currentTime;
+    [0, 0.35, 0.7].forEach(offset=>{ // 3 beep pendek berturut-turut, kayak alarm
+      const osc = ctx.createOscillator(), gain = ctx.createGain();
+      osc.type = 'square'; osc.frequency.value = 880;
+      gain.gain.setValueAtTime(0.16, now+offset);
+      gain.gain.exponentialRampToValueAtTime(0.001, now+offset+0.28);
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.start(now+offset); osc.stop(now+offset+0.3);
+    });
+  }catch(e){ /* audio diblokir/nggak didukung browser — diamkan, notifikasi/getar tetap jalan */ }
+}
+function flashAlarmBanner(msg){
+  const el = document.getElementById('alarmFlash');
+  if(!el) return;
+  el.textContent = '🚨 ' + msg;
+  el.classList.add('show');
+  clearTimeout(flashAlarmBanner._t);
+  flashAlarmBanner._t = setTimeout(()=>{ el.classList.remove('show'); }, 7000);
+}
+
+function pushAlert(msg, symbol, isAlarm){
   const log = loadAlertLog();
-  log.unshift({ msg, symbol, ts: Date.now() });
+  log.unshift({ msg, symbol, ts: Date.now(), alarm: !!isAlarm });
   saveAlertLog(log);
   renderAlertLog();
   updateAlertBadge();
+  if(isAlarm){
+    if(navigator.vibrate) navigator.vibrate([250,120,250,120,500]);
+    playAlarmBeep();
+    flashAlarmBanner(`${symbol?symbol.replace('USDT','')+' — ':''}${msg}`);
+  }
   if(window.Notification && Notification.permission === "granted"){
-    try{ new Notification("Patah Pensill Screener", { body: msg }); }catch(e){}
+    try{
+      new Notification("Patah Pensill Screener" + (isAlarm ? " 🚨 ALARM" : ""), {
+        body: msg,
+        requireInteraction: !!isAlarm, // notifikasi alarm tetap nempel di layar sampai disentuh, nggak ilang sendiri
+        tag: isAlarm && symbol ? ('alarm-'+symbol) : undefined,
+        renotify: !!isAlarm,
+      });
+    }catch(e){}
   }
 }
 const alertFiredThisSession = new Set(); // dedupe: "SYMBOL|type" so tiap kondisi cuma notif sekali per sesi
@@ -670,8 +986,8 @@ function renderAlertLog(){
   const el = document.getElementById('alertLog');
   if(log.length === 0){ el.innerHTML = `<div class="alert-empty">Belum ada alert terpicu.</div>`; return; }
   el.innerHTML = log.map(a => `
-    <div class="alert-row">
-      <span>${a.symbol ? `<b>${a.symbol.replace('USDT','')}</b> — ` : ""}${a.msg}</span>
+    <div class="alert-row" style="${a.alarm ? 'border-left:3px solid var(--crimson); padding-left:9px;' : ''}">
+      <span>${a.alarm ? '🚨 ' : ''}${a.symbol ? `<b>${a.symbol.replace('USDT','')}</b> — ` : ""}${a.msg}</span>
       <span class="at">${new Date(a.ts).toLocaleTimeString('id-ID')}</span>
     </div>`).join('');
 }
@@ -729,11 +1045,28 @@ async function loadFundingBulk(){
   }
 }
 
-async function fetchOpenInterest(symbol){
-  const res = await fetch(`${FAPI}/fapi/v1/openInterest?symbol=${symbol}`);
-  if(!res.ok) throw new Error("openInterest gagal: " + res.status);
-  const j = await res.json();
-  return parseFloat(j.openInterest);
+// OI historis (bukan cuma snapshot) — dari sini kita dapat nilai OI SEKARANG (elemen terakhir) SEKALIGUS
+// arah trennya (naik/turun dibanding beberapa jam lalu), tanpa perlu request terpisah buat OI snapshot.
+async function fetchOpenInterestHist(symbol, period, limit){
+  const res = await fetch(`${FAPI}/futures/data/openInterestHist?symbol=${symbol}&period=${period}&limit=${limit}`);
+  if(!res.ok) throw new Error("openInterestHist gagal: " + res.status);
+  const raw = await res.json();
+  return raw.map(r => ({ oi: parseFloat(r.sumOpenInterest), oiValue: parseFloat(r.sumOpenInterestValue), ts: r.timestamp }));
+}
+
+// Long/Short Ratio — akun retail (global) vs posisi top trader (biasanya dianggap "smart money").
+// Kalau dua-duanya beda arah jauh, itu insight menarik: retail vs pemain besar lagi nggak sepakat.
+async function fetchLongShortRatio(symbol, period, limit){
+  const res = await fetch(`${FAPI}/futures/data/globalLongShortAccountRatio?symbol=${symbol}&period=${period}&limit=${limit}`);
+  if(!res.ok) throw new Error("globalLongShortAccountRatio gagal: " + res.status);
+  const raw = await res.json();
+  return raw.map(r => ({ ratio: parseFloat(r.longShortRatio), longPct: parseFloat(r.longAccount)*100, shortPct: parseFloat(r.shortAccount)*100, ts: r.timestamp }));
+}
+async function fetchTopTraderRatio(symbol, period, limit){
+  const res = await fetch(`${FAPI}/futures/data/topLongShortPositionRatio?symbol=${symbol}&period=${period}&limit=${limit}`);
+  if(!res.ok) throw new Error("topLongShortPositionRatio gagal: " + res.status);
+  const raw = await res.json();
+  return raw.map(r => ({ ratio: parseFloat(r.longShortRatio), longPct: parseFloat(r.longAccount)*100, shortPct: parseFloat(r.shortAccount)*100, ts: r.timestamp }));
 }
 
 function computeQuickScore(row){
@@ -876,7 +1209,7 @@ function getFiltered(){
   return list;
 }
 
-// Badge kecil di tiap baris: kalau pair sudah di-deep-scan, tampilkan sinyal aslinya (RSI+trend).
+// Badge kecil di tiap baris: kalau pair sudah di-deep-scan manual, tampilkan sinyal aslinya (RSI+trend).
 // Kalau belum, tampilkan tingkat "Momentum" dari Quick Score — istilah yang lebih gampang dipahami orang awam daripada angka mentah.
 function rowBadgeHtml(d){
   const deep = deepData[d.symbol];
@@ -925,6 +1258,25 @@ function renderTopSignals(){
   }).join('');
 }
 
+function coinRowHtml(d, wl, badgeHtmlStr){
+  const up = parseFloat(d.priceChangePercent) >= 0;
+  const starred = wl.has(d.symbol);
+  return `
+    <div class="coin-row" onclick="openDetail('${d.symbol}')">
+      <button class="crow-star ${starred?'active':''}" onclick="event.stopPropagation(); onStarClick('${d.symbol}')">${starred?'★':'☆'}</button>
+      <div class="crow-avatar" style="background:${symbolColor(d.symbol)}">${symbolInitials(d.symbol)}</div>
+      <div class="crow-info">
+        <div class="crow-name"><span class="crow-symtext">${d.symbol.replace('USDT','')}</span><span class="crow-sub">USDT-M</span></div>
+        <div class="crow-badges">${badgeHtmlStr}${fundingBadgeHtml(d.fundingRate)}<span class="crow-vol">Vol $${fmtNum(d.quoteVolume)}</span></div>
+      </div>
+      <div class="crow-right">
+        <div class="crow-price">${fmtPrice(d.lastPrice)}</div>
+        <div class="crow-change ${up?'chg-pos':'chg-neg'}">${up?'▲':'▼'} ${Math.abs(parseFloat(d.priceChangePercent)).toFixed(2)}%</div>
+      </div>
+      <svg class="crow-chevron" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+    </div>`;
+}
+
 function renderTable(){
   const list = getFiltered();
   const wl = new Set(loadWatchlist());
@@ -938,26 +1290,7 @@ function renderTable(){
     tbody.innerHTML = `<div class="empty-state">Tidak ada pair yang cocok dengan filter/pencarian ini.</div>`;
     return;
   }
-  let html = "";
-  list.slice(0,150).forEach(d=>{
-    const up = parseFloat(d.priceChangePercent) >= 0;
-    const starred = wl.has(d.symbol);
-    html += `
-      <div class="coin-row" onclick="openDetail('${d.symbol}')">
-        <button class="crow-star ${starred?'active':''}" onclick="event.stopPropagation(); onStarClick('${d.symbol}')">${starred?'★':'☆'}</button>
-        <div class="crow-avatar" style="background:${symbolColor(d.symbol)}">${symbolInitials(d.symbol)}</div>
-        <div class="crow-info">
-          <div class="crow-name"><span class="crow-symtext">${d.symbol.replace('USDT','')}</span><span class="crow-sub">USDT-M</span></div>
-          <div class="crow-badges">${rowBadgeHtml(d)}${fundingBadgeHtml(d.fundingRate)}<span class="crow-vol">Vol $${fmtNum(d.quoteVolume)}</span></div>
-        </div>
-        <div class="crow-right">
-          <div class="crow-price">${fmtPrice(d.lastPrice)}</div>
-          <div class="crow-change ${up?'chg-pos':'chg-neg'}">${up?'▲':'▼'} ${Math.abs(parseFloat(d.priceChangePercent)).toFixed(2)}%</div>
-        </div>
-        <svg class="crow-chevron" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
-      </div>`;
-  });
-  tbody.innerHTML = html;
+  tbody.innerHTML = list.slice(0,150).map(d => coinRowHtml(d, wl, rowBadgeHtml(d))).join('');
 }
 
 function onStarClick(symbol){
@@ -1194,6 +1527,48 @@ function analyzeMarketStructure(candles){
   return { bias, label, lastSwingHigh:lastSwingHigh.price, lastSwingLow:lastSwingLow.price, event, points:zz };
 }
 
+// ===== DIVERGENCE: bandingkan swing harga vs swing RSI di titik yang sama =====
+// Bearish divergence: harga bikin Higher High, tapi RSI di titik itu malah Lower High -> momentum naik melemah, waspada reversal turun.
+// Bullish divergence: harga bikin Lower Low, tapi RSI di titik itu malah Higher Low -> momentum turun melemah, waspada reversal naik.
+function detectDivergence(candles, closes){
+  const zz = findFractalSwings(candles, 2, 2);
+  const highs = zz.filter(p=>p.type==='high');
+  const lows = zz.filter(p=>p.type==='low');
+  const rsiArr = rsiSeries(closes, 14);
+
+  let bearishDiv = null, bullishDiv = null;
+
+  if(highs.length >= 2){
+    const h1 = highs[highs.length-2], h2 = highs[highs.length-1];
+    const r1 = rsiArr[h1.index], r2 = rsiArr[h2.index];
+    if(r1!=null && r2!=null && h2.price > h1.price && r2 < r1){
+      bearishDiv = { priceFrom:h1.price, priceTo:h2.price, rsiFrom:r1, rsiTo:r2 };
+    }
+  }
+  if(lows.length >= 2){
+    const l1 = lows[lows.length-2], l2 = lows[lows.length-1];
+    const r1 = rsiArr[l1.index], r2 = rsiArr[l2.index];
+    if(r1!=null && r2!=null && l2.price < l1.price && r2 > r1){
+      bullishDiv = { priceFrom:l1.price, priceTo:l2.price, rsiFrom:r1, rsiTo:r2 };
+    }
+  }
+  return { bearishDiv, bullishDiv };
+}
+
+// ===== KLASIFIKASI TREN OPEN INTEREST =====
+// OI naik + harga naik/turun = partisipasi baru mendukung arah harga (tren "sehat").
+// OI turun + harga naik = reli lebih karena short-covering, bukan partisipasi long baru (rawan reversal).
+// OI turun + harga turun = kemungkinan long-capitulation, tekanan jual mulai mereda.
+function classifyOiTrend(oiChangePct, priceChangePct){
+  const oiUp = oiChangePct > 1, oiDown = oiChangePct < -1;
+  const priceUp = priceChangePct > 0;
+  if(oiUp && priceUp) return { label:'Tren Sehat (Bullish)', desc:'OI naik + harga naik — partisipasi baru mendukung kenaikan.', cls:'score-hi' };
+  if(oiUp && !priceUp) return { label:'Tren Sehat (Bearish)', desc:'OI naik + harga turun — posisi short baru masuk, tren turun didukung partisipasi baru.', cls:'score-lo' };
+  if(oiDown && priceUp) return { label:'Rawan Reversal', desc:'OI turun + harga naik — kenaikan kemungkinan dari short-covering, bukan partisipasi long baru.', cls:'score-mid' };
+  if(oiDown && !priceUp) return { label:'Momentum Melemah', desc:'OI turun + harga turun — kemungkinan long-capitulation, tekanan jual mulai mereda.', cls:'score-mid' };
+  return { label:'Netral', desc:'Perubahan OI belum signifikan.', cls:'score-mid' };
+}
+
 async function fetchKlines(symbol, interval, limit){
   const res = await fetch(`${FAPI}/fapi/v1/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`);
   if(!res.ok) throw new Error("klines gagal");
@@ -1245,6 +1620,128 @@ async function scanTopVisible(n){
   setStatus(`✓ Deep scan selesai untuk ${list.length} pair`, "ok");
   document.getElementById('scanTopBtn').disabled = false;
 }
+
+// Timeframe yang lebih tinggi buat gate konfirmasi tren — dicek juga di scan Mode Trading (bukan cuma di modal detail),
+// biar "ikuti tren di setiap timeframe" tetap jadi syarat utama walau scan-nya harus tetap ringan (cuma 1 request tambahan/pair).
+const HIGHER_TF_MAP = { '15m':'1h', '30m':'2h', '1h':'4h', '2h':'4h', '4h':'1d', '12h':'1w', '1d':'1w', '1w':'1M' };
+
+// ===== MODE TRADING: scan pair paling likuid, cari yang "layak entry" sesuai gaya trading =====
+// Pakai sistem skor poin yang sama kayak modal detail (lihat computeEntryScore) — bedanya di sini
+// nggak ikut hitung Divergence/Tren OI/LS Ratio, biar scan 40 pair tetap ringan.
+// Lolos kalau salah satu sisi (long/short) menang mayoritas poin DAN searah sama tren di timeframe yang lebih tinggi.
+async function qualifyForMode(symbol, tf){
+  try{
+    const higherTf = HIGHER_TF_MAP[tf] || tf;
+    const [candles, higherCloses] = await Promise.all([
+      fetchKlinesFull(symbol, tf, 150),
+      higherTf!==tf ? fetchKlines(symbol, higherTf, 60).catch(()=>null) : Promise.resolve(null),
+    ]);
+    const closes = candles.map(c=>c.close);
+    const lastPrice = closes[closes.length-1];
+    const ema21arr = ema(closes,21), ema50arr = ema(closes,50);
+    const rsiVal = rsi(closes,14);
+    const macdVal = macd(closes,12,26,9);
+    const avwap = computeAnchoredVWAP(candles, 90, 0.5);
+    const fib = computeFibonacci(candles, 90);
+    const adxVal = adx(candles,14);
+    const structure = analyzeMarketStructure(candles);
+    const vols = candles.map(c=>c.volume);
+    const prevVols = vols.slice(-21,-1);
+    const avgVol20 = prevVols.length>0 ? prevVols.reduce((a,b)=>a+b,0)/prevVols.length : 0;
+    const volRatio = avgVol20>0 ? vols[vols.length-1]/avgVol20 : 1;
+    const priceUp = closes.length>1 ? closes[closes.length-1] >= closes[closes.length-2] : true;
+    const fundingRow = tickerData.find(x=>x.symbol===symbol);
+    const fundingRate = fundingRow && fundingRow.fundingRate!==undefined ? fundingRow.fundingRate : null;
+
+    const es = computeEntryScore({
+      lastPrice, emaFast: ema21arr[ema21arr.length-1], emaSlow: ema50arr[ema50arr.length-1], emaFastLabel:'21', emaSlowLabel:'50',
+      rsiVal, macdVal, avwap, fib, volRatio, priceUp, fundingRate, structure, adxVal, candles, tf,
+    });
+
+    let bias = null;
+    if(es.longPoints > es.shortPoints && es.longPoints >= es.maxPoints/2) bias='long';
+    else if(es.shortPoints > es.longPoints && es.shortPoints >= es.maxPoints/2) bias='short';
+
+    // GATE TREN TIMEFRAME LEBIH TINGGI: kalau bias di timeframe utama berlawanan sama tren di timeframe
+    // yang lebih besar, batalkan — jangan sampai screener nyaranin Long padahal tren besarnya lagi turun.
+    if(bias && higherCloses && higherCloses.length >= 55){
+      const he21 = ema(higherCloses,21), he50 = ema(higherCloses,50);
+      const higherBias = he21[he21.length-1] > he50[he50.length-1] ? 'long' : 'short';
+      if(higherBias !== bias) bias = null;
+    }
+
+    return { bias, longPoints: es.longPoints, shortPoints: es.shortPoints, maxPoints: es.maxPoints };
+  }catch(err){
+    return { bias:null, longPoints:0, shortPoints:0, maxPoints:0 };
+  }
+}
+
+async function runModeScan(mode){
+  if(tickerData.length === 0){ setStatus("Tunggu data pair dimuat dulu.", "err"); return; }
+  const info = MODE_TIMEFRAMES[mode];
+  document.querySelectorAll('.hero-mode-pill').forEach(p=>p.classList.toggle('active', p.dataset.mode===mode));
+
+  const section = document.getElementById('modeResultsSection');
+  const statusEl = document.getElementById('heroModeStatus');
+  const titleEl = document.getElementById('modeResultsTitle');
+  const listEl = document.getElementById('modeResultsList');
+  section.classList.add('show');
+  statusEl.classList.add('show');
+  titleEl.textContent = `Layak Entry — ${info.label}`;
+  listEl.innerHTML = `<div class="empty-state"><span class="loader"></span>Menyiapkan scan…</div>`;
+  section.scrollIntoView({behavior:'smooth', block:'start'});
+
+  // Fokus ke pair paling likuid (volume tertinggi) biar hasil relevan buat dieksekusi & jumlah request terkendali
+  const CANDIDATE_POOL = 40;
+  const candidates = [...tickerData].sort((a,b)=>b.quoteVolume-a.quoteVolume).slice(0, CANDIDATE_POOL);
+
+  modeQualifyData = {};
+  let done = 0;
+  statusEl.textContent = `Scanning ${candidates.length} pair paling likuid di timeframe ${info.tf.toUpperCase()}… 0/${candidates.length}`;
+
+  const CONCURRENCY = 5;
+  let idx = 0;
+  async function worker(){
+    while(idx < candidates.length){
+      const item = candidates[idx++];
+      modeQualifyData[item.symbol] = await qualifyForMode(item.symbol, info.tf);
+      done++;
+      statusEl.textContent = `Scanning ${candidates.length} pair paling likuid di timeframe ${info.tf.toUpperCase()}… ${done}/${candidates.length}`;
+    }
+  }
+  await Promise.all(Array.from({length:CONCURRENCY}, worker));
+
+  const qualifiedSymbols = Object.keys(modeQualifyData).filter(sym => modeQualifyData[sym].bias);
+  statusEl.textContent = `✓ ${info.label}: ${qualifiedSymbols.length} dari ${candidates.length} pair likuid layak entry (timeframe ${info.tf.toUpperCase()})`;
+
+  if(qualifiedSymbols.length === 0){
+    listEl.innerHTML = `<div class="empty-state">Belum ada pair yang memenuhi syarat entry untuk mode ${info.label} saat ini. Kondisi market berubah-ubah — coba scan ulang beberapa saat lagi.</div>`;
+    return;
+  }
+
+  const wl = new Set(loadWatchlist());
+  const qualifiedRows = qualifiedSymbols
+    .map(sym => tickerData.find(d=>d.symbol===sym))
+    .filter(Boolean)
+    .sort((a,b) => {
+      const mqa = modeQualifyData[a.symbol], mqb = modeQualifyData[b.symbol];
+      const winA = mqa.bias==='long' ? mqa.longPoints : mqa.shortPoints;
+      const winB = mqb.bias==='long' ? mqb.longPoints : mqb.shortPoints;
+      return winB - winA; // poin terbanyak duluan
+    });
+
+  listEl.innerHTML = qualifiedRows.map(d=>{
+    const mq = modeQualifyData[d.symbol];
+    const cls = mq.bias === "long" ? "score-hi" : "score-lo";
+    const winPoints = mq.bias==='long' ? mq.longPoints : mq.shortPoints;
+    const badge = `<span class="badge-pill ${cls}">${mq.bias==='long'?'LONG':'SHORT'} ${winPoints}/${mq.maxPoints} poin</span>`;
+    return coinRowHtml(d, wl, badge);
+  }).join('');
+}
+document.getElementById('modeResultsClose').addEventListener('click', ()=>{
+  document.getElementById('modeResultsSection').classList.remove('show');
+  document.querySelectorAll('.hero-mode-pill').forEach(b=>b.classList.remove('active'));
+});
 
 // Level struktural yang biasa jadi acuan entry di SOP — dihitung dari candle 4H
 function computeStructLevels(candles){
@@ -1351,6 +1848,63 @@ async function checkWatchlistAlerts(){
   await Promise.all(Array.from({length:CONCURRENCY}, worker));
 }
 
+// ===== ALARM: PAIR DENGAN MAYORITAS TIMEFRAME SELARAS — jalan ke SEMUA pair likuid, bukan cuma watchlist =====
+// Cek tren cepat (EMA21 vs EMA50) di 1H/4H/1D buat tiap pair paling likuid. Kalau ketiganya kompak
+// satu arah (atau minimal 2 dari 3), itu dianggap "mayoritas timeframe sejalan" dan langsung alarm.
+const MARKET_ALIGN_TFS = ['1h','4h','1d'];
+async function quickTrendBias(symbol, tf){
+  try{
+    const closes = await fetchKlines(symbol, tf, 60);
+    const e21 = ema(closes,21), e50 = ema(closes,50);
+    return e21[e21.length-1] > e50[e50.length-1] ? 'bullish' : 'bearish';
+  }catch(e){ return null; }
+}
+
+async function scanMarketTrendAlignment(){
+  const settings = loadAlertSettings();
+  if(!settings.marketAlignEnabled || tickerData.length===0) return;
+
+  const poolSize = Math.max(5, Math.min(100, settings.marketAlignPool || 30));
+  const candidates = [...tickerData].sort((a,b)=>b.quoteVolume-a.quoteVolume).slice(0, poolSize);
+
+  const CONCURRENCY = 5;
+  let idx = 0;
+  async function worker(){
+    while(idx < candidates.length){
+      const item = candidates[idx++];
+      const biases = await Promise.all(MARKET_ALIGN_TFS.map(tf => quickTrendBias(item.symbol, tf)));
+      const valid = biases.filter(Boolean);
+      if(valid.length < MARKET_ALIGN_TFS.length) continue; // skip kalau ada timeframe yang gagal dimuat
+
+      const bullCount = valid.filter(b=>b==='bullish').length;
+      const bearCount = valid.filter(b=>b==='bearish').length;
+      const total = valid.length;
+      let aligned = null;
+      if(bullCount===total) aligned = 'bullish';
+      else if(bearCount===total) aligned = 'bearish';
+
+      const keyBull = `${item.symbol}|marketalign|bullish`, keyBear = `${item.symbol}|marketalign|bearish`;
+      if(aligned==='bullish'){
+        if(!alertFiredThisSession.has(keyBull)){
+          alertFiredThisSession.add(keyBull);
+          pushAlert(`Mayoritas timeframe (${MARKET_ALIGN_TFS.map(t=>t.toUpperCase()).join('/')}) SELARAS BULLISH — cek peluang LONG`, item.symbol, true);
+        }
+        alertFiredThisSession.delete(keyBear);
+      } else if(aligned==='bearish'){
+        if(!alertFiredThisSession.has(keyBear)){
+          alertFiredThisSession.add(keyBear);
+          pushAlert(`Mayoritas timeframe (${MARKET_ALIGN_TFS.map(t=>t.toUpperCase()).join('/')}) SELARAS BEARISH — cek peluang SHORT`, item.symbol, true);
+        }
+        alertFiredThisSession.delete(keyBull);
+      } else {
+        alertFiredThisSession.delete(keyBull);
+        alertFiredThisSession.delete(keyBear);
+      }
+    }
+  }
+  await Promise.all(Array.from({length:CONCURRENCY}, worker));
+}
+
 // ===== EVENTS =====
 document.getElementById('refreshBtn').addEventListener('click', refreshAll);
 document.getElementById('scanTopBtn').addEventListener('click', ()=>scanTopVisible(20));
@@ -1361,6 +1915,8 @@ function applyFilter(filter){
   document.querySelectorAll('.tab-row .tab-item').forEach(b=>b.classList.toggle('active', b.dataset.filter===filter));
   document.querySelectorAll('.filter-row .btn').forEach(b=>b.classList.toggle('active', b.dataset.filter===filter));
   document.querySelectorAll('.sort-row .sort-pill').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.hero-mode-pill').forEach(b=>b.classList.remove('active'));
+  document.getElementById('modeResultsSection').classList.remove('show');
   const bnAllEl = document.getElementById('bnAll'), bnWlEl = document.getElementById('bnWatchlist');
   if(bnAllEl) bnAllEl.classList.toggle('active', filter==='all');
   if(bnWlEl) bnWlEl.classList.toggle('active', filter==='watchlist');
@@ -1373,6 +1929,9 @@ document.querySelectorAll('.tab-row .tab-item').forEach(btn=>{
 document.querySelectorAll('.filter-row .btn').forEach(btn=>{
   btn.addEventListener('click', ()=> applyFilter(btn.dataset.filter));
 });
+document.querySelectorAll('.hero-mode-pill').forEach(btn=>{
+  btn.addEventListener('click', ()=> runModeScan(btn.dataset.mode));
+});
 
 document.querySelectorAll('.sort-row .sort-pill').forEach(pill=>{
   pill.addEventListener('click', ()=>{
@@ -1382,6 +1941,8 @@ document.querySelectorAll('.sort-row .sort-pill').forEach(pill=>{
     document.querySelectorAll('.tab-row .tab-item').forEach(b=>b.classList.remove('active'));
     document.querySelectorAll('.filter-row .btn').forEach(b=>b.classList.remove('active'));
     document.querySelectorAll('.sort-row .sort-pill').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.hero-mode-pill').forEach(b=>b.classList.remove('active'));
+    document.getElementById('modeResultsSection').classList.remove('show');
     const bnAllEl = document.getElementById('bnAll'), bnWlEl = document.getElementById('bnWatchlist');
     if(bnAllEl) bnAllEl.classList.remove('active');
     if(bnWlEl) bnWlEl.classList.remove('active');
@@ -1393,11 +1954,15 @@ document.querySelectorAll('.sort-row .sort-pill').forEach(pill=>{
 document.getElementById('autoBtn').addEventListener('click', function(){
   if(autoTimer){
     clearInterval(autoTimer);
-    autoTimer = null;
+    clearInterval(marketAlignTimer);
+    autoTimer = null; marketAlignTimer = null;
     this.textContent = "⏱️ Auto-Refresh: OFF";
     this.classList.remove('active');
   }else{
     autoTimer = setInterval(refreshAll, 45000);
+    // Scan alarm "mayoritas timeframe selaras" jalan lebih jarang (tiap 3 menit) karena lebih berat (banyak request per siklus)
+    marketAlignTimer = setInterval(scanMarketTrendAlignment, 180000);
+    scanMarketTrendAlignment(); // langsung scan sekali pas dinyalain, nggak nunggu 3 menit pertama
     this.textContent = "⏱️ Auto-Refresh: 45s";
     this.classList.add('active');
   }
@@ -1425,11 +1990,26 @@ document.getElementById('saveSettingsBtn').addEventListener('click', ()=>{
     rsiOb: parseFloat(document.getElementById('setRsiOb').value) || 70,
     fundingExt: parseFloat(document.getElementById('setFundingExt').value) || 0.05,
     levelProximity: parseFloat(document.getElementById('setLevelProx').value) || 0.5,
+    marketAlignEnabled: loadAlertSettings().marketAlignEnabled,
+    marketAlignPool: parseInt(document.getElementById('setMarketAlignPool').value) || 30,
   };
   saveAlertSettings(s);
   alertFiredThisSession.clear(); // reset dedupe biar threshold baru langsung berlaku
   setStatus("✓ Pengaturan alert disimpan", "ok");
   renderTable();
+});
+function syncMarketAlignToggleUI(){
+  const s = loadAlertSettings();
+  const btn = document.getElementById('toggleMarketAlignBtn');
+  btn.textContent = s.marketAlignEnabled ? '🚨 ON' : 'OFF';
+  btn.classList.toggle('active', s.marketAlignEnabled);
+}
+document.getElementById('toggleMarketAlignBtn').addEventListener('click', ()=>{
+  const s = loadAlertSettings();
+  s.marketAlignEnabled = !s.marketAlignEnabled;
+  saveAlertSettings(s);
+  syncMarketAlignToggleUI();
+  setStatus(s.marketAlignEnabled ? "✓ Alarm mayoritas timeframe diaktifkan" : "Alarm mayoritas timeframe dimatikan", "ok");
 });
 function refreshNotifStatus(){
   const el = document.getElementById('notifStatus');
@@ -1591,13 +2171,40 @@ async function openDetail(symbol){
   await loadDetail(symbol, currentDetailTf);
 }
 
-// Konfluensi multi-timeframe: cek bias trend (EMA21 vs EMA50 + posisi vs MA200) di 1H/4H/1D sekaligus
+// Konfluensi multi-timeframe: cek bias trend (EMA21 vs EMA50 + posisi vs MA200) + area kunci di 1H/4H/1D/1W sekaligus
+// Level kunci per timeframe — swing high/low struktural, Fibonacci 50/61.8%, dan AVWAP.
+// Dipakai buat nunjukin "area penting" di tiap timeframe, bukan cuma bias arahnya doang.
+function computeKeyZones(candles){
+  const closes = candles.map(c=>c.close);
+  const lastPrice = closes[closes.length-1];
+  const structure = analyzeMarketStructure(candles);
+  const lookback = Math.min(90, candles.length);
+  const fib = candles.length>=10 ? computeFibonacci(candles, lookback) : null;
+  const avwap = candles.length>=5 ? computeAnchoredVWAP(candles, lookback, 0.5) : null;
+
+  const levels = [];
+  if(structure && structure.lastSwingHigh) levels.push({label:'Swing High', price: structure.lastSwingHigh});
+  if(structure && structure.lastSwingLow) levels.push({label:'Swing Low', price: structure.lastSwingLow});
+  if(fib){
+    levels.push({label:'Fib 50%', price: fib.levels[3].price});
+    levels.push({label:'Fib 61.8%', price: fib.levels[4].price});
+  }
+  if(avwap) levels.push({label:'AVWAP', price: avwap.avwap});
+
+  const supports = levels.filter(l=>l.price>0 && l.price < lastPrice).sort((a,b)=>b.price-a.price);
+  const resistances = levels.filter(l=>l.price>0 && l.price > lastPrice).sort((a,b)=>a.price-b.price);
+  return { nearestSupport: supports[0]||null, nearestResistance: resistances[0]||null };
+}
+
+// ===== KONFLUENSI TREN MULTI-TIMEFRAME — INI JANTUNG DARI KEPUTUSAN ENTRY =====
+// Top-down: 1H (jangka pendek) -> 4H (swing intraday) -> 1D (tren harian) -> 1W (tren makro).
+// Kalau semua timeframe kompak satu arah, itu sinyal paling kuat yang bisa ditawarkan screener ini.
 async function computeConfluence(symbol){
-  const tfs = ["1h","4h","1d"];
+  const tfs = ["1h","4h","1d","1w"];
   const results = await Promise.all(tfs.map(t => fetchKlinesFull(symbol, t, 210).catch(()=>null)));
   return tfs.map((t,i)=>{
     const candles = results[i];
-    if(!candles || candles.length < 55) return { tf:t, bias:"neutral", label:"Data kurang", structure:null };
+    if(!candles || candles.length < 30) return { tf:t, bias:"neutral", label:"Data kurang", structure:null, zones:null };
     const closes = candles.map(c=>c.close);
     const lastPrice = closes[closes.length-1];
     const e21arr = ema(closes,21), e50arr = ema(closes,50);
@@ -1612,6 +2219,7 @@ async function computeConfluence(symbol){
 
     const structure = analyzeMarketStructure(candles);
     const structBias = structure ? structure.bias : "neutral";
+    const zones = computeKeyZones(candles);
 
     // Bias gabungan: EMA-trend & struktur market harus sepakat biar dianggap solid; kalau beda, ditandai "mixed"
     let bias;
@@ -1621,16 +2229,18 @@ async function computeConfluence(symbol){
     else if(structBias==="neutral" && (emaBias==="bullish"||emaBias==="bearish")) bias = emaBias; // struktur kurang data, ikuti EMA
     else bias = "mixed";
 
-    return { tf:t, bias, emaBias, structure };
+    return { tf:t, bias, emaBias, structure, zones };
   });
 }
 
 async function loadDetail(symbol, tf){
   document.getElementById('modalBody').innerHTML = `<div class="modal-loading"><span class="loader"></span>Memuat indikator ${tf.toUpperCase()}…</div>`;
   try{
-    const [candles, oi, confluence] = await Promise.all([
+    const [candles, oiHist, lsRatio, topRatio, confluence] = await Promise.all([
       fetchKlinesFull(symbol, tf, 250),
-      fetchOpenInterest(symbol).catch(()=>null),
+      fetchOpenInterestHist(symbol, "1h", 24).catch(()=>null),
+      fetchLongShortRatio(symbol, "1h", 24).catch(()=>null),
+      fetchTopTraderRatio(symbol, "1h", 24).catch(()=>null),
       computeConfluence(symbol).catch(()=>null),
     ]);
     const closes = candles.map(c=>c.close);
@@ -1651,6 +2261,17 @@ async function loadDetail(symbol, tf){
     const bb = bollinger(closes, 20, 2);
     const adxVal = adx(candles, 14);
     const structure = analyzeMarketStructure(candles);
+    const divergence = detectDivergence(candles, closes);
+
+    // OI: nilai sekarang = elemen terakhir hist, tren = dibanding elemen pertama (±24 jam ke belakang)
+    let oi = null, oiChangePct = null, oiTrend = null;
+    if(oiHist && oiHist.length >= 2){
+      const oiFirst = oiHist[0].oi, oiLast = oiHist[oiHist.length-1].oi;
+      oi = oiLast;
+      oiChangePct = oiFirst>0 ? ((oiLast-oiFirst)/oiFirst)*100 : 0;
+    } else if(oiHist && oiHist.length === 1){
+      oi = oiHist[0].oi;
+    }
 
     // Volume factor: volume candle terakhir dibanding rata-rata 20 candle sebelumnya
     const vols = candles.map(c=>c.volume);
@@ -1662,12 +2283,32 @@ async function loadDetail(symbol, tf){
 
     const fundingRow = tickerData.find(x=>x.symbol===symbol);
     const fundingRate = fundingRow && fundingRow.fundingRate!==undefined ? fundingRow.fundingRate : (fundingData[symbol]!==undefined?fundingData[symbol]:null);
+    if(fundingRow && oiChangePct !== null) oiTrend = classifyOiTrend(oiChangePct, parseFloat(fundingRow.priceChangePercent));
 
-    renderDetail({symbol, tf, lastPrice, ema21, ema30, ma200, avwap, rsiVal, fib, macdVal, stoch, atrVal, bb, adxVal, structure, volRatio, priceUp, oi, fundingRate, confluence});
+    const lsLatest = lsRatio && lsRatio.length ? lsRatio[lsRatio.length-1] : null;
+    const topLatest = topRatio && topRatio.length ? topRatio[topRatio.length-1] : null;
+
+    renderDetail({symbol, tf, lastPrice, ema21, ema30, ma200, avwap, rsiVal, fib, macdVal, stoch, atrVal, bb, adxVal, structure, divergence, volRatio, priceUp, oi, oiChangePct, oiTrend, lsLatest, topLatest, fundingRate, confluence, candles});
   }catch(err){
     console.error(err);
     document.getElementById('modalBody').innerHTML = `<div class="modal-loading">⚠️ Gagal memuat indikator. Coba lagi atau ganti timeframe.</div>`;
   }
+}
+
+// ===== VERDICT TREN MULTI-TIMEFRAME — hal PALING PENTING buat keputusan entry =====
+// Prinsipnya sederhana: kalau semua timeframe (1H/4H/1D/1W) kompak satu arah, itu sinyal paling kuat.
+// Kalau campuran, itu tanda market lagi transisi/nggak jelas — risiko entry naik, apapun kata indikator lain.
+function evaluateTrendAlignment(confluence){
+  if(!confluence || confluence.length===0) return { verdict:'unknown', label:'Data konfluensi tidak tersedia', sub:'', cls:'score-mid' };
+  const biases = confluence.map(c=>c.bias);
+  const bullCount = biases.filter(b=>b==='bullish').length;
+  const bearCount = biases.filter(b=>b==='bearish').length;
+  const total = biases.length;
+  if(bullCount===total) return { verdict:'aligned-bullish', label:`TREN SELARAS BULLISH — ${total}/${total} timeframe kompak naik`, sub:'Prioritaskan setup LONG. Cari entry di area pullback/retest, bukan kejar harga.', cls:'score-hi' };
+  if(bearCount===total) return { verdict:'aligned-bearish', label:`TREN SELARAS BEARISH — ${total}/${total} timeframe kompak turun`, sub:'Prioritaskan setup SHORT. Cari entry di area pullback/retest, bukan kejar harga.', cls:'score-lo' };
+  if(bullCount>=total-1 && bullCount>bearCount) return { verdict:'mostly-bullish', label:`MAYORITAS BULLISH — ${bullCount}/${total} timeframe searah naik`, sub:'Bias condong LONG, tapi belum full selaras — perketat konfirmasi sebelum entry.', cls:'score-mid' };
+  if(bearCount>=total-1 && bearCount>bullCount) return { verdict:'mostly-bearish', label:`MAYORITAS BEARISH — ${bearCount}/${total} timeframe searah turun`, sub:'Bias condong SHORT, tapi belum full selaras — perketat konfirmasi sebelum entry.', cls:'score-mid' };
+  return { verdict:'mixed', label:'TREN CAMPURAN — timeframe belum sepakat', sub:'Entry di kondisi ini lebih berisiko. Sebaiknya tunggu sampai mayoritas timeframe sejalan, atau kecilkan ukuran posisi kalau tetap mau eksekusi.', cls:'score-mid' };
 }
 
 function renderDetail(d){
@@ -1677,101 +2318,23 @@ function renderDetail(d){
     return `<span class="ib ${above?'pos-above':'pos-below'}">${above?'▲ Harga di atas':'▼ Harga di bawah'}</span>`;
   };
 
-  // ==== SCORING (heuristik -1..+1 per faktor) ====
-  let trendScore = 0, n = 0;
-  if(d.ma200){ trendScore += d.lastPrice > d.ma200 ? 1 : -1; n++; }
-  if(d.ema21 && d.ema30){ trendScore += d.ema21 > d.ema30 ? 0.6 : -0.6; n++; }
-  trendScore = n>0 ? trendScore/n : 0;
+  // ==== TREN MULTI-TIMEFRAME — verdict paling penting, dihitung duluan ====
+  const trendAlign = evaluateTrendAlignment(d.confluence);
 
-  let momScore = 0;
-  if(d.rsiVal >= 50) momScore = Math.min((d.rsiVal-50)/30, 1);
-  else momScore = Math.max((d.rsiVal-50)/30, -1);
-
-  let vwapScore = 0;
-  if(d.avwap){
-    const distPct = (d.lastPrice - d.avwap.avwap) / d.avwap.avwap * 100;
-    vwapScore = Math.max(-1, Math.min(1, distPct/2));
-    // Harga tembus band luar AVWAP = ekstensi kuat, perkuat sedikit skor searah band tsb (bukan sinyal reversal di sini)
-    if(d.lastPrice > d.avwap.upper) vwapScore = Math.max(vwapScore, 0.85);
-    else if(d.lastPrice < d.avwap.lower) vwapScore = Math.min(vwapScore, -0.85);
-  }
-
-  let fibScore = 0;
-  if(d.fib){
-    const fibPos = (d.lastPrice - d.fib.minLow) / Math.max(d.fib.maxHigh - d.fib.minLow, 1e-9); // 0=low,1=high
-    fibScore = (1 - fibPos*2); // dekat low -> +1 (zona bounce), dekat high -> -1 (zona resistance)
-  }
-
-  let macdScore = 0;
-  if(d.macdVal && d.macdVal.macd!==undefined && d.macdVal.signal!==null && d.macdVal.signal!==undefined){
-    macdScore = d.macdVal.macd > d.macdVal.signal ? 0.7 : -0.7;
-    if(d.macdVal.histRising===true) macdScore += (macdScore>0?0.3:-0.3);
-    else if(d.macdVal.histRising===false) macdScore -= (macdScore>0?0.3:-0.3);
-    macdScore = Math.max(-1, Math.min(1, macdScore));
-  }
-
-  let volScore = 0;
-  if(d.volRatio!==undefined && d.volRatio!==null){
-    const intensity = Math.max(0, Math.min(1, (d.volRatio-1)/2)); // volRatio 1x=0, 3x=1
-    volScore = d.priceUp ? intensity : -intensity;
-  }
-
-  let fundingScore = 0;
-  if(d.fundingRate!==null && d.fundingRate!==undefined){
-    const pct = d.fundingRate*100;
-    fundingScore = Math.max(-1, Math.min(1, -pct/0.1)); // funding +0.1% -> -1 (crowded long, warn bearish); -0.1% -> +1 (crowded short, warn bullish)
-  }
-
-  // Struktur market (HH/HL vs LH/LL + BOS/CHoCH) — faktor UTAMA sesuai SOP, jadi dibobot 2x dibanding faktor lain.
-  let structureScore = 0;
-  if(d.structure){
-    if(d.structure.bias==='bullish') structureScore = 0.7;
-    else if(d.structure.bias==='bearish') structureScore = -0.7;
-    else structureScore = 0; // transition/neutral — struktur belum jelas, jangan dipaksa condong
-    if(d.structure.event){
-      if(d.structure.event.type==='BOS') structureScore = d.structure.event.direction==='bullish' ? 1 : -1;
-      else if(d.structure.event.type==='CHoCH') structureScore = d.structure.event.direction==='bullish' ? 0.6 : -0.6;
-    }
-  }
-
-  // ADX bukan faktor arah — dia modulator KEPERCAYAAN buat sinyal trend-following (Trend & MACD).
-  // ADX rendah (<20) = market sideways, sinyal trend-following jadi kurang bisa dipercaya, jadi diredam.
-  const adxConfidence = (d.adxVal && d.adxVal.adx!==undefined) ? Math.max(0.35, Math.min(1, d.adxVal.adx/25)) : 1;
-  trendScore *= adxConfidence;
-  macdScore *= adxConfidence;
-
-  const factors = [trendScore, momScore, macdScore, vwapScore, fibScore, volScore, fundingScore, structureScore, structureScore];
-  const avg = factors.reduce((a,b)=>a+b,0) / factors.length;
-  const longScore = Math.max(0, Math.min(10, 5 + 5*avg));
-  const shortScore = 10 - longScore;
-  const longPct = (longScore/10)*100, shortPct = (shortScore/10)*100;
+  // ==== SKOR ENTRY BERBASIS POIN — tiap syarat 1 poin ke LONG atau SHORT ====
+  const entryScore = computeEntryScore({
+    lastPrice: d.lastPrice,
+    emaFast: d.ema21, emaSlow: d.ema30, emaFastLabel:'21', emaSlowLabel:'30',
+    rsiVal: d.rsiVal, macdVal: d.macdVal, avwap: d.avwap, fib: d.fib,
+    volRatio: d.volRatio, priceUp: d.priceUp, fundingRate: d.fundingRate,
+    structure: d.structure, adxVal: d.adxVal, candles: d.candles, tf: d.tf, confluence: d.confluence,
+    divergence: d.divergence, oiTrend: d.oiTrend, lsLatest: d.lsLatest,
+  });
+  const { longPoints, shortPoints, maxPoints, criteria } = entryScore;
+  const longPct = maxPoints>0 ? (longPoints/maxPoints)*100 : 0;
+  const shortPct = maxPoints>0 ? (shortPoints/maxPoints)*100 : 0;
 
   const entryPlan = computeEntryPlan(d);
-
-  const factorLabel = (s) => s > 0.25 ? "Bullish" : s < -0.25 ? "Bearish" : "Netral";
-  const trendReason = d.ma200
-    ? `Harga ${d.lastPrice > d.ma200 ? "di atas" : "di bawah"} MA200, EMA21 ${d.ema21>d.ema30?"di atas":"di bawah"} EMA30${adxConfidence<1?` (diredam ${Math.round((1-adxConfidence)*100)}% karena tren lemah — lihat ADX)`:''}`
-    : "Data MA200 belum cukup (butuh 200 candle)";
-  const momReason = `RSI(14) ${tf_note(d.rsiVal)} — nilai ${d.rsiVal.toFixed(1)}`;
-  const macdReason = (d.macdVal && d.macdVal.signal!==null && d.macdVal.signal!==undefined)
-    ? `MACD ${d.macdVal.macd>d.macdVal.signal?"di atas":"di bawah"} signal, histogram ${d.macdVal.histRising===true?"menguat":d.macdVal.histRising===false?"melemah":"stabil"}`
-    : "Data MACD belum cukup";
-  const vwapReason = d.avwap
-    ? `Harga ${(((d.lastPrice-d.avwap.avwap)/d.avwap.avwap)*100).toFixed(2)}% ${d.lastPrice>d.avwap.avwap?"di atas":"di bawah"} AVWAP (anchor ${d.avwap.anchorDirection==='up'?'swing low':'swing high'}, ${d.avwap.barsFromAnchor} candle lalu)${d.lastPrice>d.avwap.upper?' — HARGA DI LUAR UPPER BAND':d.lastPrice<d.avwap.lower?' — HARGA DI LUAR LOWER BAND':''}`
-    : "AVWAP tidak tersedia";
-  const fibReason = d.fib ? `Posisi harga ${((d.lastPrice-d.fib.minLow)/(d.fib.maxHigh-d.fib.minLow)*100).toFixed(0)}% dalam range swing (${d.fib.direction==="up"?"leg naik":"leg turun"})` : "-";
-  const volReason = (d.volRatio!==undefined && d.volRatio!==null)
-    ? `Volume candle terakhir ${d.volRatio.toFixed(2)}x rata-rata 20 candle, harga ${d.priceUp?"naik":"turun"}`
-    : "Data volume belum cukup";
-  const fundingReason = (d.fundingRate!==null && d.fundingRate!==undefined)
-    ? `Funding rate ${(d.fundingRate*100).toFixed(4)}% — ${d.fundingRate>0?"long bayar short (crowded long)":d.fundingRate<0?"short bayar long (crowded short)":"netral"}`
-    : "Data funding tidak tersedia";
-  const adxReason = (d.adxVal && d.adxVal.adx!==undefined)
-    ? `ADX ${d.adxVal.adx.toFixed(1)} (${d.adxVal.adx<20?"lemah/sideways":d.adxVal.adx<25?"mulai menguat":d.adxVal.adx<40?"tren kuat":"tren sangat kuat"}), +DI ${d.adxVal.plusDI.toFixed(1)} vs -DI ${d.adxVal.minusDI.toFixed(1)} (${d.adxVal.plusDI>d.adxVal.minusDI?"buyer dominan":"seller dominan"})`
-    : "Data ADX belum cukup (butuh minimal 28 candle)";
-  const structureReason = d.structure
-    ? `${d.structure.label}${d.structure.event ? ` — ${d.structure.event.type} ${d.structure.event.direction} (${d.structure.event.desc})` : ' — belum ada BOS/CHoCH baru'}`
-    : "Data struktur belum cukup";
 
   const fibRows = d.fib.levels.map(l=>{
     const isCurrent = Math.abs(d.lastPrice - l.price) / d.lastPrice < 0.004;
@@ -1782,14 +2345,33 @@ function renderDetail(d){
     </div>`;
   }).join('');
 
-  // Simpan semua data + hasil scoring, dipakai tombol "Copy Ringkasan buat AI"
-  lastDetailFull = {
-    d, trendScore, momScore, macdScore, vwapScore, fibScore, volScore, fundingScore, structureScore, adxConfidence,
-    longScore, shortScore, entryPlan,
-    trendReason, momReason, macdReason, vwapReason, fibReason, volReason, fundingReason, adxReason, structureReason,
-  };
+  // Simpan semua data + hasil skor, dipakai tombol "Copy Ringkasan buat AI"
+  lastDetailFull = { d, longPoints, shortPoints, maxPoints, criteria, entryPlan, trendAlign };
 
   document.getElementById('modalBody').innerHTML = `
+    <div class="trend-banner ${trendAlign.cls}">
+      <div class="tb-title">${trendAlign.label}</div>
+      ${trendAlign.sub ? `<div class="tb-sub">${trendAlign.sub}</div>` : ''}
+    </div>
+
+    <div class="ind-section-title">ARAH TREN &amp; AREA PENTING — SETIAP TIMEFRAME (1H → 1W)</div>
+    <div class="mtf-zone-grid">
+      ${d.confluence ? d.confluence.map(c=>{
+        const biasLabel = c.bias==='bullish'?'BULLISH':c.bias==='bearish'?'BEARISH':c.bias==='mixed'?'MIXED':'NETRAL';
+        const biasCls = c.bias==='bullish'?'cf-bullish':c.bias==='bearish'?'cf-bearish':c.bias==='mixed'?'cf-mixed':'cf-neutral';
+        const res = c.zones && c.zones.nearestResistance;
+        const sup = c.zones && c.zones.nearestSupport;
+        const eventBadge = c.structure && c.structure.event ? `<div class="mzc-event" style="color:${c.structure.event.type==='CHoCH'?'var(--amber)':'var(--text-3)'};">${c.structure.event.type}</div>` : '';
+        return `
+        <div class="mtf-zone-card">
+          <div class="mzc-head"><span class="mzc-tf">${c.tf.toUpperCase()}</span><span class="cf-bias ${biasCls}">${biasLabel}</span></div>
+          <div class="mzc-row"><span>Resistance</span><b>${res?fmtPrice(res.price):'-'}</b></div>
+          <div class="mzc-row"><span>Support</span><b>${sup?fmtPrice(sup.price):'-'}</b></div>
+          ${eventBadge}
+        </div>`;
+      }).join('') : '<div class="alert-empty">Data konfluensi gagal dimuat.</div>'}
+    </div>
+
     <div class="ind-section-title">INDIKATOR TREN & VOLUME (${d.tf.toUpperCase()})</div>
     <div class="ind-grid">
       <div class="ind-cell"><div class="il">EMA 21</div><div class="iv">${fmtPrice(d.ema21)}</div>${posBadge(d.ema21)}</div>
@@ -1827,6 +2409,12 @@ function renderDetail(d){
         <div class="ib">${d.stoch && d.stoch.k!==null && d.stoch.d!==null ? (d.stoch.k>d.stoch.d?'%K di atas %D':'%K di bawah %D') : ''}</div>
       </div>
     </div>
+
+    <div class="ind-section-title">DIVERGENCE (RSI vs Harga)</div>
+    ${d.divergence && (d.divergence.bearishDiv || d.divergence.bullishDiv) ? `
+      ${d.divergence.bearishDiv ? `<div class="sop-note" style="border-color:var(--crimson);"><b>⚠ Bearish Divergence:</b> Harga bikin Higher High (${fmtPrice(d.divergence.bearishDiv.priceFrom)} → ${fmtPrice(d.divergence.bearishDiv.priceTo)}), tapi RSI malah melemah (${d.divergence.bearishDiv.rsiFrom.toFixed(1)} → ${d.divergence.bearishDiv.rsiTo.toFixed(1)}). Momentum naik mulai kehabisan tenaga — waspada potensi reversal turun.</div>` : ''}
+      ${d.divergence.bullishDiv ? `<div class="sop-note" style="border-color:var(--mint); margin-top:${d.divergence.bearishDiv?'8px':'0'};"><b>✓ Bullish Divergence:</b> Harga bikin Lower Low (${fmtPrice(d.divergence.bullishDiv.priceFrom)} → ${fmtPrice(d.divergence.bullishDiv.priceTo)}), tapi RSI malah menguat (${d.divergence.bullishDiv.rsiFrom.toFixed(1)} → ${d.divergence.bullishDiv.rsiTo.toFixed(1)}). Momentum turun mulai kehabisan tenaga — waspada potensi reversal naik.</div>` : ''}
+    ` : `<div class="sop-note">Tidak ada divergence RSI vs harga yang terdeteksi di swing terakhir pada timeframe ${d.tf.toUpperCase()}.</div>`}
 
     <div class="ind-section-title">VOLATILITAS</div>
     <div class="ind-grid">
@@ -1890,89 +2478,73 @@ function renderDetail(d){
         <div class="iv">${d.oi!==null ? fmtNum(d.oi)+' kontrak' : '-'}</div>
         <div class="ib">${d.oi!==null ? '≈ $'+fmtNum(d.oi*d.lastPrice) : ''}</div>
       </div>
-    </div>
-
-    <div class="ind-section-title">KONFLUENSI MULTI-TIMEFRAME (Trend + Struktur Market)</div>
-    <div class="confluence-row">
-      ${d.confluence ? d.confluence.map(c=>{
-        const biasLabel = c.bias==='bullish'?'BULLISH':c.bias==='bearish'?'BEARISH':c.bias==='mixed'?'MIXED':'NETRAL';
-        const biasCls = c.bias==='bullish'?'cf-bullish':c.bias==='bearish'?'cf-bearish':c.bias==='mixed'?'cf-mixed':'cf-neutral';
-        const structLabel = c.structure ? c.structure.label : 'Data kurang';
-        const eventBadge = c.structure && c.structure.event ? `<div class="cf-tf" style="color:${c.structure.event.type==='CHoCH'?'var(--amber)':'var(--text-2)'};margin-top:3px;">${c.structure.event.type}</div>` : '';
-        return `
-        <div class="confluence-chip">
-          <div class="cf-tf">${c.tf.toUpperCase()}</div>
-          <div class="cf-bias ${biasCls}">${biasLabel}</div>
-          <div class="cf-tf" style="margin-top:4px; line-height:1.3;">${structLabel}</div>
-          ${eventBadge}
-        </div>`;
-      }).join('') : '<div class="alert-empty">Data konfluensi gagal dimuat.</div>'}
-    </div>
-    ${d.confluence ? (()=>{
-      const bull = d.confluence.filter(c=>c.bias==='bullish').length;
-      const bear = d.confluence.filter(c=>c.bias==='bearish').length;
-      const total = d.confluence.length;
-      const choch = d.confluence.find(c=>c.structure && c.structure.event && c.structure.event.type==='CHoCH');
-      let verdict, color;
-      if(choch){
-        verdict = `⚠ CHoCH terdeteksi di ${choch.tf.toUpperCase()} — ${choch.structure.event.desc}`;
-        color = 'var(--amber)';
-      } else if(bull===total){
-        verdict = `✓ Full konfluensi BULLISH (trend + struktur align di ${bull}/${total} timeframe)`;
-        color = 'var(--mint)';
-      } else if(bear===total){
-        verdict = `✓ Full konfluensi BEARISH (trend + struktur align di ${bear}/${total} timeframe)`;
-        color = 'var(--crimson)';
-      } else {
-        verdict = `⚠ Campuran — Bullish ${bull}/${total}, Bearish ${bear}/${total}. Timeframe belum align, hati-hati.`;
-        color = 'var(--amber)';
-      }
-      return `<div class="confluence-summary" style="color:${color}; border-color:${color};">${verdict}</div>`;
-    })() : ''}
-
-    <div class="ind-section-title">SKOR LONG VS SHORT</div>
-    <div class="modal-gauge-wrap">
-      <div class="modal-gauge-labels"><span style="color:var(--mint); font-weight:700;">LONG</span><span style="color:var(--crimson); font-weight:700;">SHORT</span></div>
-      <div class="modal-gauge-track">
-        <div class="modal-gauge-fill-l" style="width:${longPct}%"></div>
-        <div class="modal-gauge-fill-r" style="width:${shortPct}%"></div>
-        <div class="modal-gauge-mid"></div>
+      <div class="ind-cell">
+        <div class="il">OI Change (24 Jam)</div>
+        <div class="iv ${d.oiChangePct>0?'pos-above':d.oiChangePct<0?'pos-below':''}">${d.oiChangePct!==null ? (d.oiChangePct>=0?'+':'')+d.oiChangePct.toFixed(2)+'%' : '-'}</div>
+        <div class="ib">${d.oiTrend ? d.oiTrend.label : ''}</div>
       </div>
-      <div class="modal-gauge-scores">
-        <span style="color:var(--mint)">${longScore.toFixed(1)}</span>
-        <span style="color:var(--crimson)">${shortScore.toFixed(1)}</span>
+      <div class="ind-cell">
+        <div class="il">Long/Short Ratio (Retail)</div>
+        <div class="iv">${d.lsLatest ? d.lsLatest.ratio.toFixed(2) : '-'}</div>
+        <div class="ib">${d.lsLatest ? d.lsLatest.longPct.toFixed(1)+'% Long / '+d.lsLatest.shortPct.toFixed(1)+'% Short' : ''}</div>
       </div>
     </div>
+    ${d.oiTrend ? `<div class="sop-note" style="margin-top:8px;"><b>Insight OI:</b> ${d.oiTrend.desc}</div>` : ''}
 
-    <div class="ind-section-title">RINCIAN FAKTOR</div>
-    <div class="bd-row2"><span class="bd-factor2">Struktur (2x)</span><span class="bd-reason2">${structureReason}</span><span class="bd-num2" style="color:${structureScore>0?'var(--mint)':structureScore<0?'var(--crimson)':'var(--text-3)'}">${factorLabel(structureScore)}</span></div>
-    <div class="bd-row2"><span class="bd-factor2">ADX (modifier)</span><span class="bd-reason2">${adxReason}</span><span class="bd-num2" style="color:var(--text-3);">${adxConfidence.toFixed(2)}x</span></div>
-    <div class="bd-row2"><span class="bd-factor2">Trend</span><span class="bd-reason2">${trendReason}</span><span class="bd-num2" style="color:${trendScore>0?'var(--mint)':'var(--crimson)'}">${factorLabel(trendScore)}</span></div>
-    <div class="bd-row2"><span class="bd-factor2">Momentum</span><span class="bd-reason2">${momReason}</span><span class="bd-num2" style="color:${momScore>0?'var(--mint)':'var(--crimson)'}">${factorLabel(momScore)}</span></div>
-    <div class="bd-row2"><span class="bd-factor2">MACD</span><span class="bd-reason2">${macdReason}</span><span class="bd-num2" style="color:${macdScore>0?'var(--mint)':'var(--crimson)'}">${factorLabel(macdScore)}</span></div>
-    <div class="bd-row2"><span class="bd-factor2">VWAP</span><span class="bd-reason2">${vwapReason}</span><span class="bd-num2" style="color:${vwapScore>0?'var(--mint)':'var(--crimson)'}">${factorLabel(vwapScore)}</span></div>
-    <div class="bd-row2"><span class="bd-factor2">Fibonacci</span><span class="bd-reason2">${fibReason}</span><span class="bd-num2" style="color:${fibScore>0?'var(--mint)':'var(--crimson)'}">${factorLabel(fibScore)}</span></div>
-    <div class="bd-row2"><span class="bd-factor2">Volume</span><span class="bd-reason2">${volReason}</span><span class="bd-num2" style="color:${volScore>0?'var(--mint)':'var(--crimson)'}">${factorLabel(volScore)}</span></div>
-    <div class="bd-row2"><span class="bd-factor2">Funding</span><span class="bd-reason2">${fundingReason}</span><span class="bd-num2" style="color:${fundingScore>0?'var(--mint)':'var(--crimson)'}">${factorLabel(fundingScore)}</span></div>
+    <div class="ind-section-title">POSISI TRADER: RETAIL VS TOP TRADER</div>
+    <div class="ind-grid">
+      <div class="ind-cell">
+        <div class="il">Retail (Semua Akun)</div>
+        <div class="iv">${d.lsLatest ? d.lsLatest.longPct.toFixed(1)+'% Long' : '-'}</div>
+        <div class="ib">${d.lsLatest ? d.lsLatest.shortPct.toFixed(1)+'% Short' : ''}</div>
+      </div>
+      <div class="ind-cell">
+        <div class="il">Top Trader (by Posisi)</div>
+        <div class="iv">${d.topLatest ? d.topLatest.longPct.toFixed(1)+'% Long' : '-'}</div>
+        <div class="ib">${d.topLatest ? d.topLatest.shortPct.toFixed(1)+'% Short' : ''}</div>
+      </div>
+    </div>
+    ${(d.lsLatest && d.topLatest && Math.sign(d.lsLatest.longPct-50) !== Math.sign(d.topLatest.longPct-50)) ? `<div class="sop-note" style="margin-top:8px; border-color:var(--amber);"><b>⚠ Retail vs Top Trader beda arah:</b> Mayoritas akun retail condong ${d.lsLatest.longPct>50?'LONG':'SHORT'}, tapi top trader (posisi besar) justru condong ${d.topLatest.longPct>50?'LONG':'SHORT'}. Pola ini sering diasosiasikan dengan retail sebagai "exit liquidity" — pertimbangkan lebih hati-hati ikut arah crowd retail di sini.</div>` : ''}
+
+    <div class="ind-section-title">SKOR ENTRY (SISTEM POIN)</div>
+    <div class="score-points-row">
+      <div class="score-points-box long">
+        <div class="spb-label">LONG</div>
+        <div class="spb-value">${longPoints}<span class="spb-max">/${maxPoints}</span></div>
+      </div>
+      <div class="score-points-box short">
+        <div class="spb-label">SHORT</div>
+        <div class="spb-value">${shortPoints}<span class="spb-max">/${maxPoints}</span></div>
+      </div>
+    </div>
+    <div class="score-points-bar">
+      <div class="spbar-long" style="width:${longPct}%"></div>
+      <div class="spbar-short" style="width:${shortPct}%"></div>
+    </div>
+    <div class="sop-note" style="margin-top:8px;">Tiap syarat di bawah bernilai <b>1 poin</b> ke arah LONG atau SHORT — nggak ada pembobotan. ${maxPoints-longPoints-shortPoints} dari ${maxPoints} syarat netral/nggak charge ke arah manapun.</div>
+
+    <div class="ind-section-title">RINCIAN SYARAT (${maxPoints} KRITERIA)</div>
+    ${criteria.map(c => `
+    <div class="bd-row2"><span class="bd-factor2">${c.name}</span><span class="bd-reason2">${c.note}</span><span class="bd-num2" style="color:${c.side==='long'?'var(--mint)':c.side==='short'?'var(--crimson)':'var(--text-3)'}">${c.side==='long'?'+1 LONG':c.side==='short'?'+1 SHORT':'0'}</span></div>`).join('')}
 
     <div class="ind-section-title">RENCANA ENTRY (SOP) — ${d.tf.toUpperCase()}</div>
     ${d.atrVal!==null ? `<div class="sop-note" style="margin-top:0; margin-bottom:10px;"><b>Konteks Volatilitas (ATR):</b> ATR(14) saat ini ${fmtPrice(d.atrVal)} (${((d.atrVal/d.lastPrice)*100).toFixed(2)}% dari harga). Jarak SL di bawah 1× ATR dari entry cenderung kena "noise" candle biasa — pertimbangkan minimal 1–1.5× ATR (≈ ${fmtPrice(d.atrVal*1.5)}) sebagai buffer tambahan di luar level struktural di bawah.</div>` : ''}
     <div class="entry-cols">
       <div class="entry-card long">
-        <div class="entry-card-head"><span>LONG</span><span>${longScore>=5.5?'✓ Bias mendukung':'⚠ Bias lemah'}</span></div>
+        <div class="entry-card-head"><span>LONG</span><span>${(longPoints>shortPoints && longPoints>=maxPoints/2)?'✓ Bias mendukung':'⚠ Bias lemah'}</span></div>
         <div class="entry-row"><span class="el">Entry</span><span class="ev">${fmtPrice(entryPlan.long.entry)}<span class="ez">${entryPlan.long.entryLabel}</span></span></div>
         <div class="entry-row"><span class="el">Stop Loss</span><span class="ev">${fmtPrice(entryPlan.long.sl)}<span class="ez">${entryPlan.long.slLabel}</span></span></div>
         <div class="entry-row"><span class="el">Take Profit</span><span class="ev">${fmtPrice(entryPlan.long.tp)}<span class="ez">${entryPlan.long.tpLabel}</span></span></div>
         <div class="entry-row"><span class="el">Risk : Reward</span><span class="ev" style="color:${entryPlan.long.rr>=1.5?'var(--mint)':'var(--amber)'}">1 : ${entryPlan.long.rr.toFixed(2)}</span></div>
-        <div class="entry-caveat">${longScore<5.5?'Bias struktural saat ini kurang mendukung Long — tunggu konfirmasi tambahan sebelum eksekusi.':'Tunggu retest & candle konfirmasi di zona entry sebelum eksekusi, jangan market order langsung.'}</div>
+        <div class="entry-caveat">${trendAlign.verdict==='aligned-bearish' ? '⚠ Trend semua timeframe SELARAS BEARISH — Long di sini melawan arus, risiko tinggi.' : !(longPoints>shortPoints && longPoints>=maxPoints/2) ? 'Poin Long belum mayoritas — tunggu konfirmasi tambahan sebelum eksekusi.' : trendAlign.verdict==='mixed' ? 'Poin condong Long, tapi trend multi-timeframe masih campuran — tunggu keselarasan tambahan.' : 'Tunggu retest & candle konfirmasi di zona entry sebelum eksekusi, jangan market order langsung.'}</div>
       </div>
       <div class="entry-card short">
-        <div class="entry-card-head"><span>SHORT</span><span>${shortScore>=5.5?'✓ Bias mendukung':'⚠ Bias lemah'}</span></div>
+        <div class="entry-card-head"><span>SHORT</span><span>${(shortPoints>longPoints && shortPoints>=maxPoints/2)?'✓ Bias mendukung':'⚠ Bias lemah'}</span></div>
         <div class="entry-row"><span class="el">Entry</span><span class="ev">${fmtPrice(entryPlan.short.entry)}<span class="ez">${entryPlan.short.entryLabel}</span></span></div>
         <div class="entry-row"><span class="el">Stop Loss</span><span class="ev">${fmtPrice(entryPlan.short.sl)}<span class="ez">${entryPlan.short.slLabel}</span></span></div>
         <div class="entry-row"><span class="el">Take Profit</span><span class="ev">${fmtPrice(entryPlan.short.tp)}<span class="ez">${entryPlan.short.tpLabel}</span></span></div>
         <div class="entry-row"><span class="el">Risk : Reward</span><span class="ev" style="color:${entryPlan.short.rr>=1.5?'var(--mint)':'var(--amber)'}">1 : ${entryPlan.short.rr.toFixed(2)}</span></div>
-        <div class="entry-caveat">${shortScore<5.5?'Bias struktural saat ini kurang mendukung Short — tunggu konfirmasi tambahan sebelum eksekusi.':'Tunggu reject & candle konfirmasi di zona entry sebelum eksekusi, jangan market order langsung.'}</div>
+        <div class="entry-caveat">${trendAlign.verdict==='aligned-bullish' ? '⚠ Trend semua timeframe SELARAS BULLISH — Short di sini melawan arus, risiko tinggi.' : !(shortPoints>longPoints && shortPoints>=maxPoints/2) ? 'Poin Short belum mayoritas — tunggu konfirmasi tambahan sebelum eksekusi.' : trendAlign.verdict==='mixed' ? 'Poin condong Short, tapi trend multi-timeframe masih campuran — tunggu keselarasan tambahan.' : 'Tunggu reject & candle konfirmasi di zona entry sebelum eksekusi, jangan market order langsung.'}</div>
       </div>
     </div>
 
@@ -1989,6 +2561,132 @@ function tf_note(rsiVal){
 }
 
 // ===== ENTRY PLAN (SOP): entry di zona konfluensi, SL berbasis struktur, TP di level berikutnya =====
+// ===== BREAK AND RETEST =====
+// BOS = harga udah break level struktural. Retest = harga sempat balik mendekati level itu (dalam toleransi 0.5%)
+// dalam beberapa candle terakhir, TAPI closing masih bertahan di sisi breakout (bukan gagal/reversal).
+function computeBreakRetest(candles, structure){
+  if(!candles || !structure || !structure.event || structure.event.type !== 'BOS') return null;
+  const level = structure.event.level;
+  const direction = structure.event.direction; // 'bullish' | 'bearish'
+  const recent = candles.slice(-15);
+  const tolerance = level * 0.005;
+  let retested = false;
+  for(const c of recent){
+    if(direction==='bullish' && c.low <= level+tolerance && c.low >= level-tolerance){ retested = true; break; }
+    if(direction==='bearish' && c.high >= level-tolerance && c.high <= level+tolerance){ retested = true; break; }
+  }
+  if(!retested) return null;
+  const lastClose = candles[candles.length-1].close;
+  const holding = direction==='bullish' ? lastClose > level : lastClose < level;
+  return holding ? direction : null;
+}
+
+// ===== SISTEM SKOR ENTRY BERBASIS POIN =====
+// Tiap syarat bernilai TEPAT 1 poin ke arah LONG atau SHORT (atau 0 kalau netral). Nggak ada pembobotan lagi —
+// murni hitung berapa syarat yang berpihak ke long vs short. Kalau data suatu syarat nggak tersedia
+// (misal di scan cepat Mode Trading yang datanya lebih ringkas), syarat itu dilewati begitu saja dari perhitungan.
+function computeEntryScore(ctx){
+  const criteria = [];
+
+  if(ctx.emaFast!=null && ctx.emaSlow!=null){
+    const side = ctx.emaFast > ctx.emaSlow ? 'long' : 'short';
+    criteria.push({name:`Trend (EMA${ctx.emaFastLabel||''} vs EMA${ctx.emaSlowLabel||''})`, side, note:`EMA${ctx.emaFastLabel||''} ${side==='long'?'di atas':'di bawah'} EMA${ctx.emaSlowLabel||''}`});
+  }
+
+  if(ctx.rsiVal!=null){
+    let side = null;
+    if(ctx.rsiVal >= 55) side='long'; else if(ctx.rsiVal <= 45) side='short';
+    criteria.push({name:'Momentum (RSI)', side, note:`RSI(14) ${ctx.rsiVal.toFixed(1)}${side?'':' — zona netral 45-55'}`});
+  }
+
+  if(ctx.macdVal && ctx.macdVal.macd!=null && ctx.macdVal.signal!=null && ctx.macdVal.signal!==undefined){
+    const side = ctx.macdVal.macd > ctx.macdVal.signal ? 'long' : 'short';
+    criteria.push({name:'MACD', side, note:`MACD ${side==='long'?'di atas':'di bawah'} Signal`});
+  }
+
+  if(ctx.avwap){
+    const side = ctx.lastPrice > ctx.avwap.avwap ? 'long' : 'short';
+    criteria.push({name:'Anchored VWAP', side, note:`Harga ${side==='long'?'di atas':'di bawah'} AVWAP`});
+  }
+
+  if(ctx.volRatio!=null){
+    let side = null;
+    if(ctx.volRatio >= 1.2) side = ctx.priceUp ? 'long' : 'short';
+    criteria.push({name:'Volume', side, note: ctx.volRatio>=1.2 ? `Volume ${ctx.volRatio.toFixed(2)}x rata-rata, harga ${ctx.priceUp?'naik':'turun'}` : `Volume ${ctx.volRatio.toFixed(2)}x rata-rata — belum ada lonjakan`});
+  }
+
+  if(ctx.fundingRate!=null){
+    // Deadband: funding di bawah 0.005% itu praktis netral, jangan dihitung "crowded" — kalau tetap dihitung,
+    // selisih sekecil apapun (misal 0.0001%) bakal dikasih poin penuh, padahal itu noise, bukan sinyal.
+    const pct = ctx.fundingRate*100;
+    let side = null;
+    if(pct > 0.005) side='short'; else if(pct < -0.005) side='long';
+    criteria.push({name:'Funding Rate', side, note:`${pct.toFixed(4)}% — ${side==='short'?'crowded long':side==='long'?'crowded short':'netral, belum ekstrem'}`});
+  }
+
+  if(ctx.structure && ctx.structure.bias){
+    let side = null;
+    if(ctx.structure.bias==='bullish') side='long'; else if(ctx.structure.bias==='bearish') side='short';
+    criteria.push({name:'Struktur Market', side, note: ctx.structure.label});
+  }
+
+  if(ctx.adxVal && ctx.adxVal.plusDI!=null){
+    // Deadband ganda: ADX sendiri harus minimal 15 (ada tren beneran, bukan sideways total),
+    // DAN selisih +DI/-DI harus minimal 3 poin — kalau dua-duanya nyaris sama, itu noise, bukan dominasi buyer/seller.
+    const gap = Math.abs(ctx.adxVal.plusDI - ctx.adxVal.minusDI);
+    let side = null;
+    if(ctx.adxVal.adx >= 15 && gap >= 3) side = ctx.adxVal.plusDI > ctx.adxVal.minusDI ? 'long' : 'short';
+    criteria.push({name:'ADX Direction', side, note:`+DI ${ctx.adxVal.plusDI.toFixed(1)} vs -DI ${ctx.adxVal.minusDI.toFixed(1)}, ADX ${ctx.adxVal.adx.toFixed(1)}${side?'':' — belum cukup kuat/jelas'}`});
+  }
+
+  if(ctx.candles && ctx.structure){
+    const br = computeBreakRetest(ctx.candles, ctx.structure);
+    if(br){
+      const side = br === 'bullish' ? 'long' : 'short';
+      let confirmed = true, note = `Break & retest ${br} terkonfirmasi di ${(ctx.tf||'timeframe ini').toUpperCase()}`;
+      if(ctx.confluence){
+        confirmed = ctx.confluence.some(c => c.bias === br);
+        note += confirmed ? ', didukung minimal 1 timeframe lain' : ' — tapi belum didukung timeframe lain, poin ditahan';
+      }
+      criteria.push({name:'Break & Retest Struktur', side: confirmed ? side : null, note});
+    } else {
+      criteria.push({name:'Break & Retest Struktur', side:null, note:'Belum ada break & retest struktur yang terkonfirmasi'});
+    }
+  }
+
+  if(ctx.fib){
+    const zoneHigh = ctx.fib.levels[3].price, zoneLow = ctx.fib.levels[4].price; // 50% & 61.8%
+    const inZone = ctx.lastPrice <= zoneHigh && ctx.lastPrice >= zoneLow;
+    let side = null;
+    if(inZone) side = ctx.fib.direction==='up' ? 'long' : 'short';
+    criteria.push({name:'Fibonacci Golden Pocket (50-61.8%)', side, note: inZone ? `Harga di zona 50%-61.8% (${ctx.fib.direction==='up'?'leg naik':'leg turun'})` : 'Harga di luar zona 50%-61.8%'});
+  }
+
+  if(ctx.divergence && (ctx.divergence.bullishDiv || ctx.divergence.bearishDiv)){
+    const side = ctx.divergence.bullishDiv ? 'long' : 'short';
+    criteria.push({name:'Divergence RSI', side, note: side==='long' ? 'Bullish divergence terdeteksi' : 'Bearish divergence terdeteksi'});
+  }
+
+  if(ctx.oiTrend){
+    let side = null;
+    if(ctx.oiTrend.label==='Tren Sehat (Bullish)') side='long';
+    else if(ctx.oiTrend.label==='Tren Sehat (Bearish)') side='short';
+    else if(ctx.oiTrend.label==='Rawan Reversal') side='short';
+    else if(ctx.oiTrend.label==='Momentum Melemah') side='long';
+    criteria.push({name:'Tren Open Interest', side, note: ctx.oiTrend.label});
+  }
+
+  if(ctx.lsLatest && ctx.lsLatest.ratio){
+    let side = null;
+    if(ctx.lsLatest.ratio >= 2) side='short'; else if(ctx.lsLatest.ratio <= 0.6) side='long';
+    criteria.push({name:'Long/Short Ratio', side, note:`Ratio ${ctx.lsLatest.ratio.toFixed(2)}`});
+  }
+
+  const longPoints = criteria.filter(c=>c.side==='long').length;
+  const shortPoints = criteria.filter(c=>c.side==='short').length;
+  return { longPoints, shortPoints, maxPoints: criteria.length, criteria };
+}
+
 function computeEntryPlan(d){
   const levels = {};
   if(d.ema21) levels['EMA 21'] = d.ema21;
@@ -2028,6 +2726,13 @@ function computeEntryPlan(d){
   }
   if(resistances.length > 0){ longTpLabel = resistances[0][0]; longTp = resistances[0][1]; }
   else { longTpLabel = 'Swing High'; longTp = d.fib ? d.fib.maxHigh : longEntry*1.03; }
+  // Jaga-jaga: kalau harga udah break di atas SEMUA level yang kita lacak (termasuk Swing High),
+  // fallback di atas bisa kebetulan sama persis dengan longEntry (Entry == TP, RR jadi 0). Kalau itu terjadi,
+  // proyeksikan target baru di atas entry (pakai ATR kalau ada, atau persentase) daripada nunjuk ke level yang sama.
+  if(longTp <= longEntry){
+    longTpLabel = 'Proyeksi (level tertinggi terlacak sudah terlampaui)';
+    longTp = d.atrVal ? longEntry + d.atrVal*3 : longEntry*1.03;
+  }
   const longRR = Math.abs(longTp-longEntry) / Math.max(Math.abs(longEntry-longSl), 1e-9);
 
   // ---- SHORT PLAN ----
@@ -2042,6 +2747,12 @@ function computeEntryPlan(d){
   }
   if(supports.length > 0){ shortTpLabel = supports[0][0]; shortTp = supports[0][1]; }
   else { shortTpLabel = 'Swing Low'; shortTp = d.fib ? d.fib.minLow : shortEntry*0.97; }
+  // Jaga-jaga versi SHORT: kalau harga udah break di bawah SEMUA level yang kita lacak (termasuk Swing Low),
+  // fallback bisa kebetulan sama/lebih tinggi dari shortEntry (Entry == TP atau TP di atas Entry, nggak masuk akal buat Short).
+  if(shortTp >= shortEntry){
+    shortTpLabel = 'Proyeksi (level terendah terlacak sudah terlampaui)';
+    shortTp = d.atrVal ? shortEntry - d.atrVal*3 : shortEntry*0.97;
+  }
   const shortRR = Math.abs(shortEntry-shortTp) / Math.max(Math.abs(shortSl-shortEntry), 1e-9);
 
   return {
@@ -2059,10 +2770,19 @@ function generateAIPrompt(){
   const sym = d.symbol.replace('USDT','');
   const cf = d.confluence ? d.confluence.map(c=>{
     const structTxt = c.structure ? c.structure.label + (c.structure.event ? ` (${c.structure.event.type} ${c.structure.event.direction})` : '') : 'data kurang';
-    return `${c.tf.toUpperCase()}: ${c.bias==='bullish'?'Bullish':c.bias==='bearish'?'Bearish':c.bias==='mixed'?'Mixed (EMA & struktur beda arah)':'Netral'} — struktur: ${structTxt}`;
+    const res = c.zones && c.zones.nearestResistance ? fmtPrice(c.zones.nearestResistance.price)+' ('+c.zones.nearestResistance.label+')' : '-';
+    const sup = c.zones && c.zones.nearestSupport ? fmtPrice(c.zones.nearestSupport.price)+' ('+c.zones.nearestSupport.label+')' : '-';
+    return `${c.tf.toUpperCase()}: ${c.bias==='bullish'?'Bullish':c.bias==='bearish'?'Bearish':c.bias==='mixed'?'Mixed (EMA & struktur beda arah)':'Netral'} — struktur: ${structTxt} | Resistance terdekat: ${res} | Support terdekat: ${sup}`;
   }).join('\n') : 'tidak tersedia';
 
-  return `Tolong bantu saya ambil keputusan trading futures untuk pair ${sym}/USDT di Binance, berdasarkan SOP saya: entry di zona konfluensi indikator, SL berbasis struktur (bukan jarak tetap), minimum Risk:Reward 1:1.5, dan struktur market multi-timeframe (HH/HL vs LH/LL, BOS/CHoCH) sebagai penilaian utama sebelum eksekusi.
+  return `Tolong bantu saya ambil keputusan trading futures untuk pair ${sym}/USDT di Binance, berdasarkan SOP saya: HAL PALING UTAMA adalah keselarasan tren di setiap timeframe (1H/4H/1D/1W) dan area kunci (support/resistance) di tiap timeframe itu — baru setelah itu konfirmasi dari indikator lain. Entry di zona konfluensi, SL berbasis struktur (bukan jarak tetap), minimum Risk:Reward 1:1.5.
+
+=== VERDICT TREN MULTI-TIMEFRAME (PALING UTAMA) ===
+${f.trendAlign.label}
+${f.trendAlign.sub}
+
+=== AREA PENTING PER TIMEFRAME (1H → 1W) ===
+${cf}
 
 === DATA SAAT INI (timeframe ${d.tf.toUpperCase()}, sumber: Binance Futures live) ===
 Harga terakhir: ${fmtPrice(d.lastPrice)}
@@ -2072,6 +2792,7 @@ STRUKTUR MARKET (${d.tf.toUpperCase()}):
 - Swing High terakhir: ${d.structure && d.structure.lastSwingHigh ? fmtPrice(d.structure.lastSwingHigh) : '-'}
 - Swing Low terakhir: ${d.structure && d.structure.lastSwingLow ? fmtPrice(d.structure.lastSwingLow) : '-'}
 - Event: ${d.structure && d.structure.event ? `${d.structure.event.type} ${d.structure.event.direction} — ${d.structure.event.desc}` : 'belum ada BOS/CHoCH baru'}
+- Divergence RSI vs Harga: ${d.divergence && d.divergence.bearishDiv ? `BEARISH — harga HH tapi RSI melemah (${d.divergence.bearishDiv.rsiFrom.toFixed(1)}→${d.divergence.bearishDiv.rsiTo.toFixed(1)})` : d.divergence && d.divergence.bullishDiv ? `BULLISH — harga LL tapi RSI menguat (${d.divergence.bullishDiv.rsiFrom.toFixed(1)}→${d.divergence.bullishDiv.rsiTo.toFixed(1)})` : 'tidak ada divergence terdeteksi'}
 
 TREN & VOLUME:
 - EMA 21: ${fmtPrice(d.ema21)}
@@ -2099,22 +2820,23 @@ ${d.fib.levels.map(l=>`- ${(l.ratio*100).toFixed(1)}%: ${fmtPrice(l.price)}`).jo
 
 FUTURES DATA:
 - Funding Rate: ${d.fundingRate!=null ? (d.fundingRate*100).toFixed(4)+'%' : '-'} (${d.fundingRate>0?'crowded long':d.fundingRate<0?'crowded short':'netral'})
-- Open Interest: ${d.oi!=null ? fmtNum(d.oi)+' kontrak (≈$'+fmtNum(d.oi*d.lastPrice)+')' : '-'}
+- Open Interest: ${d.oi!=null ? fmtNum(d.oi)+' kontrak (≈$'+fmtNum(d.oi*d.lastPrice)+')' : '-'}, perubahan 24 jam: ${d.oiChangePct!=null ? (d.oiChangePct>=0?'+':'')+d.oiChangePct.toFixed(2)+'%' : '-'} (${d.oiTrend?d.oiTrend.label:'-'})
+- Long/Short Ratio Retail: ${d.lsLatest ? d.lsLatest.ratio.toFixed(2)+' ('+d.lsLatest.longPct.toFixed(1)+'% long / '+d.lsLatest.shortPct.toFixed(1)+'% short)' : '-'}
+- Long/Short Ratio Top Trader (by posisi): ${d.topLatest ? d.topLatest.ratio.toFixed(2)+' ('+d.topLatest.longPct.toFixed(1)+'% long / '+d.topLatest.shortPct.toFixed(1)+'% short)' : '-'}
 
-STRUKTUR & KONFLUENSI MULTI-TIMEFRAME (1H/4H/1D):
-${cf}
-
-SKOR SISTEM (heuristik screener, 8 faktor — Struktur Market dibobot 2x sebagai penilaian utama sesuai SOP saya: Struktur(2x)/Trend/Momentum/MACD/VWAP/Fibonacci/Volume/Funding — Trend & MACD sudah diredam ${f.adxConfidence.toFixed(2)}x sesuai kekuatan ADX):
-- Long Score: ${f.longScore.toFixed(1)}/10
-- Short Score: ${f.shortScore.toFixed(1)}/10
+SKOR ENTRY (SISTEM POIN — tiap syarat bernilai 1 poin ke LONG atau SHORT, tanpa pembobotan):
+- LONG: ${f.longPoints}/${f.maxPoints} poin
+- SHORT: ${f.shortPoints}/${f.maxPoints} poin
+Rincian tiap syarat:
+${f.criteria.map(c=>`- ${c.name}: ${c.side==='long'?'+1 LONG':c.side==='short'?'+1 SHORT':'0 (netral)'} — ${c.note}`).join('\n')}
 
 RENCANA ENTRY OTOMATIS DARI SCREENER (referensi awal, bukan keputusan final):
 - LONG → Entry ${fmtPrice(f.entryPlan.long.entry)} (${f.entryPlan.long.entryLabel}), SL ${fmtPrice(f.entryPlan.long.sl)} (${f.entryPlan.long.slLabel}), TP ${fmtPrice(f.entryPlan.long.tp)} (${f.entryPlan.long.tpLabel}), RR 1:${f.entryPlan.long.rr.toFixed(2)}
 - SHORT → Entry ${fmtPrice(f.entryPlan.short.entry)} (${f.entryPlan.short.entryLabel}), SL ${fmtPrice(f.entryPlan.short.sl)} (${f.entryPlan.short.slLabel}), TP ${fmtPrice(f.entryPlan.short.tp)} (${f.entryPlan.short.tpLabel}), RR 1:${f.entryPlan.short.rr.toFixed(2)}
 
 === YANG SAYA BUTUHKAN ===
-1. Menurutmu bias saat ini Long, Short, atau Netral/tunggu — dan kenapa (rujuk konfluensi antar indikator di atas, bukan cuma satu angka)?
-2. Apakah rencana entry/SL/TP dari screener di atas masuk akal secara struktur, atau ada level yang lebih baik?
+1. Berdasarkan VERDICT TREN MULTI-TIMEFRAME di atas (hal paling utama), apakah kondisi sekarang layak buat entry Long, Short, atau lebih baik tunggu?
+2. Apakah rencana entry/SL/TP dari screener di atas masuk akal secara struktur & area penting per timeframe, atau ada level yang lebih baik?
 3. Risiko utama apa yang perlu saya waspadai di setup ini sekarang (termasuk funding rate & konfluensi timeframe yang campuran kalau ada)?
 4. Kalau belum layak entry, sinyal apa yang perlu saya tunggu?`;
 }
@@ -2151,6 +2873,64 @@ document.getElementById('modalCloseBtn').addEventListener('click', ()=>{
 document.getElementById('modalBackdrop').addEventListener('click', (e)=>{
   if(e.target.id === 'modalBackdrop') document.getElementById('modalBackdrop').classList.remove('show');
 });
+
+// ===== JURNAL TRADING: event wiring =====
+document.getElementById('journalAddBtn').addEventListener('click', ()=> openJournalForm(null));
+document.getElementById('journalClearBtn').addEventListener('click', ()=>{
+  const entries = loadJournal();
+  if(entries.length === 0) return;
+  if(!confirm(`Hapus SEMUA ${entries.length} entry jurnal? Tindakan ini nggak bisa dibatalkan.`)) return;
+  saveJournalEntries([]);
+  renderJournal();
+  setStatus('✓ Semua entry jurnal dihapus', 'ok');
+});
+document.getElementById('journalModalClose').addEventListener('click', ()=>{
+  document.getElementById('journalModalBackdrop').classList.remove('show');
+});
+document.getElementById('journalModalBackdrop').addEventListener('click', (e)=>{
+  if(e.target.id === 'journalModalBackdrop') document.getElementById('journalModalBackdrop').classList.remove('show');
+});
+document.getElementById('journalForm').addEventListener('submit', (e)=>{
+  e.preventDefault();
+  const symbol = document.getElementById('jfSymbol').value.trim().toUpperCase();
+  if(!symbol){ return; }
+  const id = document.getElementById('jfId').value || ('j_' + Date.now() + '_' + Math.random().toString(36).slice(2,8));
+  const entry = {
+    id,
+    symbol,
+    direction: document.getElementById('jfDirection').value,
+    date: document.getElementById('jfDate').value,
+    status: document.getElementById('jfStatus').value,
+    entry: document.getElementById('jfEntry').value,
+    exit: document.getElementById('jfExit').value,
+    sl: document.getElementById('jfSl').value,
+    tp: document.getElementById('jfTp').value,
+    pnlUsd: document.getElementById('jfPnlUsd').value,
+    pnlPct: document.getElementById('jfPnlPct').value,
+    setup: document.getElementById('jfSetup').value.trim(),
+    emotion: document.getElementById('jfEmotion').value.trim(),
+    notes: document.getElementById('jfNotes').value.trim(),
+    createdAt: Date.now(),
+  };
+  const entries = loadJournal();
+  const existingIdx = entries.findIndex(x=>x.id===id);
+  if(existingIdx >= 0){ entry.createdAt = entries[existingIdx].createdAt; entries[existingIdx] = entry; }
+  else entries.push(entry);
+  saveJournalEntries(entries);
+  renderJournal();
+  document.getElementById('journalModalBackdrop').classList.remove('show');
+  setStatus('✓ Entry jurnal disimpan', 'ok');
+});
+document.getElementById('journalDeleteBtn').addEventListener('click', ()=>{
+  const id = document.getElementById('jfId').value;
+  if(!id) return;
+  const entries = loadJournal().filter(x=>x.id!==id);
+  saveJournalEntries(entries);
+  renderJournal();
+  document.getElementById('journalModalBackdrop').classList.remove('show');
+  setStatus('✓ Entry jurnal dihapus', 'ok');
+});
+
 document.querySelectorAll('.tf-btn').forEach(btn=>{
   btn.addEventListener('click', async ()=>{
     document.querySelectorAll('.tf-btn').forEach(b=>b.classList.remove('active'));
@@ -2159,6 +2939,13 @@ document.querySelectorAll('.tf-btn').forEach(btn=>{
     if(currentDetailSymbol) await loadDetail(currentDetailSymbol, currentDetailTf);
   });
 });
+
+// Timeframe acuan tiap Mode Trading — dipakai oleh fitur scan "coin yang layak entry" di halaman depan
+const MODE_TIMEFRAMES = {
+  scalping: { tf:'15m', label:'Scalping', sub:'15m · 30m · 1H' },
+  intraday: { tf:'1h', label:'Intraday', sub:'1H · 2H · 4H' },
+  swing: { tf:'4h', label:'Swing', sub:'4H · 12H · 1D · 1W' },
+};
 
 function updateModalStarBtn(symbol){
   const btn = document.getElementById('mhStarBtn');
@@ -2180,11 +2967,16 @@ document.getElementById('mhStarBtn').addEventListener('click', ()=>{
   document.getElementById('setRsiOb').value = s.rsiOb;
   document.getElementById('setFundingExt').value = s.fundingExt;
   document.getElementById('setLevelProx').value = s.levelProximity;
+  document.getElementById('setMarketAlignPool').value = s.marketAlignPool;
+  syncMarketAlignToggleUI();
   renderAlertLog();
   updateAlertBadge();
   refreshNotifStatus();
 })();
 
+document.getElementById('alarmFlash').addEventListener('click', function(){ this.classList.remove('show'); });
+
+renderJournal();
 refreshAll();
 
 // ===== PWA: register service worker =====
