@@ -21,6 +21,7 @@
     --bg:#080B10;
     --surface:#10141C;
     --surface-2:#161B26;
+    --surface-3:#1B2130;
     --border:#232C3B;
     --border-soft:#1A2130;
     --text-1:#E9ECF2;
@@ -32,6 +33,10 @@
     --crimson-dim:#4A1723;
     --amber:#F5B942;
     --amber-dim:#4A3A14;
+    --r-lg:20px;
+    --r-md:14px;
+    --r-sm:10px;
+    --r-pill:999px;
   }
   *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
   html,body{background:var(--bg); color:var(--text-1); font-family:'Inter',sans-serif;}
@@ -41,7 +46,7 @@
       radial-gradient(ellipse 700px 400px at 100% 5%, rgba(255,77,106,0.05), transparent),
       var(--bg);
     min-height:100vh;
-    padding-bottom:50px;
+    padding-bottom:88px;
     font-size:15px;
   }
   .mono{font-family:'JetBrains Mono',monospace;}
@@ -49,7 +54,16 @@
   :root{ --container-max:1180px; --side-pad:clamp(14px, 3vw, 28px); }
 
   /* ===== TICKER TAPE ===== */
-  .ticker-wrap{background:#000; border-bottom:1px solid var(--border); overflow:hidden; white-space:nowrap; padding:8px 0;}
+  .ticker-wrap{
+    max-width:var(--container-max); margin:14px auto 0; padding:0 var(--side-pad);
+  }
+  .ticker-pill{
+    background:var(--surface); border:1px solid var(--border-soft); border-radius:var(--r-pill);
+    overflow:hidden; white-space:nowrap; padding:10px 0; display:flex; align-items:center;
+  }
+  .ticker-pill::before{
+    content:'⚡'; flex-shrink:0; margin:0 4px 0 16px; font-size:13px;
+  }
   .ticker{display:inline-block; animation:scroll 22s linear infinite;}
   .ticker span{font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600; padding:0 22px; color:var(--text-2);}
   .ticker span b{color:var(--text-1); font-weight:700;}
@@ -58,20 +72,65 @@
   @keyframes scroll{0%{transform:translateX(0);} 100%{transform:translateX(-50%);}}
 
   /* ===== HEADER ===== */
-  .masthead{max-width:var(--container-max); margin:0 auto; padding:clamp(18px,3vw,28px) var(--side-pad) 16px; border-bottom:1px solid var(--border-soft);}
-  .brand-eyebrow{font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:0.16em; color:var(--mint); text-transform:uppercase; margin-bottom:6px; display:flex; align-items:center; gap:8px;}
-  .brand-eyebrow::before{content:''; width:6px;height:6px;border-radius:50%; background:var(--mint); box-shadow:0 0 8px var(--mint); animation:pulse 1.6s ease-in-out infinite;}
+  .masthead{max-width:var(--container-max); margin:0 auto; padding:clamp(16px,3vw,24px) var(--side-pad) 4px;}
+  .brand-lockup{display:flex; align-items:center; gap:10px;}
+  .brand-text{display:flex; align-items:baseline; gap:7px; flex-wrap:wrap;}
+  .brand-name{font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:clamp(21px,4vw,30px); letter-spacing:0.01em; color:var(--mint); line-height:1; text-transform:uppercase;}
+  .brand-suffix{font-family:'Space Grotesk',sans-serif; font-weight:500; font-size:clamp(17px,3vw,24px); color:var(--text-1); line-height:1;}
+  .brand-live{
+    font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:0.14em; color:var(--text-3);
+    text-transform:uppercase; display:flex; align-items:center; gap:6px; margin:6px 0 4px 2px;
+  }
+  .brand-live::before{content:''; width:5px;height:5px;border-radius:50%; background:var(--mint); box-shadow:0 0 6px var(--mint); animation:pulse 1.6s ease-in-out infinite;}
   @keyframes pulse{0%,100%{opacity:1;} 50%{opacity:0.35;}}
-  .masthead h1{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(22px,3.4vw,34px); letter-spacing:-0.01em;}
-  .masthead .meta{font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--text-3); margin-top:6px;}
+  .masthead h1{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(16px,2.6vw,21px); letter-spacing:-0.005em; color:var(--text-2);}
+
+  /* ===== HERO STAT CARD (Est. Total Value style) ===== */
+  .hero-card{
+    max-width:var(--container-max); margin:14px auto 0; padding:20px var(--side-pad);
+  }
+  .hero-inner{
+    background:linear-gradient(135deg, var(--surface) 0%, var(--surface-2) 100%);
+    border:1px solid var(--border-soft); border-radius:var(--r-lg);
+    padding:22px 22px 20px; display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap;
+  }
+  .hero-label{font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:0.1em; color:var(--text-3); text-transform:uppercase;}
+  .hero-value{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(28px,5vw,40px); letter-spacing:-0.01em; margin-top:6px; line-height:1;}
+  .hero-delta{font-family:'JetBrains Mono',monospace; font-size:12.5px; margin-top:10px; display:flex; align-items:center; gap:6px;}
+  .hero-delta .hd-label{color:var(--text-3);}
+  .hero-cta{
+    background:var(--mint); color:#04120C; border:none; border-radius:var(--r-pill);
+    font-family:'JetBrains Mono',monospace; font-weight:800; font-size:12.5px; letter-spacing:0.03em;
+    padding:14px 22px; cursor:pointer; text-transform:uppercase; flex-shrink:0;
+    box-shadow:0 4px 20px rgba(33,241,168,0.18);
+  }
+  .hero-cta:active{transform:scale(0.97);}
+  .hero-cta:disabled{opacity:0.5;}
+  .hero-meta{font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-3); margin-top:14px; padding-top:14px; border-top:1px dashed var(--border-soft); width:100%;}
+
+  /* ===== QUICK ACTION CARDS (P2P/USD/Send Money/BNB style grid) ===== */
+  .quick-grid{
+    max-width:var(--container-max); margin:0 auto; padding:0 var(--side-pad);
+    display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:14px;
+  }
+  @media(max-width:640px){ .quick-grid{grid-template-columns:repeat(2,1fr);} }
+  .quick-card.btn{
+    background:var(--surface); border:1px solid var(--border-soft); border-radius:var(--r-md);
+    padding:16px 10px; cursor:pointer; text-align:center; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:4px; font-family:'JetBrains Mono',monospace;
+    font-size:11px; font-weight:700; color:var(--text-1); position:relative; text-transform:none;
+    letter-spacing:0; min-height:64px; line-height:1.4;
+  }
+  .quick-card.btn:active{transform:scale(0.97);}
+  .quick-card.btn.active{border-color:var(--mint); background:var(--mint-dim); color:var(--mint);}
+  .quick-card.btn .badge-count{position:absolute; top:8px; right:8px; margin-left:0;}
 
   /* ===== STATUS / CONTROLS ===== */
   .panel{max-width:var(--container-max); margin:16px auto 0; padding:0 var(--side-pad);}
-  .status-row{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:12px;}
   .btn{
     font-family:'JetBrains Mono',monospace; font-size:11.5px; font-weight:700; letter-spacing:0.04em;
     background:var(--surface-2); color:var(--text-1); border:1px solid var(--border);
-    padding:10px 16px; cursor:pointer; text-transform:uppercase;
+    padding:10px 16px; cursor:pointer; text-transform:uppercase; border-radius:var(--r-sm);
   }
   .btn:active{transform:scale(0.98);}
   .btn-primary{background:var(--mint-dim); border-color:var(--mint); color:var(--mint);}
@@ -85,59 +144,93 @@
     width:100%;
     background:var(--surface); border:1px solid var(--border); color:var(--text-1);
     font-family:'JetBrains Mono',monospace; font-size:13px;
-    padding:11px 14px; margin-bottom:12px;
+    padding:12px 16px; margin-bottom:12px; border-radius:var(--r-pill);
   }
   .searchbar::placeholder{color:var(--text-3);}
 
-  .filter-row{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;}
+  .filter-row{display:flex; gap:8px; flex-wrap:nowrap; overflow-x:auto; margin-bottom:14px; padding-bottom:2px; -webkit-overflow-scrolling:touch; scrollbar-width:none;}
+  .filter-row::-webkit-scrollbar{display:none;}
+  .filter-row .btn{border-radius:var(--r-pill); flex-shrink:0;}
 
   /* scoreboard */
-  .scoreboard{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border-soft); border:1px solid var(--border-soft); margin-bottom:16px;}
-  .sb-cell{background:var(--surface); padding:12px 14px;}
+  .scoreboard{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:16px;}
+  .sb-cell{background:var(--surface); border:1px solid var(--border-soft); border-radius:var(--r-md); padding:13px 14px;}
   .sb-cell .lbl{font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--text-3); letter-spacing:0.08em;}
   .sb-cell .val{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:18px; margin-top:2px;}
   @media(max-width:560px){ .scoreboard{grid-template-columns:repeat(2,1fr);} }
 
-  /* ===== TABLE ===== */
-  .tbl-wrap{border:1px solid var(--border); background:var(--surface); overflow-x:auto; -webkit-overflow-scrolling:touch;}
-  table{width:100%; border-collapse:collapse; min-width:640px;}
-  thead th{
-    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.08em; color:var(--text-3);
-    text-align:left; padding:10px 12px; border-bottom:1px solid var(--border); white-space:nowrap;
-    cursor:pointer; user-select:none; background:var(--surface-2);
+  /* ===== PRIMARY TABS (Discover/DeFi/Booster/DApps style) ===== */
+  .tab-row{display:flex; gap:22px; margin-bottom:14px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;}
+  .tab-row::-webkit-scrollbar{display:none;}
+  .tab-item{
+    background:none; border:none; cursor:pointer; padding:6px 0 10px; flex-shrink:0;
+    font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:15.5px; color:var(--text-3);
+    position:relative; white-space:nowrap;
   }
-  thead th.active{color:var(--mint);}
-  thead th .arrow{opacity:0.5; margin-left:3px;}
-  tbody tr{border-bottom:1px solid var(--border-soft);}
-  tbody tr:last-child{border-bottom:none;}
-  tbody tr:active{background:var(--surface-2);}
-  td{padding:11px 12px; font-family:'JetBrains Mono',monospace; font-size:12.5px; white-space:nowrap;}
-  .sym-cell{display:flex; flex-direction:column; gap:2px;}
-  .sym-cell .s{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:13.5px; color:var(--text-1);}
-  .sym-cell .p{font-size:10px; color:var(--text-3);}
-  .chg-pos{color:var(--mint); font-weight:700;}
-  .chg-neg{color:var(--crimson); font-weight:700;}
-  .rangebar{position:relative; width:90px; height:6px; background:var(--surface-2); border:1px solid var(--border-soft);}
-  .rangebar .fill{position:absolute; top:0; bottom:0; width:2px; background:var(--amber);}
-  .rangebar-lbl{font-size:9px; color:var(--text-3); margin-top:3px;}
-  .score-pill{
-    display:inline-flex; align-items:center; justify-content:center;
-    min-width:34px; padding:3px 7px; font-weight:700; font-size:12px;
-    border:1px solid;
+  .tab-item.active{color:var(--text-1);}
+  .tab-item.active::after{content:''; position:absolute; left:0; right:0; bottom:0; height:3px; border-radius:var(--r-pill); background:var(--mint);}
+
+  /* ===== SECTION HEADER (Recommended tokens style) ===== */
+  .section-head{display:flex; align-items:center; justify-content:space-between; margin:18px 0 10px;}
+  .section-head span{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:16px; color:var(--text-1);}
+  .section-head svg{width:18px; height:18px; stroke:var(--text-3); fill:none; stroke-width:2;}
+
+  /* ===== TOP SIGNAL CARDS (Recommended tokens 2-col style) ===== */
+  .top-signal-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:6px;}
+  .signal-card{
+    background:var(--surface); border:1px solid var(--border-soft); border-radius:var(--r-lg);
+    padding:16px; cursor:pointer; display:flex; flex-direction:column; gap:14px;
+  }
+  .signal-card:active{transform:scale(0.98);}
+  .sc-top{display:flex; align-items:center; gap:9px; min-width:0;}
+  .sc-name{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:14.5px; color:var(--text-1); display:flex; flex-direction:column; gap:5px; align-items:flex-start; min-width:0; max-width:100%;}
+  .sc-symtext{overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:100%;}
+  .sc-value{font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:22px;}
+  .sc-sub{font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--text-3); margin-top:-8px;}
+
+  /* ===== SORT PILLS ===== */
+  .sort-row{display:flex; align-items:center; gap:8px; margin-bottom:12px; overflow-x:auto; scrollbar-width:none;}
+  .sort-row::-webkit-scrollbar{display:none;}
+  .sort-label{font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--text-3); flex-shrink:0;}
+  .sort-pill{
+    font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; flex-shrink:0;
+    background:var(--surface-2); border:1px solid var(--border); color:var(--text-2);
+    padding:6px 13px; border-radius:var(--r-pill); cursor:pointer;
+  }
+  .sort-pill.active{background:var(--mint-dim); border-color:var(--mint); color:var(--mint);}
+
+  /* ===== COIN LIST (beginner-friendly rows) ===== */
+  .coin-list{background:var(--surface); border:1px solid var(--border-soft); border-radius:var(--r-lg); overflow:hidden;}
+  .coin-row{display:flex; align-items:center; gap:11px; padding:13px 14px; border-bottom:1px solid var(--border-soft); cursor:pointer;}
+  .coin-row:last-child{border-bottom:none;}
+  .coin-row:active{background:var(--surface-2);}
+  .crow-star{background:none; border:none; font-size:15px; color:var(--text-3); cursor:pointer; padding:0; flex-shrink:0; line-height:1;}
+  .crow-star.active{color:var(--amber);}
+  .crow-avatar{
+    width:38px; height:38px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+    font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:13px; color:#fff;
+  }
+  .crow-avatar.sm{width:30px; height:30px; font-size:11px;}
+  .crow-info{flex:1; min-width:0; display:flex; flex-direction:column; gap:5px;}
+  .crow-name{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:14.5px; color:var(--text-1); display:flex; align-items:baseline; gap:6px; min-width:0;}
+  .crow-symtext{overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0;}
+  .crow-sub{font-family:'JetBrains Mono',monospace; font-weight:400; font-size:9.5px; color:var(--text-3); flex-shrink:0;}
+  .crow-badges{display:flex; align-items:center; gap:7px; flex-wrap:wrap;}
+  .crow-vol{font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text-3);}
+  .crow-right{text-align:right; flex-shrink:0;}
+  .crow-price{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:13px; color:var(--text-1);}
+  .crow-change{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:12px; margin-top:2px;}
+  .chg-pos{color:var(--mint);}
+  .chg-neg{color:var(--crimson);}
+  .crow-chevron{width:16px; height:16px; stroke:var(--text-3); fill:none; stroke-width:2; flex-shrink:0; opacity:0.6;}
+
+  .badge-pill{
+    display:inline-flex; align-items:center; gap:3px; padding:3px 9px;
+    border-radius:var(--r-pill); font-size:10px; font-weight:700; font-family:'JetBrains Mono',monospace; border:1px solid;
   }
   .score-hi{color:var(--mint); border-color:var(--mint); background:var(--mint-dim);}
   .score-mid{color:var(--amber); border-color:var(--amber); background:var(--amber-dim);}
   .score-lo{color:var(--crimson); border-color:var(--crimson); background:var(--crimson-dim);}
-  .deep-cell{color:var(--text-3); font-size:11px;}
-  .deep-cell.mint{color:var(--mint);}
-  .deep-cell.crimson{color:var(--crimson);}
-  .deep-cell.amber{color:var(--amber);}
-  .row-scan-btn{
-    font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700;
-    background:transparent; border:1px solid var(--border); color:var(--text-3);
-    padding:4px 8px; cursor:pointer;
-  }
-  .row-scan-btn:disabled{opacity:0.4;}
 
   .empty-state{padding:50px 20px; text-align:center; color:var(--text-3); font-family:'JetBrains Mono',monospace; font-size:12.5px; line-height:1.8;}
   .empty-state b{color:var(--text-1);}
@@ -159,17 +252,12 @@
     body{font-size:16px;}
   }
   @media(max-width:480px){
-    .status-row .btn{flex:1 1 auto; text-align:center;}
-    .filter-row .btn{flex:1 1 calc(50% - 4px); text-align:center;}
-    td, thead th{padding:9px 8px; font-size:11.5px;}
     .modal{max-width:100%;}
   }
   @media(min-width:820px){
     .modal{max-width:680px;}
     .ind-grid{grid-template-columns:repeat(4,1fr);}
   }
-
-  tbody tr{cursor:pointer;}
 
   /* ===== MODAL ===== */
   .modal-backdrop{
@@ -181,7 +269,7 @@
   .modal-backdrop.show{display:flex;}
   .modal{
     background:var(--surface); border:1px solid var(--border);
-    width:100%; max-width:620px; margin-top:10px;
+    width:100%; max-width:620px; margin-top:10px; border-radius:var(--r-lg); overflow:hidden;
   }
   .modal-head{
     padding:18px 20px; border-bottom:1px solid var(--border-soft);
@@ -191,13 +279,13 @@
   .modal-head .mh-price{font-family:'JetBrains Mono',monospace; font-size:14px; color:var(--text-2); margin-top:3px;}
   .modal-close{
     background:none; border:1px solid var(--border); color:var(--text-2);
-    width:30px; height:30px; font-size:16px; cursor:pointer; flex-shrink:0;
+    width:30px; height:30px; font-size:16px; cursor:pointer; flex-shrink:0; border-radius:var(--r-pill);
   }
   .tf-switch{display:flex; gap:6px; padding:14px 20px 0; flex-wrap:wrap;}
   .tf-btn{
     font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700;
     background:var(--surface-2); border:1px solid var(--border); color:var(--text-2);
-    padding:7px 13px; cursor:pointer; flex:1 1 auto; min-width:52px; text-align:center;
+    padding:7px 13px; cursor:pointer; flex:1 1 auto; min-width:52px; text-align:center; border-radius:var(--r-pill);
   }
   .tf-btn.active{background:var(--mint-dim); border-color:var(--mint); color:var(--mint);}
 
@@ -210,15 +298,15 @@
   }
   .ind-section-title:first-child{margin-top:0;}
 
-  .ind-grid{display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--border-soft); border:1px solid var(--border-soft);}
-  .ind-cell{background:var(--surface); padding:11px 13px;}
+  .ind-grid{display:grid; grid-template-columns:1fr 1fr; gap:8px;}
+  .ind-cell{background:var(--surface-2); padding:12px 13px; border-radius:var(--r-md); border:1px solid var(--border-soft);}
   .ind-cell .il{font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text-3); letter-spacing:0.05em;}
   .ind-cell .iv{font-family:'JetBrains Mono',monospace; font-size:13.5px; font-weight:700; margin-top:3px;}
   .ind-cell .ib{font-size:10px; margin-top:3px; font-weight:600;}
   .pos-above{color:var(--mint);}
   .pos-below{color:var(--crimson);}
 
-  .fib-list{border:1px solid var(--border-soft);}
+  .fib-list{border:1px solid var(--border-soft); border-radius:var(--r-md); overflow:hidden;}
   .fib-row{
     display:flex; justify-content:space-between; align-items:center;
     padding:9px 13px; border-bottom:1px solid var(--border-soft);
@@ -247,7 +335,7 @@
   /* entry plan */
   .entry-cols{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:4px;}
   @media(max-width:520px){ .entry-cols{grid-template-columns:1fr;} }
-  .entry-card{border:1px solid var(--border-soft); background:var(--surface-2);}
+  .entry-card{border:1px solid var(--border-soft); background:var(--surface-2); border-radius:var(--r-md); overflow:hidden;}
   .entry-card-head{
     padding:9px 12px; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:12.5px;
     display:flex; justify-content:space-between; align-items:center;
@@ -263,66 +351,200 @@
   .entry-caveat{padding:9px 12px; font-size:10.5px; color:var(--text-3); line-height:1.5; border-top:1px solid var(--border-soft);}
   .sop-note{
     margin-top:12px; padding:11px 13px; border:1px solid var(--border-soft); background:var(--surface);
-    font-size:10.5px; color:var(--text-3); line-height:1.7;
+    font-size:10.5px; color:var(--text-3); line-height:1.7; border-radius:var(--r-md);
   }
   .sop-note b{color:var(--text-2);}
+
+  /* ===== WATCHLIST STAR (modal header) ===== */
+  .mh-star{background:none; border:1px solid var(--border); color:var(--text-3); width:34px; height:34px; font-size:16px; cursor:pointer; margin-left:8px; border-radius:var(--r-pill);}
+  .mh-star.active{color:var(--amber); border-color:var(--amber); background:var(--amber-dim);}
+  .mh-headrow{display:flex; align-items:center;}
+
+  /* ===== TOP BAR: SETTINGS + ALERTS ===== */
+  .badge-count{
+    display:inline-flex; align-items:center; justify-content:center; min-width:16px; height:16px;
+    background:var(--crimson); color:#fff; font-size:9.5px; font-weight:700; border-radius:var(--r-pill); padding:0 4px; margin-left:6px;
+  }
+
+  .panel-drawer{
+    max-width:var(--container-max); margin:0 auto 16px; padding:0 var(--side-pad);
+    display:none;
+  }
+  .panel-drawer.show{display:block;}
+  .drawer-box{border:1px solid var(--border); background:var(--surface); padding:16px; border-radius:var(--r-lg);}
+  .drawer-title{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.08em; color:var(--text-2); margin-bottom:12px; text-transform:uppercase;}
+  .settings-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; margin-bottom:14px;}
+  .setting-field label{display:block; font-size:10px; color:var(--text-3); margin-bottom:5px; font-family:'JetBrains Mono',monospace;}
+  .setting-field input{
+    width:100%; background:var(--surface-2); border:1px solid var(--border); color:var(--text-1);
+    font-family:'JetBrains Mono',monospace; font-size:12.5px; padding:9px 12px; border-radius:var(--r-sm);
+  }
+  .alert-log{max-height:260px; overflow-y:auto; border:1px solid var(--border-soft); margin-top:6px; border-radius:var(--r-md);}
+  .alert-row{
+    display:flex; justify-content:space-between; gap:10px; padding:9px 12px;
+    border-bottom:1px solid var(--border-soft); font-family:'JetBrains Mono',monospace; font-size:11.5px;
+  }
+  .alert-row:last-child{border-bottom:none;}
+  .alert-row .at{color:var(--text-3); font-size:10px; flex-shrink:0;}
+  .alert-empty{padding:20px; text-align:center; color:var(--text-3); font-size:11.5px;}
+  .notif-status{font-size:10.5px; color:var(--text-3); margin-top:8px;}
+  .notif-status.granted{color:var(--mint);}
+  .notif-status.denied{color:var(--crimson);}
+
+  /* ===== CONFLUENCE ===== */
+  .confluence-row{display:flex; gap:8px; flex-wrap:wrap; margin-top:2px;}
+  .confluence-chip{
+    flex:1; min-width:90px; border:1px solid var(--border-soft); background:var(--surface-2);
+    padding:9px 10px; text-align:center; border-radius:var(--r-md);
+  }
+  .confluence-chip .cf-tf{font-size:9.5px; color:var(--text-3); letter-spacing:0.06em;}
+  .confluence-chip .cf-bias{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:13px; margin-top:3px;}
+  .cf-bullish{color:var(--mint);}
+  .cf-bearish{color:var(--crimson);}
+  .cf-neutral{color:var(--amber);}
+  .cf-mixed{color:var(--text-2);}
+  .confluence-summary{
+    margin-top:10px; padding:9px 12px; text-align:center; font-family:'JetBrains Mono',monospace;
+    font-size:12px; font-weight:700; border:1px solid var(--border-soft); border-radius:var(--r-md);
+  }
+
+  /* ===== AI COPY BUTTON ===== */
+  .ai-row{padding:12px 20px 0;}
+  .btn-ai{
+    width:100%; background:linear-gradient(90deg, var(--mint-dim), var(--surface-2));
+    border-color:var(--mint); color:var(--mint); padding:11px 16px; font-size:12px; border-radius:var(--r-pill);
+  }
+  .btn-ai.copied{background:var(--mint); color:#04120C; border-color:var(--mint);}
+
+  /* ===== BOTTOM NAV (app-style quick switcher) ===== */
+  .bottom-nav{
+    position:fixed; left:0; right:0; bottom:0; z-index:90;
+    background:rgba(11,14,20,0.92); backdrop-filter:blur(14px);
+    border-top:1px solid var(--border-soft);
+    padding:6px clamp(8px,2vw,20px) calc(6px + env(safe-area-inset-bottom));
+  }
+  .bottom-nav-inner{
+    max-width:560px; margin:0 auto; display:flex;
+  }
+  .bn-item{
+    flex:1; background:none; border:none; color:var(--text-3); cursor:pointer;
+    display:flex; flex-direction:column; align-items:center; gap:3px;
+    padding:8px 4px 6px; font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:0.02em;
+    position:relative;
+  }
+  .bn-item svg{width:20px; height:20px; stroke:currentColor; fill:none; stroke-width:1.8;}
+  .bn-item.active{color:var(--mint);}
+  .bn-item:active{transform:scale(0.94);}
+  .bn-badge{
+    position:absolute; top:2px; right:calc(50% - 18px);
+    background:var(--crimson); color:#fff; font-size:9px; font-weight:700;
+    min-width:14px; height:14px; border-radius:var(--r-pill); display:flex; align-items:center; justify-content:center; padding:0 3px;
+  }
 </style>
 </head>
 <body>
 
-  <div class="ticker-wrap"><div class="ticker" id="ticker"><span class="mono">MEMUAT DATA BINANCE FUTURES…</span></div></div>
+  <div class="ticker-wrap"><div class="ticker-pill"><div class="ticker" id="ticker"><span class="mono">MEMUAT DATA BINANCE FUTURES…</span></div></div></div>
 
   <div class="masthead">
-    <div class="brand-eyebrow">Patah Pensill Live Screener</div>
-    <h1>Binance USDT-M Futures Screener</h1>
-    <div class="meta" id="metaInfo">Menghubungkan ke fapi.binance.com…</div>
+    <div class="brand-lockup">
+      <span class="brand-text"><span class="brand-name">Patah Pensill</span><span class="brand-suffix">Live</span></span>
+    </div>
+    <div class="brand-live">Real-time · Binance Futures</div>
+    <h1>Futures Screener</h1>
+  </div>
+
+  <div class="hero-card">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-label">Total Volume 24H · USDT-M Futures</div>
+        <div class="hero-value" id="heroValue">$0</div>
+        <div class="hero-delta" id="heroDelta"><span class="hd-label">Memuat data…</span></div>
+      </div>
+      <button class="hero-cta" id="refreshBtn">↻ Refresh</button>
+      <div class="hero-meta"><span id="metaInfo">Menghubungkan ke fapi.binance.com…</span> <span id="statusText"></span></div>
+    </div>
+  </div>
+
+  <div class="quick-grid">
+    <button class="btn quick-card" id="autoBtn">⏱️ Auto-Refresh: OFF</button>
+    <button class="btn quick-card" id="scanTopBtn">⚡ Deep Scan Top 20</button>
+    <button class="btn quick-card" id="alertBtn">🔔 Alert<span class="badge-count" id="alertBadge" style="display:none;">0</span></button>
+    <button class="btn quick-card" id="settingsBtn">⚙ Pengaturan Alert</button>
   </div>
 
   <div class="panel">
-    <div class="status-row">
-      <button class="btn btn-primary" id="refreshBtn">↻ Refresh Data</button>
-      <button class="btn" id="autoBtn">Auto-Refresh: OFF</button>
-      <button class="btn" id="scanTopBtn">⚡ Deep Scan Top 20</button>
-      <span id="statusText"></span>
+
+    <div class="panel-drawer" id="alertDrawer">
+      <div class="drawer-box">
+        <div class="drawer-title">Riwayat Alert</div>
+        <div class="alert-log" id="alertLog"><div class="alert-empty">Belum ada alert terpicu.</div></div>
+        <button class="btn" id="clearAlertBtn" style="margin-top:10px;">Bersihkan Riwayat</button>
+      </div>
+    </div>
+
+    <div class="panel-drawer" id="settingsDrawer">
+      <div class="drawer-box">
+        <div class="drawer-title">Pengaturan Alert Otomatis</div>
+        <div class="settings-grid">
+          <div class="setting-field"><label>RSI Oversold ≤</label><input type="number" id="setRsiOs" value="30"></div>
+          <div class="setting-field"><label>RSI Overbought ≥</label><input type="number" id="setRsiOb" value="70"></div>
+          <div class="setting-field"><label>Funding Rate Ekstrem ±%</label><input type="number" id="setFundingExt" value="0.05" step="0.01"></div>
+          <div class="setting-field"><label>Jarak Alert ke Level Struktural (%)</label><input type="number" id="setLevelProx" value="0.5" step="0.1"></div>
+        </div>
+        <button class="btn btn-primary" id="saveSettingsBtn">Simpan Pengaturan</button>
+        <button class="btn" id="notifPermBtn" style="margin-left:8px;">Izinkan Notifikasi Browser</button>
+        <div class="notif-status" id="notifStatus"></div>
+        <div class="drawer-title" style="margin-top:16px;">Alert otomatis dicek untuk pair di Watchlist (⭐) setiap Auto-Refresh: RSI ekstrem (1H), funding rate ekstrem, harga mendekati EMA21/EMA30/MA200/AVWAP+Band/Fibonacci (4H), dan Change of Character (CHoCH) struktur market di 4H.</div>
+      </div>
     </div>
 
     <input type="text" class="searchbar" id="searchBox" placeholder="Cari pair… (contoh: BTC, HYPE, INJ)">
 
+    <div class="tab-row">
+      <button class="tab-item active" data-filter="all">Semua</button>
+      <button class="tab-item" data-filter="watchlist">Watchlist</button>
+      <button class="tab-item" data-filter="gainers">Top Gainers</button>
+      <button class="tab-item" data-filter="losers">Top Losers</button>
+    </div>
+
     <div class="filter-row">
-      <button class="btn active" data-filter="all">Semua</button>
-      <button class="btn" data-filter="gainers">🟢 Top Gainers</button>
-      <button class="btn" data-filter="losers">🔴 Top Losers</button>
       <button class="btn" data-filter="volume">💠 Volume Tertinggi</button>
       <button class="btn" data-filter="nearhigh">📈 Dekat 24H High</button>
       <button class="btn" data-filter="nearlow">📉 Dekat 24H Low</button>
+      <button class="btn" data-filter="fundingext">🌡️ Funding Ekstrem</button>
     </div>
 
     <div class="scoreboard" id="scoreboard"></div>
 
-    <div class="tbl-wrap">
-      <table id="mainTable">
-        <thead>
-          <tr>
-            <th data-sort="symbol">PAIR</th>
-            <th data-sort="lastPrice">HARGA</th>
-            <th data-sort="priceChangePercent">24H %</th>
-            <th data-sort="quoteVolume">VOLUME (USDT)</th>
-            <th data-sort="rangePos">POSISI RANGE 24H</th>
-            <th data-sort="quickScore">QUICK SCORE</th>
-            <th data-sort="deepScore">DEEP SIGNAL</th>
-          </tr>
-        </thead>
-        <tbody id="tbody">
-          <tr><td colspan="7" class="empty-state"><span class="loader"></span>Mengambil data dari Binance…</td></tr>
-        </tbody>
-      </table>
+    <div class="section-head">
+      <span>Sinyal Teratas</span>
+      <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+    </div>
+    <div class="top-signal-grid" id="topSignalGrid"></div>
+
+    <div class="section-head">
+      <span id="listTitle">Semua Pair</span>
+      <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+    </div>
+
+    <div class="sort-row">
+      <span class="sort-label">Urutkan:</span>
+      <button class="sort-pill active" data-sort="quoteVolume">Volume</button>
+      <button class="sort-pill" data-sort="priceChangePercent">Perubahan 24H</button>
+      <button class="sort-pill" data-sort="quickScore">Skor Momentum</button>
+      <button class="sort-pill" data-sort="symbol">Nama</button>
+    </div>
+
+    <div class="coin-list" id="tbody">
+      <div class="empty-state"><span class="loader"></span>Mengambil data dari Binance…</div>
     </div>
   </div>
 
   <footer>
     <div class="fbrand">Patah<span>Pensill</span> Live Screener</div>
     <div class="fdisc">
-      Data diambil langsung dari endpoint publik Binance Futures (fapi.binance.com) tanpa API key — semua proses berjalan di browser lo, bukan di server saya. "Quick Score" dihitung dari data 24 jam (volume, volatilitas, posisi harga dalam range). "Deep Signal" dihitung dari RSI(14) 1H dan tren EMA21 vs EMA50 di 4H, hanya untuk pair yang di-scan manual — untuk membatasi jumlah request dari HP lo. Tap baris pair untuk lihat indikator lengkap (EMA21, EMA30, MA200, VWAP, Fibonacci) dan skor Long/Short. Ini bukan rekomendasi finansial, hasil dari struktur teknikal murni. Kalau data gagal dimuat, kemungkinan ISP/provider lo memblokir akses ke domain Binance — coba pakai VPN atau jaringan lain.
+      Data diambil langsung dari endpoint publik Binance Futures (fapi.binance.com) tanpa API key — semua proses berjalan di browser lo, bukan di server saya. "Quick Score" dihitung dari data 24 jam (volume, volatilitas, posisi harga dalam range). "Deep Signal" dihitung dari RSI(14) 1H dan tren EMA21 vs EMA50 di 4H, hanya untuk pair yang di-scan manual — untuk membatasi jumlah request dari HP lo. Tap baris pair untuk lihat indikator lengkap: EMA21/30, MA200, Anchored VWAP + Band (0.5σ), Fibonacci, MACD, StochRSI, ATR, Bollinger Bands, ADX (kekuatan tren), Struktur Market (swing HH/HL vs LH/LL + BOS/CHoCH — dibobot 2x sebagai penilaian utama), Funding Rate, Open Interest, dan konfluensi multi-timeframe (trend + struktur, 1H/4H/1D), plus skor Long/Short. Kolom FUNDING menampilkan funding rate terkini tiap pair. Tandai pair dengan ⭐ untuk masuk Watchlist — pair di Watchlist otomatis dicek untuk alert RSI ekstrem, funding ekstrem, harga mendekati level struktural (EMA21/EMA30/MA200/AVWAP+Band/Fibonacci di 4H), dan Change of Character (CHoCH) struktur market di 4H, tiap Auto-Refresh. Semua data (watchlist, riwayat alert, pengaturan) tersimpan lokal di HP/browser lo saja. Ini bukan rekomendasi finansial, hasil dari struktur teknikal murni. Kalau data gagal dimuat, kemungkinan ISP/provider lo memblokir akses ke domain Binance — coba pakai VPN atau jaringan lain.
     </div>
   </footer>
 
@@ -330,7 +552,7 @@
     <div class="modal">
       <div class="modal-head">
         <div>
-          <div class="mh-sym" id="mhSym">-</div>
+          <div class="mh-headrow"><div class="mh-sym" id="mhSym">-</div><button class="mh-star" id="mhStarBtn" title="Watchlist">☆</button></div>
           <div class="mh-price" id="mhPrice">-</div>
         </div>
         <button class="modal-close" id="modalCloseBtn">✕</button>
@@ -343,21 +565,116 @@
         <button class="tf-btn" data-tf="1w">Weekly</button>
         <button class="tf-btn" data-tf="1M">Monthly</button>
       </div>
+      <div class="ai-row">
+        <button class="btn btn-ai" id="aiCopyBtn">🤖 Copy Ringkasan buat AI</button>
+      </div>
       <div class="modal-body" id="modalBody">
         <div class="modal-loading">Memuat indikator…</div>
       </div>
     </div>
   </div>
 
+  <nav class="bottom-nav">
+    <div class="bottom-nav-inner">
+    <button class="bn-item active" id="bnAll">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+      <span>Semua</span>
+    </button>
+    <button class="bn-item" id="bnWatchlist">
+      <svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.7 6.2.6-4.7 4.2 1.4 6.1L12 16.8 6.5 19.6l1.4-6.1L3.2 9.3l6.2-.6L12 3z"/></svg>
+      <span>Watchlist</span>
+    </button>
+    <button class="bn-item" id="bnScan">
+      <svg viewBox="0 0 24 24"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+      <span>Scan</span>
+    </button>
+    <button class="bn-item" id="bnAlert">
+      <svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
+      <span>Alert</span>
+      <span class="bn-badge" id="bnAlertBadge" style="display:none;">0</span>
+    </button>
+    <button class="bn-item" id="bnSettings">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.9-.3 1.7 1.7 0 00-1 1.6V21a2 2 0 11-4 0v-.2a1.7 1.7 0 00-1-1.5 1.7 1.7 0 00-1.9.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.9 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.2a1.7 1.7 0 001.5-1 1.7 1.7 0 00-.3-1.9l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.9.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.2a1.7 1.7 0 001 1.6 1.7 1.7 0 001.9-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.9V9a1.7 1.7 0 001.6 1H21a2 2 0 110 4h-.2a1.7 1.7 0 00-1.6 1z"/></svg>
+      <span>Atur</span>
+    </button>
+    </div>
+  </nav>
+
 <script>
 const FAPI = "https://fapi.binance.com";
 let allSymbols = [];      // from exchangeInfo: perpetual USDT pairs
 let tickerData = [];      // merged 24hr data
 let deepData = {};        // symbol -> {rsi1h, trend4h, deepScore, label}
+let fundingData = {};     // symbol -> fundingRate (decimal, e.g. 0.0001)
 let currentFilter = "all";
 let sortKey = "quoteVolume";
 let sortDir = -1;
 let autoTimer = null;
+
+// ===== LOCAL STORAGE: WATCHLIST, ALERT LOG, ALERT SETTINGS =====
+const LS_WATCHLIST = "pp_watchlist";
+const LS_ALERTLOG = "pp_alert_log";
+const LS_ALERTSETTINGS = "pp_alert_settings";
+const LS_ALERTFIRED = "pp_alert_fired_session"; // dedupe key -> timestamp, in-memory per session
+
+function loadWatchlist(){
+  try{ return JSON.parse(localStorage.getItem(LS_WATCHLIST) || "[]"); }catch(e){ return []; }
+}
+function saveWatchlist(list){ localStorage.setItem(LS_WATCHLIST, JSON.stringify(list)); }
+function isWatchlisted(symbol){ return loadWatchlist().includes(symbol); }
+function toggleWatchlist(symbol){
+  let list = loadWatchlist();
+  if(list.includes(symbol)) list = list.filter(s=>s!==symbol);
+  else list.push(symbol);
+  saveWatchlist(list);
+  return list.includes(symbol);
+}
+
+function loadAlertSettings(){
+  try{
+    return Object.assign({ rsiOs:30, rsiOb:70, fundingExt:0.05, levelProximity:0.5 }, JSON.parse(localStorage.getItem(LS_ALERTSETTINGS) || "{}"));
+  }catch(e){ return { rsiOs:30, rsiOb:70, fundingExt:0.05, levelProximity:0.5 }; }
+}
+function saveAlertSettings(s){ localStorage.setItem(LS_ALERTSETTINGS, JSON.stringify(s)); }
+
+function loadAlertLog(){
+  try{ return JSON.parse(localStorage.getItem(LS_ALERTLOG) || "[]"); }catch(e){ return []; }
+}
+function saveAlertLog(log){ localStorage.setItem(LS_ALERTLOG, JSON.stringify(log.slice(0,100))); }
+function pushAlert(msg, symbol){
+  const log = loadAlertLog();
+  log.unshift({ msg, symbol, ts: Date.now() });
+  saveAlertLog(log);
+  renderAlertLog();
+  updateAlertBadge();
+  if(window.Notification && Notification.permission === "granted"){
+    try{ new Notification("Patah Pensill Screener", { body: msg }); }catch(e){}
+  }
+}
+const alertFiredThisSession = new Set(); // dedupe: "SYMBOL|type" so tiap kondisi cuma notif sekali per sesi
+function updateAlertBadge(){
+  const log = loadAlertLog();
+  const badge = document.getElementById('alertBadge');
+  const bnBadge = document.getElementById('bnAlertBadge');
+  const text = log.length > 99 ? "99+" : String(log.length);
+  if(log.length > 0){
+    badge.style.display = "inline-flex"; badge.textContent = text;
+    if(bnBadge){ bnBadge.style.display = "flex"; bnBadge.textContent = text; }
+  } else {
+    badge.style.display = "none";
+    if(bnBadge) bnBadge.style.display = "none";
+  }
+}
+function renderAlertLog(){
+  const log = loadAlertLog();
+  const el = document.getElementById('alertLog');
+  if(log.length === 0){ el.innerHTML = `<div class="alert-empty">Belum ada alert terpicu.</div>`; return; }
+  el.innerHTML = log.map(a => `
+    <div class="alert-row">
+      <span>${a.symbol ? `<b>${a.symbol.replace('USDT','')}</b> — ` : ""}${a.msg}</span>
+      <span class="at">${new Date(a.ts).toLocaleTimeString('id-ID')}</span>
+    </div>`).join('');
+}
 
 const statusEl = document.getElementById('statusText');
 const tbody = document.getElementById('tbody');
@@ -397,7 +714,33 @@ async function loadTicker24h(){
   return await res.json();
 }
 
+async function loadFundingBulk(){
+  // /fapi/v1/premiumIndex tanpa parameter symbol mengembalikan array semua pair sekaligus (1 request saja)
+  try{
+    const res = await fetch(FAPI + "/fapi/v1/premiumIndex");
+    if(!res.ok) throw new Error("premiumIndex gagal: " + res.status);
+    const raw = await res.json();
+    const map = {};
+    raw.forEach(r => { map[r.symbol] = parseFloat(r.lastFundingRate); });
+    return map;
+  }catch(err){
+    console.error(err);
+    return {};
+  }
+}
+
+async function fetchOpenInterest(symbol){
+  const res = await fetch(`${FAPI}/fapi/v1/openInterest?symbol=${symbol}`);
+  if(!res.ok) throw new Error("openInterest gagal: " + res.status);
+  const j = await res.json();
+  return parseFloat(j.openInterest);
+}
+
 function computeQuickScore(row){
+  // Sanitasi di titik masuk data: simbol Binance seharusnya cuma huruf besar+angka.
+  // Ini jaga-jaga (defense-in-depth) supaya string simbol yang nanti disisipkan ke innerHTML
+  // di banyak tempat (baris list, modal, ticker, alert) nggak pernah bisa membawa karakter HTML.
+  row.symbol = String(row.symbol || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
   const high = parseFloat(row.highPrice), low = parseFloat(row.lowPrice), last = parseFloat(row.lastPrice);
   const range = Math.max(high - low, 1e-9);
   const rangePos = ((last - low) / range) * 100; // 0 = at low, 100 = at high
@@ -418,7 +761,8 @@ async function refreshAll(){
     if(allSymbols.length === 0){
       allSymbols = await loadExchangeInfo();
     }
-    const raw = await loadTicker24h();
+    const [raw, funding] = await Promise.all([ loadTicker24h(), loadFundingBulk() ]);
+    fundingData = funding;
     const symSet = new Set(allSymbols);
     tickerData = raw
       .filter(r => symSet.has(r.symbol))
@@ -429,20 +773,23 @@ async function refreshAll(){
         highPrice:r.highPrice,
         lowPrice:r.lowPrice,
         quoteVolume:parseFloat(r.quoteVolume),
+        fundingRate: funding[r.symbol] !== undefined ? funding[r.symbol] : null,
       }));
     metaInfo.textContent = `${tickerData.length} pair USDT-M Perpetual · Update: ${new Date().toLocaleTimeString('id-ID')} WITA`;
     setStatus(`✓ ${tickerData.length} pair dimuat`, "ok");
     renderTicker();
     renderScoreboard();
+    renderTopSignals();
     renderTable();
+    checkWatchlistAlerts();
   }catch(err){
     console.error(err);
     setStatus("Gagal memuat: mungkin domain Binance diblokir jaringan/ISP kamu. Coba VPN.", "err");
-    tbody.innerHTML = `<tr><td colspan="7" class="empty-state">
+    tbody.innerHTML = `<div class="empty-state">
       ⚠️ <b>Gagal terhubung ke Binance API.</b><br>
       Kemungkinan penyebab: koneksi internet, atau ISP/provider memblokir domain fapi.binance.com (pernah terjadi sebelumnya dengan Telkomsel).<br>
       Coba: aktifkan VPN (mis. Cloudflare WARP), lalu tekan Refresh lagi.
-    </td></tr>`;
+    </div>`;
   }finally{
     document.getElementById('refreshBtn').disabled = false;
   }
@@ -470,6 +817,14 @@ function renderScoreboard(){
     <div class="sb-cell"><div class="lbl">TOTAL VOLUME 24H</div><div class="val">$${fmtNum(totalVol)}</div></div>
     <div class="sb-cell"><div class="lbl">RATA² VOLATILITAS</div><div class="val">${avgVola.toFixed(1)}%</div></div>
   `;
+  // Hero stat (mirrors "Est. Total Value" pattern) — dipakai di kartu hero atas
+  const heroValueEl = document.getElementById('heroValue');
+  const heroDeltaEl = document.getElementById('heroDelta');
+  if(heroValueEl) heroValueEl.textContent = `$${fmtNum(totalVol)}`;
+  if(heroDeltaEl){
+    const netUp = gainers >= losers;
+    heroDeltaEl.innerHTML = `<span class="hd-label">Gainers/Losers</span> <span style="color:${netUp?'var(--mint)':'var(--crimson)'}; font-weight:700;">${netUp?'▲':'▼'} ${gainers} / ${losers}</span>`;
+  }
 }
 
 function scoreClass(n, max){
@@ -477,6 +832,18 @@ function scoreClass(n, max){
   if(pct >= 0.66) return "score-hi";
   if(pct >= 0.33) return "score-mid";
   return "score-lo";
+}
+
+// Warna avatar konsisten per simbol (hash sederhana -> hue), biar tiap koin gampang dikenali sekilas kayak ikon di app exchange
+function symbolColor(symbol){
+  let hash = 0;
+  for(let i=0;i<symbol.length;i++){ hash = symbol.charCodeAt(i) + ((hash<<5)-hash); }
+  const hue = Math.abs(hash) % 360;
+  return `hsl(${hue}, 62%, 46%)`;
+}
+function symbolInitials(symbol){
+  const s = symbol.replace('USDT','');
+  return s.length <= 3 ? s : s.slice(0,3);
 }
 
 function getFiltered(){
@@ -489,6 +856,15 @@ function getFiltered(){
   else if(currentFilter === "volume") list = list.sort((a,b)=>b.quoteVolume-a.quoteVolume);
   else if(currentFilter === "nearhigh") list = list.sort((a,b)=>b.rangePos-a.rangePos);
   else if(currentFilter === "nearlow") list = list.sort((a,b)=>a.rangePos-b.rangePos);
+  else if(currentFilter === "watchlist"){
+    const wl = new Set(loadWatchlist());
+    list = list.filter(d=>wl.has(d.symbol)).sort((a,b)=>b.quoteVolume-a.quoteVolume);
+  }
+  else if(currentFilter === "fundingext"){
+    const th = loadAlertSettings().fundingExt/100;
+    list = list.filter(d=>d.fundingRate!==null && Math.abs(d.fundingRate) >= th)
+      .sort((a,b)=>Math.abs(b.fundingRate)-Math.abs(a.fundingRate));
+  }
   else {
     list.sort((a,b)=>{
       let va = a[sortKey], vb = b[sortKey];
@@ -500,38 +876,94 @@ function getFiltered(){
   return list;
 }
 
+// Badge kecil di tiap baris: kalau pair sudah di-deep-scan, tampilkan sinyal aslinya (RSI+trend).
+// Kalau belum, tampilkan tingkat "Momentum" dari Quick Score — istilah yang lebih gampang dipahami orang awam daripada angka mentah.
+function rowBadgeHtml(d){
+  const deep = deepData[d.symbol];
+  if(deep === "loading"){
+    return `<span class="badge-pill score-mid"><span class="loader" style="width:8px;height:8px;margin-right:2px;"></span>Scan…</span>`;
+  }
+  if(deep && deep.trendLabel){
+    const cls = deep.bias === "long" ? "score-hi" : deep.bias === "short" ? "score-lo" : "score-mid";
+    return `<span class="badge-pill ${cls}">${deep.trendLabel} · RSI ${deep.rsi.toFixed(0)}</span>`;
+  }
+  const tier = scoreClass(d.quickScore, 10);
+  const label = tier==="score-hi" ? "Momentum Tinggi" : tier==="score-mid" ? "Momentum Sedang" : "Momentum Rendah";
+  return `<span class="badge-pill ${tier}">${label}</span>`;
+}
+
+// Cuma tampil kalau funding rate lagi ekstrem — biar nggak jadi noise buat pair yang normal-normal saja
+function fundingBadgeHtml(rate){
+  if(rate === null || rate === undefined || isNaN(rate)) return '';
+  const pct = rate*100;
+  const th = loadAlertSettings().fundingExt;
+  if(Math.abs(pct) < th) return '';
+  const cls = pct > 0 ? 'score-lo' : 'score-hi';
+  return `<span class="badge-pill ${cls}" title="Funding rate ekstrem">⚡${pct>=0?'+':''}${pct.toFixed(3)}%</span>`;
+}
+
+// "Sinyal Teratas" — 2 pair dengan Quick Score tertinggi, ditampilkan sebagai kartu besar
+// biar orang awam langsung lihat mana yang paling menarik tanpa harus scroll/analisa tabel penuh.
+function renderTopSignals(){
+  const el = document.getElementById('topSignalGrid');
+  if(!el) return;
+  if(tickerData.length === 0){ el.innerHTML = ''; return; }
+  const top2 = [...tickerData].sort((a,b)=>b.quickScore-a.quickScore).slice(0,2);
+  el.innerHTML = top2.map(d=>{
+    const up = parseFloat(d.priceChangePercent) >= 0;
+    return `
+    <div class="signal-card" onclick="openDetail('${d.symbol}')">
+      <div class="sc-top">
+        <div class="crow-avatar sm" style="background:${symbolColor(d.symbol)}">${symbolInitials(d.symbol)}</div>
+        <div class="sc-name"><span class="sc-symtext">${d.symbol.replace('USDT','')}</span><span class="badge-pill ${scoreClass(d.quickScore,10)}">Sinyal</span></div>
+      </div>
+      <div>
+        <div class="sc-value ${up?'chg-pos':'chg-neg'}">${up?'▲':'▼'} ${Math.abs(parseFloat(d.priceChangePercent)).toFixed(2)}%</div>
+        <div class="sc-sub">Skor Momentum ${d.quickScore}/10</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
 function renderTable(){
   const list = getFiltered();
+  const wl = new Set(loadWatchlist());
+
+  const titleMap = { all:"Semua Pair", watchlist:"Watchlist", gainers:"Top Gainers", losers:"Top Losers",
+    volume:"Volume Tertinggi", nearhigh:"Dekat 24H High", nearlow:"Dekat 24H Low", fundingext:"Funding Ekstrem", custom:"Semua Pair" };
+  const titleEl = document.getElementById('listTitle');
+  if(titleEl) titleEl.textContent = `${titleMap[currentFilter] || "Semua Pair"} · ${list.length}`;
+
   if(list.length === 0){
-    tbody.innerHTML = `<tr><td colspan="7" class="empty-state">Tidak ada pair yang cocok dengan filter/pencarian ini.</td></tr>`;
+    tbody.innerHTML = `<div class="empty-state">Tidak ada pair yang cocok dengan filter/pencarian ini.</div>`;
     return;
   }
   let html = "";
   list.slice(0,150).forEach(d=>{
     const up = parseFloat(d.priceChangePercent) >= 0;
-    const deep = deepData[d.symbol];
-    let deepCell = `<button class="row-scan-btn" onclick="scanOne('${d.symbol}')">SCAN</button>`;
-    if(deep === "loading"){
-      deepCell = `<span class="deep-cell"><span class="loader" style="width:11px;height:11px;"></span></span>`;
-    } else if(deep){
-      const cls = deep.bias === "long" ? "mint" : deep.bias === "short" ? "crimson" : "amber";
-      deepCell = `<span class="deep-cell ${cls}">RSI ${deep.rsi.toFixed(0)} · ${deep.trendLabel}</span>`;
-    }
+    const starred = wl.has(d.symbol);
     html += `
-      <tr onclick="openDetail('${d.symbol}')">
-        <td><div class="sym-cell"><span class="s">${d.symbol.replace('USDT','')}</span><span class="p">USDT-M PERP</span></div></td>
-        <td>${fmtPrice(d.lastPrice)}</td>
-        <td class="${up?'chg-pos':'chg-neg'}">${up?'+':''}${d.priceChangePercent}%</td>
-        <td>$${fmtNum(d.quoteVolume)}</td>
-        <td>
-          <div class="rangebar"><div class="fill" style="left:${d.rangePos}%"></div></div>
-          <div class="rangebar-lbl">${d.rangePos.toFixed(0)}% dari range</div>
-        </td>
-        <td><span class="score-pill ${scoreClass(d.quickScore,10)}">${d.quickScore}</span></td>
-        <td onclick="event.stopPropagation()">${deepCell}</td>
-      </tr>`;
+      <div class="coin-row" onclick="openDetail('${d.symbol}')">
+        <button class="crow-star ${starred?'active':''}" onclick="event.stopPropagation(); onStarClick('${d.symbol}')">${starred?'★':'☆'}</button>
+        <div class="crow-avatar" style="background:${symbolColor(d.symbol)}">${symbolInitials(d.symbol)}</div>
+        <div class="crow-info">
+          <div class="crow-name"><span class="crow-symtext">${d.symbol.replace('USDT','')}</span><span class="crow-sub">USDT-M</span></div>
+          <div class="crow-badges">${rowBadgeHtml(d)}${fundingBadgeHtml(d.fundingRate)}<span class="crow-vol">Vol $${fmtNum(d.quoteVolume)}</span></div>
+        </div>
+        <div class="crow-right">
+          <div class="crow-price">${fmtPrice(d.lastPrice)}</div>
+          <div class="crow-change ${up?'chg-pos':'chg-neg'}">${up?'▲':'▼'} ${Math.abs(parseFloat(d.priceChangePercent)).toFixed(2)}%</div>
+        </div>
+        <svg class="crow-chevron" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+      </div>`;
   });
   tbody.innerHTML = html;
+}
+
+function onStarClick(symbol){
+  toggleWatchlist(symbol);
+  renderTable();
+  if(currentDetailSymbol === symbol) updateModalStarBtn(symbol);
 }
 
 // ===== DEEP SCAN (RSI 1H + EMA trend 4H) =====
@@ -559,6 +991,207 @@ function rsi(closes, period){
   if(avgLoss===0) return 100;
   const rs = avgGain/avgLoss;
   return 100 - (100/(1+rs));
+}
+
+// rsi() di atas cuma kasih nilai terakhir. Untuk StochRSI kita butuh SERI nilai RSI dari waktu ke waktu.
+function rsiSeries(closes, period){
+  const out = new Array(closes.length).fill(null);
+  if(closes.length <= period) return out;
+  let gains=0, losses=0;
+  for(let i=1;i<=period;i++){
+    const diff = closes[i]-closes[i-1];
+    if(diff>=0) gains+=diff; else losses -= diff;
+  }
+  let avgGain = gains/period, avgLoss = losses/period;
+  out[period] = avgLoss===0 ? 100 : 100-(100/(1+avgGain/avgLoss));
+  for(let i=period+1;i<closes.length;i++){
+    const diff = closes[i]-closes[i-1];
+    const g = diff>0?diff:0, l = diff<0?-diff:0;
+    avgGain = (avgGain*(period-1)+g)/period;
+    avgLoss = (avgLoss*(period-1)+l)/period;
+    out[i] = avgLoss===0 ? 100 : 100-(100/(1+avgGain/avgLoss));
+  }
+  return out;
+}
+
+// StochRSI: stochastic dari nilai RSI (bukan dari harga). %K = raw stoch, %D = SMA3 dari %K.
+function stochRSI(closes, rsiPeriod, stochPeriod, smoothK, smoothD){
+  const rsiArr = rsiSeries(closes, rsiPeriod);
+  const validIdx = rsiArr.map((v,i)=>v!==null?i:-1).filter(i=>i>=0);
+  if(validIdx.length < stochPeriod) return { k:null, d:null };
+  const rawK = [];
+  for(let i=0;i<validIdx.length;i++){
+    if(i < stochPeriod-1){ rawK.push(null); continue; }
+    const windowVals = validIdx.slice(i-stochPeriod+1, i+1).map(j=>rsiArr[j]);
+    const hi = Math.max(...windowVals), lo = Math.min(...windowVals);
+    const cur = rsiArr[validIdx[i]];
+    rawK.push(hi-lo===0 ? 0 : ((cur-lo)/(hi-lo))*100);
+  }
+  const smoothArr = (arr, period) => {
+    const o = new Array(arr.length).fill(null);
+    for(let i=0;i<arr.length;i++){
+      if(i < period-1 || arr[i]===null) continue;
+      const win = arr.slice(i-period+1, i+1);
+      if(win.some(v=>v===null)) continue;
+      o[i] = win.reduce((a,b)=>a+b,0)/period;
+    }
+    return o;
+  };
+  const kArr = smoothArr(rawK, smoothK);
+  const dArr = smoothArr(kArr, smoothD);
+  return { k: kArr[kArr.length-1], d: dArr[dArr.length-1] };
+}
+
+// MACD: EMA cepat - EMA lambat, signal = EMA dari MACD line, histogram = MACD - signal
+function macd(closes, fastP, slowP, signalP){
+  const fastArr = ema(closes, fastP);
+  const slowArr = ema(closes, slowP);
+  const macdLine = closes.map((_,i)=>fastArr[i]-slowArr[i]);
+  const signalArr = ema(macdLine.slice(slowP-1), signalP); // baru valid setelah slowP candle
+  const signalFull = new Array(slowP-1).fill(null).concat(signalArr);
+  const last = macdLine.length-1;
+  const macdVal = macdLine[last];
+  const signalVal = signalFull[last];
+  const histVal = (macdVal!==undefined && signalVal!==undefined && signalVal!==null) ? macdVal-signalVal : null;
+  const prevHist = (signalFull[last-1]!==undefined && signalFull[last-1]!==null) ? macdLine[last-1]-signalFull[last-1] : null;
+  return { macd:macdVal, signal:signalVal, hist:histVal, histRising: (histVal!==null && prevHist!==null) ? histVal>prevHist : null };
+}
+
+// ATR (Average True Range) — Wilder smoothing sederhana
+function atr(candles, period){
+  if(candles.length <= period) return null;
+  const trs = [];
+  for(let i=1;i<candles.length;i++){
+    const c = candles[i], p = candles[i-1];
+    trs.push(Math.max(c.high-c.low, Math.abs(c.high-p.close), Math.abs(c.low-p.close)));
+  }
+  let a = trs.slice(0,period).reduce((x,y)=>x+y,0)/period;
+  for(let i=period;i<trs.length;i++){
+    a = (a*(period-1)+trs[i])/period;
+  }
+  return a;
+}
+
+// Bollinger Bands: SMA20 +/- 2*stddev
+function bollinger(closes, period, mult){
+  const slice = closes.slice(-period);
+  const mid = slice.reduce((a,b)=>a+b,0)/period;
+  const variance = slice.reduce((a,b)=>a+Math.pow(b-mid,2),0)/period;
+  const sd = Math.sqrt(variance);
+  return { mid, upper: mid+mult*sd, lower: mid-mult*sd, bandwidthPct: (mid>0 ? ((mult*sd*2)/mid)*100 : 0) };
+}
+
+// ADX (Average Directional Index) — Wilder smoothing. Mengukur KEKUATAN tren (bukan arah).
+// +DI/-DI dipakai buat lihat siapa yang dominan (buyer/seller), ADX sendiri cuma soal seberapa kuat.
+function adx(candles, period){
+  if(candles.length <= period*2) return null;
+  const plusDM=[], minusDM=[], tr=[];
+  for(let i=1;i<candles.length;i++){
+    const c=candles[i], p=candles[i-1];
+    const upMove = c.high-p.high, downMove = p.low-c.low;
+    plusDM.push((upMove>downMove && upMove>0) ? upMove : 0);
+    minusDM.push((downMove>upMove && downMove>0) ? downMove : 0);
+    tr.push(Math.max(c.high-c.low, Math.abs(c.high-p.close), Math.abs(c.low-p.close)));
+  }
+  function wilderSmooth(arr, period){
+    const out = new Array(arr.length).fill(undefined);
+    let sum = arr.slice(0,period).reduce((a,b)=>a+b,0);
+    out[period-1] = sum;
+    for(let i=period;i<arr.length;i++){
+      sum = sum - (sum/period) + arr[i];
+      out[i] = sum;
+    }
+    return out;
+  }
+  const trS = wilderSmooth(tr, period);
+  const plusDMS = wilderSmooth(plusDM, period);
+  const minusDMS = wilderSmooth(minusDM, period);
+  const plusDI=[], minusDI=[], dx=[];
+  for(let i=period-1;i<tr.length;i++){
+    if(!trS[i]){ plusDI[i]=0; minusDI[i]=0; dx[i]=0; continue; }
+    plusDI[i] = 100*(plusDMS[i]/trS[i]);
+    minusDI[i] = 100*(minusDMS[i]/trS[i]);
+    const sum = plusDI[i]+minusDI[i];
+    dx[i] = sum===0 ? 0 : 100*Math.abs(plusDI[i]-minusDI[i])/sum;
+  }
+  const startIdx = period-1;
+  const dxSlice = dx.slice(startIdx, startIdx+period).filter(v=>v!==undefined);
+  if(dxSlice.length < period) return null;
+  let adxVal = dxSlice.reduce((a,b)=>a+b,0)/period;
+  for(let i=startIdx+period;i<dx.length;i++){
+    if(dx[i]===undefined) continue;
+    adxVal = (adxVal*(period-1)+dx[i])/period;
+  }
+  return { adx:adxVal, plusDI:plusDI[plusDI.length-1], minusDI:minusDI[minusDI.length-1] };
+}
+
+// ===== STRUKTUR MARKET: swing high/low (fractal), klasifikasi HH/HL vs LH/LL, deteksi BOS/CHoCH =====
+// Fractal sederhana: candle jadi swing high/low kalau high/low-nya lebih ekstrem dari `leftBars` candle
+// sebelum dan `rightBars` candle sesudahnya.
+function findFractalSwings(candles, leftBars, rightBars){
+  const raw = [];
+  for(let i=leftBars; i<candles.length-rightBars; i++){
+    const c = candles[i];
+    let isHigh = true, isLow = true;
+    for(let j=i-leftBars; j<=i+rightBars; j++){
+      if(j===i) continue;
+      if(candles[j].high >= c.high) isHigh = false;
+      if(candles[j].low <= c.low) isLow = false;
+    }
+    if(isHigh) raw.push({ index:i, price:c.high, type:'high' });
+    if(isLow) raw.push({ index:i, price:c.low, type:'low' });
+  }
+  raw.sort((a,b)=>a.index-b.index);
+  // Bikin urutan zigzag yang selang-seling high/low — kalau 2 swing berturut-turut tipenya sama, ambil yang paling ekstrem
+  const zz = [];
+  raw.forEach(s=>{
+    if(zz.length===0){ zz.push(s); return; }
+    const last = zz[zz.length-1];
+    if(last.type === s.type){
+      if((s.type==='high' && s.price>last.price) || (s.type==='low' && s.price<last.price)) zz[zz.length-1] = s;
+    } else {
+      zz.push(s);
+    }
+  });
+  return zz;
+}
+
+function analyzeMarketStructure(candles){
+  if(candles.length < 20) return null;
+  const zz = findFractalSwings(candles, 2, 2);
+  if(zz.length < 4) return { bias:'neutral', label:'Data swing belum cukup', points:zz, lastSwingHigh:null, lastSwingLow:null, event:null };
+
+  const highs = zz.filter(p=>p.type==='high');
+  const lows = zz.filter(p=>p.type==='low');
+  if(highs.length < 2 || lows.length < 2) return { bias:'neutral', label:'Data swing belum cukup', points:zz, lastSwingHigh:null, lastSwingLow:null, event:null };
+
+  const h1 = highs[highs.length-2], h2 = highs[highs.length-1];
+  const l1 = lows[lows.length-2], l2 = lows[lows.length-1];
+  const higherHigh = h2.price > h1.price;
+  const higherLow = l2.price > l1.price;
+
+  let bias, label;
+  if(higherHigh && higherLow){ bias='bullish'; label='HH–HL (Struktur Bullish)'; }
+  else if(!higherHigh && !higherLow){ bias='bearish'; label='LH–LL (Struktur Bearish)'; }
+  else if(higherHigh && !higherLow){ bias='transition'; label='HH–LL (Struktur Melebar/Topping)'; }
+  else { bias='transition'; label='LH–HL (Struktur Menyempit/Bottoming)'; }
+
+  const lastSwingHigh = highs[highs.length-1];
+  const lastSwingLow = lows[lows.length-1];
+  const lastClose = candles[candles.length-1].close;
+
+  // BOS = harga tembus swing terakhir SEARAH struktur (konfirmasi tren lanjut)
+  // CHoCH = harga tembus swing terakhir BERLAWANAN struktur (sinyal awal potensi reversal)
+  let event = null;
+  if(bias==='bullish'){
+    if(lastClose > lastSwingHigh.price) event = { type:'BOS', direction:'bullish', level:lastSwingHigh.price, desc:'Break of Structure bullish — harga tembus swing high terakhir, uptrend terkonfirmasi lanjut' };
+    else if(lastClose < lastSwingLow.price) event = { type:'CHoCH', direction:'bearish', level:lastSwingLow.price, desc:'Change of Character — harga tembus ke bawah swing low terakhir, potensi reversal dari uptrend' };
+  } else if(bias==='bearish'){
+    if(lastClose < lastSwingLow.price) event = { type:'BOS', direction:'bearish', level:lastSwingLow.price, desc:'Break of Structure bearish — harga tembus swing low terakhir, downtrend terkonfirmasi lanjut' };
+    else if(lastClose > lastSwingHigh.price) event = { type:'CHoCH', direction:'bullish', level:lastSwingHigh.price, desc:'Change of Character — harga tembus ke atas swing high terakhir, potensi reversal dari downtrend' };
+  }
+
+  return { bias, label, lastSwingHigh:lastSwingHigh.price, lastSwingLow:lastSwingLow.price, event, points:zz };
 }
 
 async function fetchKlines(symbol, interval, limit){
@@ -613,28 +1246,146 @@ async function scanTopVisible(n){
   document.getElementById('scanTopBtn').disabled = false;
 }
 
+// Level struktural yang biasa jadi acuan entry di SOP — dihitung dari candle 4H
+function computeStructLevels(candles){
+  const closes = candles.map(c=>c.close);
+  const levels = {};
+  if(closes.length>=30){
+    const e21arr = ema(closes,21), e30arr = ema(closes,30);
+    levels['EMA21'] = e21arr[e21arr.length-1];
+    levels['EMA30'] = e30arr[e30arr.length-1];
+  }
+  if(closes.length>=200){ const s = sma(closes,200); levels['MA200'] = s[s.length-1]; }
+  const avwap = computeAnchoredVWAP(candles, 90, 0.5);
+  if(avwap){
+    levels['AVWAP'] = avwap.avwap;
+    levels['AVWAP Upper Band'] = avwap.upper;
+    levels['AVWAP Lower Band'] = avwap.lower;
+  }
+  if(closes.length>=90){
+    const fib = computeFibonacci(candles, 90);
+    levels['Fib 38.2%'] = fib.levels[2].price;
+    levels['Fib 50.0%'] = fib.levels[3].price;
+    levels['Fib 61.8%'] = fib.levels[4].price;
+  }
+  return levels;
+}
+
+// ===== ALERT CHECK: dijalankan otomatis tiap refresh, cuma untuk pair di Watchlist =====
+async function checkWatchlistAlerts(){
+  const wl = loadWatchlist();
+  if(wl.length === 0) return;
+  const settings = loadAlertSettings();
+
+  // 1) Funding rate ekstrem — data sudah ada dari refreshAll, tidak perlu request tambahan
+  wl.forEach(symbol=>{
+    const row = tickerData.find(d=>d.symbol===symbol);
+    if(row && row.fundingRate!==null && row.fundingRate!==undefined){
+      const pct = row.fundingRate*100;
+      if(Math.abs(pct) >= settings.fundingExt){
+        const key = `${symbol}|funding|${pct>=0?'pos':'neg'}`;
+        if(!alertFiredThisSession.has(key)){
+          alertFiredThisSession.add(key);
+          pushAlert(`Funding rate ekstrem ${pct>=0?'+':''}${pct.toFixed(4)}% — ${pct>0?'crowded long, rawan koreksi turun':'crowded short, rawan short squeeze'}`, symbol);
+        }
+      } else {
+        alertFiredThisSession.delete(`${symbol}|funding|pos`);
+        alertFiredThisSession.delete(`${symbol}|funding|neg`);
+      }
+    }
+  });
+
+  // 2) RSI(14) 1H ekstrem + 3) Harga mendekati level struktural 4H — digabung per symbol biar hemat gelombang request
+  const CONCURRENCY = 3;
+  let idx = 0;
+  async function worker(){
+    while(idx < wl.length){
+      const symbol = wl[idx++];
+
+      // RSI 1H
+      try{
+        const closes1h = await fetchKlines(symbol, "1h", 60);
+        const rsi1h = rsi(closes1h, 14);
+        if(rsi1h <= settings.rsiOs){
+          const key = `${symbol}|rsi_os`;
+          if(!alertFiredThisSession.has(key)){ alertFiredThisSession.add(key); pushAlert(`RSI(14) 1H oversold: ${rsi1h.toFixed(1)}`, symbol); }
+        } else if(rsi1h >= settings.rsiOb){
+          const key = `${symbol}|rsi_ob`;
+          if(!alertFiredThisSession.has(key)){ alertFiredThisSession.add(key); pushAlert(`RSI(14) 1H overbought: ${rsi1h.toFixed(1)}`, symbol); }
+        } else {
+          alertFiredThisSession.delete(`${symbol}|rsi_os`);
+          alertFiredThisSession.delete(`${symbol}|rsi_ob`);
+        }
+      }catch(e){ /* skip pair kalau fetch gagal */ }
+
+      // Jarak harga ke level struktural 4H + deteksi CHoCH (pakai candle yang sama, nggak nambah request)
+      try{
+        const candles4h = await fetchKlinesFull(symbol, "4h", 210);
+        const lastPrice = candles4h[candles4h.length-1].close;
+        const levels = computeStructLevels(candles4h);
+        Object.entries(levels).forEach(([label, val])=>{
+          if(val===null || val===undefined || isNaN(val)) return;
+          const distPct = Math.abs(lastPrice - val) / val * 100;
+          const key = `${symbol}|level|${label}`;
+          if(distPct <= settings.levelProximity){
+            if(!alertFiredThisSession.has(key)){
+              alertFiredThisSession.add(key);
+              pushAlert(`Harga (${fmtPrice(lastPrice)}) mendekati ${label} (${fmtPrice(val)}) di 4H — jarak ${distPct.toFixed(2)}%`, symbol);
+            }
+          } else {
+            alertFiredThisSession.delete(key);
+          }
+        });
+
+        const structure4h = analyzeMarketStructure(candles4h);
+        if(structure4h && structure4h.event && structure4h.event.type === 'CHoCH'){
+          const key = `${symbol}|choch|${structure4h.event.direction}`;
+          if(!alertFiredThisSession.has(key)){
+            alertFiredThisSession.add(key);
+            pushAlert(`⚠ CHoCH di 4H — ${structure4h.event.desc} (level ${fmtPrice(structure4h.event.level)})`, symbol);
+          }
+        }
+      }catch(e){ /* skip pair kalau fetch gagal */ }
+    }
+  }
+  await Promise.all(Array.from({length:CONCURRENCY}, worker));
+}
+
 // ===== EVENTS =====
 document.getElementById('refreshBtn').addEventListener('click', refreshAll);
 document.getElementById('scanTopBtn').addEventListener('click', ()=>scanTopVisible(20));
 document.getElementById('searchBox').addEventListener('input', renderTable);
 
+function applyFilter(filter){
+  currentFilter = filter;
+  document.querySelectorAll('.tab-row .tab-item').forEach(b=>b.classList.toggle('active', b.dataset.filter===filter));
+  document.querySelectorAll('.filter-row .btn').forEach(b=>b.classList.toggle('active', b.dataset.filter===filter));
+  document.querySelectorAll('.sort-row .sort-pill').forEach(b=>b.classList.remove('active'));
+  const bnAllEl = document.getElementById('bnAll'), bnWlEl = document.getElementById('bnWatchlist');
+  if(bnAllEl) bnAllEl.classList.toggle('active', filter==='all');
+  if(bnWlEl) bnWlEl.classList.toggle('active', filter==='watchlist');
+  renderTable();
+}
+
+document.querySelectorAll('.tab-row .tab-item').forEach(btn=>{
+  btn.addEventListener('click', ()=> applyFilter(btn.dataset.filter));
+});
 document.querySelectorAll('.filter-row .btn').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    document.querySelectorAll('.filter-row .btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    currentFilter = btn.dataset.filter;
-    renderTable();
-  });
+  btn.addEventListener('click', ()=> applyFilter(btn.dataset.filter));
 });
 
-document.querySelectorAll('thead th').forEach(th=>{
-  th.addEventListener('click', ()=>{
-    const key = th.dataset.sort;
-    if(sortKey === key) sortDir *= -1; else { sortKey = key; sortDir = -1; }
+document.querySelectorAll('.sort-row .sort-pill').forEach(pill=>{
+  pill.addEventListener('click', ()=>{
+    const key = pill.dataset.sort;
+    if(sortKey === key) sortDir *= -1; else { sortKey = key; sortDir = key==="symbol" ? 1 : -1; }
     currentFilter = "custom";
+    document.querySelectorAll('.tab-row .tab-item').forEach(b=>b.classList.remove('active'));
     document.querySelectorAll('.filter-row .btn').forEach(b=>b.classList.remove('active'));
-    document.querySelectorAll('thead th').forEach(t=>t.classList.remove('active'));
-    th.classList.add('active');
+    document.querySelectorAll('.sort-row .sort-pill').forEach(b=>b.classList.remove('active'));
+    const bnAllEl = document.getElementById('bnAll'), bnWlEl = document.getElementById('bnWatchlist');
+    if(bnAllEl) bnAllEl.classList.remove('active');
+    if(bnWlEl) bnWlEl.classList.remove('active');
+    pill.classList.add('active');
     renderTable();
   });
 });
@@ -643,18 +1394,105 @@ document.getElementById('autoBtn').addEventListener('click', function(){
   if(autoTimer){
     clearInterval(autoTimer);
     autoTimer = null;
-    this.textContent = "Auto-Refresh: OFF";
+    this.textContent = "⏱️ Auto-Refresh: OFF";
     this.classList.remove('active');
   }else{
     autoTimer = setInterval(refreshAll, 45000);
-    this.textContent = "Auto-Refresh: 45s";
+    this.textContent = "⏱️ Auto-Refresh: 45s";
     this.classList.add('active');
+  }
+});
+
+// ===== ALERT DRAWER & SETTINGS DRAWER =====
+document.getElementById('alertBtn').addEventListener('click', ()=>{
+  document.getElementById('settingsDrawer').classList.remove('show');
+  document.getElementById('alertDrawer').classList.toggle('show');
+  syncDrawerNavState();
+});
+document.getElementById('settingsBtn').addEventListener('click', ()=>{
+  document.getElementById('alertDrawer').classList.remove('show');
+  document.getElementById('settingsDrawer').classList.toggle('show');
+  syncDrawerNavState();
+});
+document.getElementById('clearAlertBtn').addEventListener('click', ()=>{
+  saveAlertLog([]);
+  renderAlertLog();
+  updateAlertBadge();
+});
+document.getElementById('saveSettingsBtn').addEventListener('click', ()=>{
+  const s = {
+    rsiOs: parseFloat(document.getElementById('setRsiOs').value) || 30,
+    rsiOb: parseFloat(document.getElementById('setRsiOb').value) || 70,
+    fundingExt: parseFloat(document.getElementById('setFundingExt').value) || 0.05,
+    levelProximity: parseFloat(document.getElementById('setLevelProx').value) || 0.5,
+  };
+  saveAlertSettings(s);
+  alertFiredThisSession.clear(); // reset dedupe biar threshold baru langsung berlaku
+  setStatus("✓ Pengaturan alert disimpan", "ok");
+  renderTable();
+});
+function refreshNotifStatus(){
+  const el = document.getElementById('notifStatus');
+  if(!window.Notification){ el.textContent = "Browser ini tidak mendukung notifikasi."; return; }
+  if(Notification.permission === "granted"){ el.textContent = "✓ Notifikasi browser aktif."; el.className = "notif-status granted"; }
+  else if(Notification.permission === "denied"){ el.textContent = "✕ Notifikasi diblokir — ubah di pengaturan browser."; el.className = "notif-status denied"; }
+  else{ el.textContent = "Notifikasi belum diizinkan."; el.className = "notif-status"; }
+}
+document.getElementById('notifPermBtn').addEventListener('click', ()=>{
+  if(!window.Notification){ refreshNotifStatus(); return; }
+  Notification.requestPermission().then(()=>refreshNotifStatus());
+});
+
+// ===== BOTTOM NAV (app-style quick switcher) =====
+function syncDrawerNavState(){
+  const alertOpen = document.getElementById('alertDrawer').classList.contains('show');
+  const settingsOpen = document.getElementById('settingsDrawer').classList.contains('show');
+  document.getElementById('bnAlert').classList.toggle('active', alertOpen);
+  document.getElementById('bnSettings').classList.toggle('active', settingsOpen);
+  document.getElementById('alertBtn').classList.toggle('active', alertOpen);
+  document.getElementById('settingsBtn').classList.toggle('active', settingsOpen);
+}
+document.getElementById('bnAll').addEventListener('click', ()=>{
+  document.getElementById('alertDrawer').classList.remove('show');
+  document.getElementById('settingsDrawer').classList.remove('show');
+  syncDrawerNavState();
+  applyFilter('all');
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+document.getElementById('bnWatchlist').addEventListener('click', ()=>{
+  document.getElementById('alertDrawer').classList.remove('show');
+  document.getElementById('settingsDrawer').classList.remove('show');
+  syncDrawerNavState();
+  applyFilter('watchlist');
+  document.querySelector('.coin-list').scrollIntoView({behavior:'smooth', block:'start'});
+});
+document.getElementById('bnScan').addEventListener('click', ()=>{
+  document.getElementById('alertDrawer').classList.remove('show');
+  document.getElementById('settingsDrawer').classList.remove('show');
+  syncDrawerNavState();
+  scanTopVisible(20);
+});
+document.getElementById('bnAlert').addEventListener('click', ()=>{
+  document.getElementById('settingsDrawer').classList.remove('show');
+  document.getElementById('alertDrawer').classList.toggle('show');
+  syncDrawerNavState();
+  if(document.getElementById('alertDrawer').classList.contains('show')){
+    document.getElementById('alertDrawer').scrollIntoView({behavior:'smooth', block:'start'});
+  }
+});
+document.getElementById('bnSettings').addEventListener('click', ()=>{
+  document.getElementById('alertDrawer').classList.remove('show');
+  document.getElementById('settingsDrawer').classList.toggle('show');
+  syncDrawerNavState();
+  if(document.getElementById('settingsDrawer').classList.contains('show')){
+    document.getElementById('settingsDrawer').scrollIntoView({behavior:'smooth', block:'start'});
   }
 });
 
 // ===== DETAIL MODAL: EMA21/EMA30/MA200/VWAP/Fibonacci + Long/Short Score =====
 let currentDetailSymbol = null;
 let currentDetailTf = "4h";
+let lastDetailFull = null; // data lengkap hasil renderDetail() terakhir, dipakai tombol Copy AI
 
 function sma(values, period){
   const out = [];
@@ -677,14 +1515,45 @@ async function fetchKlinesFull(symbol, interval, limit){
   }));
 }
 
-function computeVWAP(candles){
-  let cumPV = 0, cumV = 0;
-  candles.forEach(c=>{
-    const tp = (c.high + c.low + c.close)/3;
-    cumPV += tp * c.volume;
+// Anchored VWAP + Standard Deviation Bands (multiplier 0.5).
+// Anchor otomatis ke titik awal swing yang sedang berjalan: swing LOW kalau leg saat ini naik,
+// swing HIGH kalau leg saat ini turun — dalam window `lookback` candle terakhir. Ini bikin AVWAP
+// selalu relevan sama pergerakan yang sedang aktif, bukan rolling window sembarangan.
+function computeAnchoredVWAP(candles, lookback, bandMult){
+  const startIdx = Math.max(0, candles.length - lookback);
+  const window = candles.slice(startIdx);
+  if(window.length === 0) return null;
+  let maxHigh=-Infinity, minLow=Infinity, iMax=0, iMin=0;
+  window.forEach((c,i)=>{
+    if(c.high>maxHigh){ maxHigh=c.high; iMax=i; }
+    if(c.low<minLow){ minLow=c.low; iMin=i; }
+  });
+  const direction = iMax > iMin ? "up" : "down";
+  const anchorRel = direction==="up" ? iMin : iMax;
+  const anchorGlobalIdx = startIdx + anchorRel;
+  const slice = candles.slice(anchorGlobalIdx);
+  if(slice.length === 0) return null;
+
+  let cumPV=0, cumV=0;
+  const tps = [];
+  slice.forEach(c=>{
+    const tp=(c.high+c.low+c.close)/3;
+    tps.push(tp);
+    cumPV += tp*c.volume;
     cumV += c.volume;
   });
-  return cumV > 0 ? cumPV/cumV : null;
+  if(cumV<=0) return null;
+  const avwap = cumPV/cumV;
+  let varSum = 0;
+  slice.forEach((c,i)=>{ varSum += c.volume * Math.pow(tps[i]-avwap,2); });
+  const sd = Math.sqrt(varSum/cumV);
+  return {
+    avwap,
+    upper: avwap + bandMult*sd,
+    lower: avwap - bandMult*sd,
+    barsFromAnchor: slice.length-1,
+    anchorDirection: direction, // "up" = anchor di swing low, "down" = anchor di swing high
+  };
 }
 
 function computeFibonacci(candles, lookback){
@@ -711,19 +1580,59 @@ function scoreClassModal(bias){
 
 async function openDetail(symbol){
   currentDetailSymbol = symbol;
+  lastDetailFull = null; // biar tombol Copy AI nggak kepakai sambil data pair lama masih nyangkut
   document.getElementById('mhSym').textContent = symbol.replace('USDT','') + " / USDT";
   const live = tickerData.find(d=>d.symbol===symbol);
   document.getElementById('mhPrice').textContent = live ? `${fmtPrice(live.lastPrice)}  ${live.priceChangePercent>=0?'▲':'▼'} ${live.priceChangePercent}%` : "-";
   document.getElementById('modalBody').innerHTML = `<div class="modal-loading"><span class="loader"></span>Memuat indikator ${currentDetailTf.toUpperCase()}…</div>`;
   document.getElementById('modalBackdrop').classList.add('show');
   document.querySelectorAll('.tf-btn').forEach(b=>b.classList.toggle('active', b.dataset.tf===currentDetailTf));
+  updateModalStarBtn(symbol);
   await loadDetail(symbol, currentDetailTf);
+}
+
+// Konfluensi multi-timeframe: cek bias trend (EMA21 vs EMA50 + posisi vs MA200) di 1H/4H/1D sekaligus
+async function computeConfluence(symbol){
+  const tfs = ["1h","4h","1d"];
+  const results = await Promise.all(tfs.map(t => fetchKlinesFull(symbol, t, 210).catch(()=>null)));
+  return tfs.map((t,i)=>{
+    const candles = results[i];
+    if(!candles || candles.length < 55) return { tf:t, bias:"neutral", label:"Data kurang", structure:null };
+    const closes = candles.map(c=>c.close);
+    const lastPrice = closes[closes.length-1];
+    const e21arr = ema(closes,21), e50arr = ema(closes,50);
+    const lastE21 = e21arr[e21arr.length-1], lastE50 = e50arr[e50arr.length-1];
+    let ma200v = null;
+    if(closes.length >= 200){ const s = sma(closes,200); ma200v = s[s.length-1]; }
+    let score = 0, n = 0;
+    score += lastE21>lastE50 ? 1 : -1; n++;
+    if(ma200v){ score += lastPrice>ma200v ? 1 : -1; n++; }
+    const avg = score/n;
+    const emaBias = avg>0.3 ? "bullish" : avg<-0.3 ? "bearish" : "neutral";
+
+    const structure = analyzeMarketStructure(candles);
+    const structBias = structure ? structure.bias : "neutral";
+
+    // Bias gabungan: EMA-trend & struktur market harus sepakat biar dianggap solid; kalau beda, ditandai "mixed"
+    let bias;
+    if((emaBias==="bullish" && structBias==="bullish") ) bias = "bullish";
+    else if((emaBias==="bearish" && structBias==="bearish")) bias = "bearish";
+    else if(emaBias==="neutral" && (structBias==="bullish"||structBias==="bearish")) bias = structBias; // EMA netral, ikuti struktur
+    else if(structBias==="neutral" && (emaBias==="bullish"||emaBias==="bearish")) bias = emaBias; // struktur kurang data, ikuti EMA
+    else bias = "mixed";
+
+    return { tf:t, bias, emaBias, structure };
+  });
 }
 
 async function loadDetail(symbol, tf){
   document.getElementById('modalBody').innerHTML = `<div class="modal-loading"><span class="loader"></span>Memuat indikator ${tf.toUpperCase()}…</div>`;
   try{
-    const candles = await fetchKlinesFull(symbol, tf, 250);
+    const [candles, oi, confluence] = await Promise.all([
+      fetchKlinesFull(symbol, tf, 250),
+      fetchOpenInterest(symbol).catch(()=>null),
+      computeConfluence(symbol).catch(()=>null),
+    ]);
     const closes = candles.map(c=>c.close);
     const lastPrice = closes[closes.length-1];
 
@@ -733,11 +1642,28 @@ async function loadDetail(symbol, tf){
     const ema21 = ema21arr[ema21arr.length-1];
     const ema30 = ema30arr[ema30arr.length-1];
     const ma200 = sma200arr[sma200arr.length-1];
-    const vwap = computeVWAP(candles.slice(-100));
+    const avwap = computeAnchoredVWAP(candles, 90, 0.5); // Anchored VWAP, band multiplier 0.5
     const rsiVal = rsi(closes, 14);
     const fib = computeFibonacci(candles, 90);
+    const macdVal = macd(closes, 12, 26, 9);
+    const stoch = stochRSI(closes, 14, 14, 3, 3);
+    const atrVal = atr(candles, 14);
+    const bb = bollinger(closes, 20, 2);
+    const adxVal = adx(candles, 14);
+    const structure = analyzeMarketStructure(candles);
 
-    renderDetail({symbol, tf, lastPrice, ema21, ema30, ma200, vwap, rsiVal, fib});
+    // Volume factor: volume candle terakhir dibanding rata-rata 20 candle sebelumnya
+    const vols = candles.map(c=>c.volume);
+    const prevVols = vols.slice(-21,-1);
+    const avgVol20 = prevVols.length>0 ? prevVols.reduce((a,b)=>a+b,0)/prevVols.length : 0;
+    const lastVol = vols[vols.length-1];
+    const volRatio = avgVol20>0 ? lastVol/avgVol20 : 1;
+    const priceUp = closes.length>1 ? closes[closes.length-1] >= closes[closes.length-2] : true;
+
+    const fundingRow = tickerData.find(x=>x.symbol===symbol);
+    const fundingRate = fundingRow && fundingRow.fundingRate!==undefined ? fundingRow.fundingRate : (fundingData[symbol]!==undefined?fundingData[symbol]:null);
+
+    renderDetail({symbol, tf, lastPrice, ema21, ema30, ma200, avwap, rsiVal, fib, macdVal, stoch, atrVal, bb, adxVal, structure, volRatio, priceUp, oi, fundingRate, confluence});
   }catch(err){
     console.error(err);
     document.getElementById('modalBody').innerHTML = `<div class="modal-loading">⚠️ Gagal memuat indikator. Coba lagi atau ganti timeframe.</div>`;
@@ -762,9 +1688,12 @@ function renderDetail(d){
   else momScore = Math.max((d.rsiVal-50)/30, -1);
 
   let vwapScore = 0;
-  if(d.vwap){
-    const distPct = (d.lastPrice - d.vwap) / d.vwap * 100;
+  if(d.avwap){
+    const distPct = (d.lastPrice - d.avwap.avwap) / d.avwap.avwap * 100;
     vwapScore = Math.max(-1, Math.min(1, distPct/2));
+    // Harga tembus band luar AVWAP = ekstensi kuat, perkuat sedikit skor searah band tsb (bukan sinyal reversal di sini)
+    if(d.lastPrice > d.avwap.upper) vwapScore = Math.max(vwapScore, 0.85);
+    else if(d.lastPrice < d.avwap.lower) vwapScore = Math.min(vwapScore, -0.85);
   }
 
   let fibScore = 0;
@@ -773,7 +1702,46 @@ function renderDetail(d){
     fibScore = (1 - fibPos*2); // dekat low -> +1 (zona bounce), dekat high -> -1 (zona resistance)
   }
 
-  const avg = (trendScore + momScore + vwapScore + fibScore) / 4;
+  let macdScore = 0;
+  if(d.macdVal && d.macdVal.macd!==undefined && d.macdVal.signal!==null && d.macdVal.signal!==undefined){
+    macdScore = d.macdVal.macd > d.macdVal.signal ? 0.7 : -0.7;
+    if(d.macdVal.histRising===true) macdScore += (macdScore>0?0.3:-0.3);
+    else if(d.macdVal.histRising===false) macdScore -= (macdScore>0?0.3:-0.3);
+    macdScore = Math.max(-1, Math.min(1, macdScore));
+  }
+
+  let volScore = 0;
+  if(d.volRatio!==undefined && d.volRatio!==null){
+    const intensity = Math.max(0, Math.min(1, (d.volRatio-1)/2)); // volRatio 1x=0, 3x=1
+    volScore = d.priceUp ? intensity : -intensity;
+  }
+
+  let fundingScore = 0;
+  if(d.fundingRate!==null && d.fundingRate!==undefined){
+    const pct = d.fundingRate*100;
+    fundingScore = Math.max(-1, Math.min(1, -pct/0.1)); // funding +0.1% -> -1 (crowded long, warn bearish); -0.1% -> +1 (crowded short, warn bullish)
+  }
+
+  // Struktur market (HH/HL vs LH/LL + BOS/CHoCH) — faktor UTAMA sesuai SOP, jadi dibobot 2x dibanding faktor lain.
+  let structureScore = 0;
+  if(d.structure){
+    if(d.structure.bias==='bullish') structureScore = 0.7;
+    else if(d.structure.bias==='bearish') structureScore = -0.7;
+    else structureScore = 0; // transition/neutral — struktur belum jelas, jangan dipaksa condong
+    if(d.structure.event){
+      if(d.structure.event.type==='BOS') structureScore = d.structure.event.direction==='bullish' ? 1 : -1;
+      else if(d.structure.event.type==='CHoCH') structureScore = d.structure.event.direction==='bullish' ? 0.6 : -0.6;
+    }
+  }
+
+  // ADX bukan faktor arah — dia modulator KEPERCAYAAN buat sinyal trend-following (Trend & MACD).
+  // ADX rendah (<20) = market sideways, sinyal trend-following jadi kurang bisa dipercaya, jadi diredam.
+  const adxConfidence = (d.adxVal && d.adxVal.adx!==undefined) ? Math.max(0.35, Math.min(1, d.adxVal.adx/25)) : 1;
+  trendScore *= adxConfidence;
+  macdScore *= adxConfidence;
+
+  const factors = [trendScore, momScore, macdScore, vwapScore, fibScore, volScore, fundingScore, structureScore, structureScore];
+  const avg = factors.reduce((a,b)=>a+b,0) / factors.length;
   const longScore = Math.max(0, Math.min(10, 5 + 5*avg));
   const shortScore = 10 - longScore;
   const longPct = (longScore/10)*100, shortPct = (shortScore/10)*100;
@@ -782,11 +1750,28 @@ function renderDetail(d){
 
   const factorLabel = (s) => s > 0.25 ? "Bullish" : s < -0.25 ? "Bearish" : "Netral";
   const trendReason = d.ma200
-    ? `Harga ${d.lastPrice > d.ma200 ? "di atas" : "di bawah"} MA200, EMA21 ${d.ema21>d.ema30?"di atas":"di bawah"} EMA30`
+    ? `Harga ${d.lastPrice > d.ma200 ? "di atas" : "di bawah"} MA200, EMA21 ${d.ema21>d.ema30?"di atas":"di bawah"} EMA30${adxConfidence<1?` (diredam ${Math.round((1-adxConfidence)*100)}% karena tren lemah — lihat ADX)`:''}`
     : "Data MA200 belum cukup (butuh 200 candle)";
   const momReason = `RSI(14) ${tf_note(d.rsiVal)} — nilai ${d.rsiVal.toFixed(1)}`;
-  const vwapReason = d.vwap ? `Harga ${((d.lastPrice-d.vwap)/d.vwap*100).toFixed(2)}% ${d.lastPrice>d.vwap?"di atas":"di bawah"} VWAP` : "VWAP tidak tersedia";
+  const macdReason = (d.macdVal && d.macdVal.signal!==null && d.macdVal.signal!==undefined)
+    ? `MACD ${d.macdVal.macd>d.macdVal.signal?"di atas":"di bawah"} signal, histogram ${d.macdVal.histRising===true?"menguat":d.macdVal.histRising===false?"melemah":"stabil"}`
+    : "Data MACD belum cukup";
+  const vwapReason = d.avwap
+    ? `Harga ${(((d.lastPrice-d.avwap.avwap)/d.avwap.avwap)*100).toFixed(2)}% ${d.lastPrice>d.avwap.avwap?"di atas":"di bawah"} AVWAP (anchor ${d.avwap.anchorDirection==='up'?'swing low':'swing high'}, ${d.avwap.barsFromAnchor} candle lalu)${d.lastPrice>d.avwap.upper?' — HARGA DI LUAR UPPER BAND':d.lastPrice<d.avwap.lower?' — HARGA DI LUAR LOWER BAND':''}`
+    : "AVWAP tidak tersedia";
   const fibReason = d.fib ? `Posisi harga ${((d.lastPrice-d.fib.minLow)/(d.fib.maxHigh-d.fib.minLow)*100).toFixed(0)}% dalam range swing (${d.fib.direction==="up"?"leg naik":"leg turun"})` : "-";
+  const volReason = (d.volRatio!==undefined && d.volRatio!==null)
+    ? `Volume candle terakhir ${d.volRatio.toFixed(2)}x rata-rata 20 candle, harga ${d.priceUp?"naik":"turun"}`
+    : "Data volume belum cukup";
+  const fundingReason = (d.fundingRate!==null && d.fundingRate!==undefined)
+    ? `Funding rate ${(d.fundingRate*100).toFixed(4)}% — ${d.fundingRate>0?"long bayar short (crowded long)":d.fundingRate<0?"short bayar long (crowded short)":"netral"}`
+    : "Data funding tidak tersedia";
+  const adxReason = (d.adxVal && d.adxVal.adx!==undefined)
+    ? `ADX ${d.adxVal.adx.toFixed(1)} (${d.adxVal.adx<20?"lemah/sideways":d.adxVal.adx<25?"mulai menguat":d.adxVal.adx<40?"tren kuat":"tren sangat kuat"}), +DI ${d.adxVal.plusDI.toFixed(1)} vs -DI ${d.adxVal.minusDI.toFixed(1)} (${d.adxVal.plusDI>d.adxVal.minusDI?"buyer dominan":"seller dominan"})`
+    : "Data ADX belum cukup (butuh minimal 28 candle)";
+  const structureReason = d.structure
+    ? `${d.structure.label}${d.structure.event ? ` — ${d.structure.event.type} ${d.structure.event.direction} (${d.structure.event.desc})` : ' — belum ada BOS/CHoCH baru'}`
+    : "Data struktur belum cukup";
 
   const fibRows = d.fib.levels.map(l=>{
     const isCurrent = Math.abs(d.lastPrice - l.price) / d.lastPrice < 0.004;
@@ -797,17 +1782,153 @@ function renderDetail(d){
     </div>`;
   }).join('');
 
+  // Simpan semua data + hasil scoring, dipakai tombol "Copy Ringkasan buat AI"
+  lastDetailFull = {
+    d, trendScore, momScore, macdScore, vwapScore, fibScore, volScore, fundingScore, structureScore, adxConfidence,
+    longScore, shortScore, entryPlan,
+    trendReason, momReason, macdReason, vwapReason, fibReason, volReason, fundingReason, adxReason, structureReason,
+  };
+
   document.getElementById('modalBody').innerHTML = `
     <div class="ind-section-title">INDIKATOR TREN & VOLUME (${d.tf.toUpperCase()})</div>
     <div class="ind-grid">
       <div class="ind-cell"><div class="il">EMA 21</div><div class="iv">${fmtPrice(d.ema21)}</div>${posBadge(d.ema21)}</div>
       <div class="ind-cell"><div class="il">EMA 30</div><div class="iv">${fmtPrice(d.ema30)}</div>${posBadge(d.ema30)}</div>
       <div class="ind-cell"><div class="il">MA 200</div><div class="iv">${d.ma200?fmtPrice(d.ma200):'Data kurang'}</div>${posBadge(d.ma200)}</div>
-      <div class="ind-cell"><div class="il">VWAP (rolling 100 candle)</div><div class="iv">${d.vwap?fmtPrice(d.vwap):'-'}</div>${posBadge(d.vwap)}</div>
+      <div class="ind-cell"><div class="il">Anchored VWAP</div><div class="iv">${d.avwap?fmtPrice(d.avwap.avwap):'-'}</div>${d.avwap?posBadge(d.avwap.avwap):''}</div>
+      <div class="ind-cell"><div class="il">AVWAP Upper Band (0.5σ)</div><div class="iv">${d.avwap?fmtPrice(d.avwap.upper):'-'}</div>${d.avwap?posBadge(d.avwap.upper):''}</div>
+      <div class="ind-cell"><div class="il">AVWAP Lower Band (0.5σ)</div><div class="iv">${d.avwap?fmtPrice(d.avwap.lower):'-'}</div>${d.avwap?posBadge(d.avwap.lower):''}</div>
     </div>
+    ${d.avwap ? `<div class="sop-note" style="margin-top:8px;"><b>Anchor AVWAP:</b> ${d.avwap.anchorDirection==='up'?'Swing Low':'Swing High'} — ${d.avwap.barsFromAnchor} candle ${d.tf.toUpperCase()} yang lalu (dalam window swing 90 candle). Anchor otomatis pindah mengikuti swing terbaru yang lagi berjalan.</div>` : ''}
 
     <div class="ind-section-title">FIBONACCI RETRACEMENT (swing 90 candle, ${d.fib.direction==="up"?"leg naik":"leg turun"})</div>
     <div class="fib-list">${fibRows}</div>
+
+    <div class="ind-section-title">MOMENTUM LANJUTAN</div>
+    <div class="ind-grid">
+      <div class="ind-cell">
+        <div class="il">MACD (12,26,9)</div>
+        <div class="iv">${d.macdVal && d.macdVal.macd!==undefined ? d.macdVal.macd.toFixed(4) : '-'}</div>
+        <div class="ib ${d.macdVal && d.macdVal.macd>d.macdVal.signal?'pos-above':'pos-below'}">Signal: ${d.macdVal && d.macdVal.signal!==null && d.macdVal.signal!==undefined ? d.macdVal.signal.toFixed(4) : '-'}</div>
+      </div>
+      <div class="ind-cell">
+        <div class="il">MACD Histogram</div>
+        <div class="iv">${d.macdVal && d.macdVal.hist!==null && d.macdVal.hist!==undefined ? d.macdVal.hist.toFixed(4) : '-'}</div>
+        <div class="ib ${d.macdVal && d.macdVal.histRising?'pos-above':'pos-below'}">${d.macdVal && d.macdVal.histRising===true?'Menguat':d.macdVal && d.macdVal.histRising===false?'Melemah':'-'}</div>
+      </div>
+      <div class="ind-cell">
+        <div class="il">StochRSI %K</div>
+        <div class="iv">${d.stoch && d.stoch.k!==null ? d.stoch.k.toFixed(1) : '-'}</div>
+        <div class="ib">${d.stoch && d.stoch.k!==null ? (d.stoch.k>=80?'Overbought':d.stoch.k<=20?'Oversold':'Netral') : ''}</div>
+      </div>
+      <div class="ind-cell">
+        <div class="il">StochRSI %D</div>
+        <div class="iv">${d.stoch && d.stoch.d!==null ? d.stoch.d.toFixed(1) : '-'}</div>
+        <div class="ib">${d.stoch && d.stoch.k!==null && d.stoch.d!==null ? (d.stoch.k>d.stoch.d?'%K di atas %D':'%K di bawah %D') : ''}</div>
+      </div>
+    </div>
+
+    <div class="ind-section-title">VOLATILITAS</div>
+    <div class="ind-grid">
+      <div class="ind-cell">
+        <div class="il">ATR (14)</div>
+        <div class="iv">${d.atrVal!==null ? fmtPrice(d.atrVal) : '-'}</div>
+        <div class="ib">${d.atrVal!==null ? ((d.atrVal/d.lastPrice)*100).toFixed(2)+'% dari harga' : ''}</div>
+      </div>
+      <div class="ind-cell">
+        <div class="il">Bollinger Bandwidth</div>
+        <div class="iv">${d.bb ? d.bb.bandwidthPct.toFixed(2)+'%' : '-'}</div>
+        <div class="ib">${d.bb ? (d.bb.bandwidthPct<4?'Squeeze — volatilitas rendah':'Normal/melebar') : ''}</div>
+      </div>
+      <div class="ind-cell"><div class="il">BB Upper</div><div class="iv">${d.bb?fmtPrice(d.bb.upper):'-'}</div>${d.bb?posBadge(d.bb.upper):''}</div>
+      <div class="ind-cell"><div class="il">BB Lower</div><div class="iv">${d.bb?fmtPrice(d.bb.lower):'-'}</div>${d.bb?posBadge(d.bb.lower):''}</div>
+    </div>
+
+    <div class="ind-section-title">KEKUATAN TREN (ADX)</div>
+    <div class="ind-grid">
+      <div class="ind-cell">
+        <div class="il">ADX (14)</div>
+        <div class="iv">${d.adxVal ? d.adxVal.adx.toFixed(1) : '-'}</div>
+        <div class="ib ${d.adxVal && d.adxVal.adx>=25 ? 'pos-above' : ''}">${d.adxVal ? (d.adxVal.adx<20?'Lemah/Sideways':d.adxVal.adx<25?'Mulai Menguat':d.adxVal.adx<40?'Tren Kuat':'Sangat Kuat') : 'Data kurang'}</div>
+      </div>
+      <div class="ind-cell">
+        <div class="il">+DI / -DI</div>
+        <div class="iv">${d.adxVal ? d.adxVal.plusDI.toFixed(1)+' / '+d.adxVal.minusDI.toFixed(1) : '-'}</div>
+        <div class="ib ${d.adxVal && d.adxVal.plusDI>d.adxVal.minusDI ? 'pos-above':'pos-below'}">${d.adxVal ? (d.adxVal.plusDI>d.adxVal.minusDI?'Buyer dominan':'Seller dominan') : ''}</div>
+      </div>
+    </div>
+    ${d.adxVal && d.adxVal.adx<20 ? `<div class="sop-note" style="margin-top:8px;"><b>Catatan ADX:</b> Tren sedang lemah/sideways (ADX ${d.adxVal.adx.toFixed(1)} < 20). Sinyal Trend & MACD di bawah otomatis diredam karena kurang bisa diandalkan di kondisi ini — pertimbangkan tunggu breakout dengan ADX naik di atas 20-25 sebelum entry berbasis tren.</div>` : ''}
+
+    <div class="ind-section-title">STRUKTUR MARKET (${d.tf.toUpperCase()})</div>
+    <div class="ind-grid">
+      <div class="ind-cell">
+        <div class="il">Bias Struktur</div>
+        <div class="iv ${d.structure && d.structure.bias==='bullish'?'pos-above':d.structure && d.structure.bias==='bearish'?'pos-below':''}">${d.structure ? d.structure.label : 'Data kurang'}</div>
+      </div>
+      <div class="ind-cell">
+        <div class="il">Swing High Terakhir</div>
+        <div class="iv">${d.structure && d.structure.lastSwingHigh ? fmtPrice(d.structure.lastSwingHigh) : '-'}</div>
+        ${d.structure && d.structure.lastSwingHigh ? posBadge(d.structure.lastSwingHigh) : ''}
+      </div>
+      <div class="ind-cell">
+        <div class="il">Swing Low Terakhir</div>
+        <div class="iv">${d.structure && d.structure.lastSwingLow ? fmtPrice(d.structure.lastSwingLow) : '-'}</div>
+        ${d.structure && d.structure.lastSwingLow ? posBadge(d.structure.lastSwingLow) : ''}
+      </div>
+    </div>
+    ${d.structure && d.structure.event ? `<div class="sop-note" style="margin-top:8px; border-color:${d.structure.event.type==='CHoCH'?'var(--amber)':'var(--mint)'};"><b>${d.structure.event.type}${d.structure.event.type==='CHoCH'?' ⚠':' ✓'}:</b> ${d.structure.event.desc} (level ${fmtPrice(d.structure.event.level)}).</div>` : ''}
+
+    <div class="ind-section-title">DATA FUTURES</div>
+    <div class="ind-grid">
+      <div class="ind-cell">
+        <div class="il">Funding Rate</div>
+        <div class="iv ${d.fundingRate>0?'pos-below':d.fundingRate<0?'pos-above':''}">${d.fundingRate!==null&&d.fundingRate!==undefined ? (d.fundingRate*100).toFixed(4)+'%' : '-'}</div>
+        <div class="ib">${d.fundingRate!==null&&d.fundingRate!==undefined ? (d.fundingRate>0?'Crowded long':d.fundingRate<0?'Crowded short':'Netral') : ''}</div>
+      </div>
+      <div class="ind-cell">
+        <div class="il">Open Interest</div>
+        <div class="iv">${d.oi!==null ? fmtNum(d.oi)+' kontrak' : '-'}</div>
+        <div class="ib">${d.oi!==null ? '≈ $'+fmtNum(d.oi*d.lastPrice) : ''}</div>
+      </div>
+    </div>
+
+    <div class="ind-section-title">KONFLUENSI MULTI-TIMEFRAME (Trend + Struktur Market)</div>
+    <div class="confluence-row">
+      ${d.confluence ? d.confluence.map(c=>{
+        const biasLabel = c.bias==='bullish'?'BULLISH':c.bias==='bearish'?'BEARISH':c.bias==='mixed'?'MIXED':'NETRAL';
+        const biasCls = c.bias==='bullish'?'cf-bullish':c.bias==='bearish'?'cf-bearish':c.bias==='mixed'?'cf-mixed':'cf-neutral';
+        const structLabel = c.structure ? c.structure.label : 'Data kurang';
+        const eventBadge = c.structure && c.structure.event ? `<div class="cf-tf" style="color:${c.structure.event.type==='CHoCH'?'var(--amber)':'var(--text-2)'};margin-top:3px;">${c.structure.event.type}</div>` : '';
+        return `
+        <div class="confluence-chip">
+          <div class="cf-tf">${c.tf.toUpperCase()}</div>
+          <div class="cf-bias ${biasCls}">${biasLabel}</div>
+          <div class="cf-tf" style="margin-top:4px; line-height:1.3;">${structLabel}</div>
+          ${eventBadge}
+        </div>`;
+      }).join('') : '<div class="alert-empty">Data konfluensi gagal dimuat.</div>'}
+    </div>
+    ${d.confluence ? (()=>{
+      const bull = d.confluence.filter(c=>c.bias==='bullish').length;
+      const bear = d.confluence.filter(c=>c.bias==='bearish').length;
+      const total = d.confluence.length;
+      const choch = d.confluence.find(c=>c.structure && c.structure.event && c.structure.event.type==='CHoCH');
+      let verdict, color;
+      if(choch){
+        verdict = `⚠ CHoCH terdeteksi di ${choch.tf.toUpperCase()} — ${choch.structure.event.desc}`;
+        color = 'var(--amber)';
+      } else if(bull===total){
+        verdict = `✓ Full konfluensi BULLISH (trend + struktur align di ${bull}/${total} timeframe)`;
+        color = 'var(--mint)';
+      } else if(bear===total){
+        verdict = `✓ Full konfluensi BEARISH (trend + struktur align di ${bear}/${total} timeframe)`;
+        color = 'var(--crimson)';
+      } else {
+        verdict = `⚠ Campuran — Bullish ${bull}/${total}, Bearish ${bear}/${total}. Timeframe belum align, hati-hati.`;
+        color = 'var(--amber)';
+      }
+      return `<div class="confluence-summary" style="color:${color}; border-color:${color};">${verdict}</div>`;
+    })() : ''}
 
     <div class="ind-section-title">SKOR LONG VS SHORT</div>
     <div class="modal-gauge-wrap">
@@ -824,12 +1945,18 @@ function renderDetail(d){
     </div>
 
     <div class="ind-section-title">RINCIAN FAKTOR</div>
+    <div class="bd-row2"><span class="bd-factor2">Struktur (2x)</span><span class="bd-reason2">${structureReason}</span><span class="bd-num2" style="color:${structureScore>0?'var(--mint)':structureScore<0?'var(--crimson)':'var(--text-3)'}">${factorLabel(structureScore)}</span></div>
+    <div class="bd-row2"><span class="bd-factor2">ADX (modifier)</span><span class="bd-reason2">${adxReason}</span><span class="bd-num2" style="color:var(--text-3);">${adxConfidence.toFixed(2)}x</span></div>
     <div class="bd-row2"><span class="bd-factor2">Trend</span><span class="bd-reason2">${trendReason}</span><span class="bd-num2" style="color:${trendScore>0?'var(--mint)':'var(--crimson)'}">${factorLabel(trendScore)}</span></div>
     <div class="bd-row2"><span class="bd-factor2">Momentum</span><span class="bd-reason2">${momReason}</span><span class="bd-num2" style="color:${momScore>0?'var(--mint)':'var(--crimson)'}">${factorLabel(momScore)}</span></div>
+    <div class="bd-row2"><span class="bd-factor2">MACD</span><span class="bd-reason2">${macdReason}</span><span class="bd-num2" style="color:${macdScore>0?'var(--mint)':'var(--crimson)'}">${factorLabel(macdScore)}</span></div>
     <div class="bd-row2"><span class="bd-factor2">VWAP</span><span class="bd-reason2">${vwapReason}</span><span class="bd-num2" style="color:${vwapScore>0?'var(--mint)':'var(--crimson)'}">${factorLabel(vwapScore)}</span></div>
     <div class="bd-row2"><span class="bd-factor2">Fibonacci</span><span class="bd-reason2">${fibReason}</span><span class="bd-num2" style="color:${fibScore>0?'var(--mint)':'var(--crimson)'}">${factorLabel(fibScore)}</span></div>
+    <div class="bd-row2"><span class="bd-factor2">Volume</span><span class="bd-reason2">${volReason}</span><span class="bd-num2" style="color:${volScore>0?'var(--mint)':'var(--crimson)'}">${factorLabel(volScore)}</span></div>
+    <div class="bd-row2"><span class="bd-factor2">Funding</span><span class="bd-reason2">${fundingReason}</span><span class="bd-num2" style="color:${fundingScore>0?'var(--mint)':'var(--crimson)'}">${factorLabel(fundingScore)}</span></div>
 
     <div class="ind-section-title">RENCANA ENTRY (SOP) — ${d.tf.toUpperCase()}</div>
+    ${d.atrVal!==null ? `<div class="sop-note" style="margin-top:0; margin-bottom:10px;"><b>Konteks Volatilitas (ATR):</b> ATR(14) saat ini ${fmtPrice(d.atrVal)} (${((d.atrVal/d.lastPrice)*100).toFixed(2)}% dari harga). Jarak SL di bawah 1× ATR dari entry cenderung kena "noise" candle biasa — pertimbangkan minimal 1–1.5× ATR (≈ ${fmtPrice(d.atrVal*1.5)}) sebagai buffer tambahan di luar level struktural di bawah.</div>` : ''}
     <div class="entry-cols">
       <div class="entry-card long">
         <div class="entry-card-head"><span>LONG</span><span>${longScore>=5.5?'✓ Bias mendukung':'⚠ Bias lemah'}</span></div>
@@ -850,7 +1977,7 @@ function renderDetail(d){
     </div>
 
     <div class="sop-note">
-      <b>Dasar SOP:</b> Entry ditempatkan di zona konfluensi indikator (EMA21/30, MA200, VWAP, Fibonacci), bukan harga sembarangan. SL wajib di luar level struktural berikutnya sebagai invalidation — bukan jarak tetap. Ukuran posisi ditentukan dari jarak SL ini (risk % dari modal), bukan sebaliknya. RR di bawah 1:1.5 sebaiknya dilewati kecuali ada alasan kuat lain. Ini bukan sinyal otomatis — tetap tunggu konfirmasi price action sebelum eksekusi.
+      <b>Dasar SOP:</b> Entry ditempatkan di zona konfluensi indikator (EMA21/30, MA200, AVWAP+Band, Fibonacci, swing struktural), bukan harga sembarangan. SL wajib di luar level struktural berikutnya sebagai invalidation — bukan jarak tetap. Ukuran posisi ditentukan dari jarak SL ini (risk % dari modal), bukan sebaliknya. RR di bawah 1:1.5 sebaiknya dilewati kecuali ada alasan kuat lain. Kalau ada CHoCH di timeframe manapun, perlakukan sebagai peringatan — tunggu struktur baru terbentuk sebelum entry searah bias lama. Ini bukan sinyal otomatis — tetap tunggu konfirmasi price action sebelum eksekusi.
     </div>
   `;
 }
@@ -867,7 +1994,11 @@ function computeEntryPlan(d){
   if(d.ema21) levels['EMA 21'] = d.ema21;
   if(d.ema30) levels['EMA 30'] = d.ema30;
   if(d.ma200) levels['MA 200'] = d.ma200;
-  if(d.vwap) levels['VWAP'] = d.vwap;
+  if(d.avwap){
+    levels['AVWAP'] = d.avwap.avwap;
+    levels['AVWAP Upper Band'] = d.avwap.upper;
+    levels['AVWAP Lower Band'] = d.avwap.lower;
+  }
   if(d.fib){
     levels['Fib 23.6%'] = d.fib.levels[1].price;
     levels['Fib 38.2%'] = d.fib.levels[2].price;
@@ -876,6 +2007,10 @@ function computeEntryPlan(d){
     levels['Fib 78.6%'] = d.fib.levels[5].price;
     levels['Swing High'] = d.fib.maxHigh;
     levels['Swing Low'] = d.fib.minLow;
+  }
+  if(d.structure){
+    if(d.structure.lastSwingHigh) levels['Swing High (Struktur)'] = d.structure.lastSwingHigh;
+    if(d.structure.lastSwingLow) levels['Swing Low (Struktur)'] = d.structure.lastSwingLow;
   }
   const entries = Object.entries(levels).filter(([k,v]) => v && !isNaN(v));
   const supports = entries.filter(([k,v]) => v < d.lastPrice).sort((a,b) => b[1]-a[1]); // nearest below dulu
@@ -915,6 +2050,101 @@ function computeEntryPlan(d){
   };
 }
 
+// ===== "COPY RINGKASAN BUAT AI" =====
+// Merangkum semua indikator + skor + rencana entry yang lagi tampil di modal jadi satu teks siap-tempel ke Claude.
+function generateAIPrompt(){
+  const f = lastDetailFull;
+  if(!f) return null;
+  const d = f.d;
+  const sym = d.symbol.replace('USDT','');
+  const cf = d.confluence ? d.confluence.map(c=>{
+    const structTxt = c.structure ? c.structure.label + (c.structure.event ? ` (${c.structure.event.type} ${c.structure.event.direction})` : '') : 'data kurang';
+    return `${c.tf.toUpperCase()}: ${c.bias==='bullish'?'Bullish':c.bias==='bearish'?'Bearish':c.bias==='mixed'?'Mixed (EMA & struktur beda arah)':'Netral'} — struktur: ${structTxt}`;
+  }).join('\n') : 'tidak tersedia';
+
+  return `Tolong bantu saya ambil keputusan trading futures untuk pair ${sym}/USDT di Binance, berdasarkan SOP saya: entry di zona konfluensi indikator, SL berbasis struktur (bukan jarak tetap), minimum Risk:Reward 1:1.5, dan struktur market multi-timeframe (HH/HL vs LH/LL, BOS/CHoCH) sebagai penilaian utama sebelum eksekusi.
+
+=== DATA SAAT INI (timeframe ${d.tf.toUpperCase()}, sumber: Binance Futures live) ===
+Harga terakhir: ${fmtPrice(d.lastPrice)}
+
+STRUKTUR MARKET (${d.tf.toUpperCase()}):
+- Bias: ${d.structure ? d.structure.label : 'data kurang'}
+- Swing High terakhir: ${d.structure && d.structure.lastSwingHigh ? fmtPrice(d.structure.lastSwingHigh) : '-'}
+- Swing Low terakhir: ${d.structure && d.structure.lastSwingLow ? fmtPrice(d.structure.lastSwingLow) : '-'}
+- Event: ${d.structure && d.structure.event ? `${d.structure.event.type} ${d.structure.event.direction} — ${d.structure.event.desc}` : 'belum ada BOS/CHoCH baru'}
+
+TREN & VOLUME:
+- EMA 21: ${fmtPrice(d.ema21)}
+- EMA 30: ${fmtPrice(d.ema30)}
+- MA 200: ${d.ma200 ? fmtPrice(d.ma200) : 'data kurang'}
+- Anchored VWAP: ${d.avwap ? fmtPrice(d.avwap.avwap)+' (anchor di '+(d.avwap.anchorDirection==='up'?'swing low':'swing high')+', '+d.avwap.barsFromAnchor+' candle lalu)' : '-'}
+- AVWAP Band (0.5σ): Upper ${d.avwap?fmtPrice(d.avwap.upper):'-'} / Lower ${d.avwap?fmtPrice(d.avwap.lower):'-'}
+- Volume candle terakhir vs rata-rata 20 candle: ${d.volRatio ? d.volRatio.toFixed(2)+'x' : '-'} (harga ${d.priceUp?'naik':'turun'} di candle ini)
+
+MOMENTUM:
+- RSI(14): ${d.rsiVal.toFixed(1)}
+- MACD(12,26,9): ${d.macdVal && d.macdVal.macd!==undefined ? d.macdVal.macd.toFixed(4) : '-'}, Signal: ${d.macdVal && d.macdVal.signal!=null ? d.macdVal.signal.toFixed(4) : '-'}, Histogram ${d.macdVal && d.macdVal.histRising===true?'menguat':d.macdVal && d.macdVal.histRising===false?'melemah':'stabil'}
+- StochRSI %K/%D: ${d.stoch && d.stoch.k!=null ? d.stoch.k.toFixed(1) : '-'} / ${d.stoch && d.stoch.d!=null ? d.stoch.d.toFixed(1) : '-'}
+
+KEKUATAN TREN:
+- ADX(14): ${d.adxVal ? d.adxVal.adx.toFixed(1) : '-'} (${d.adxVal ? (d.adxVal.adx<20?'lemah/sideways':d.adxVal.adx<25?'mulai menguat':d.adxVal.adx<40?'tren kuat':'sangat kuat') : 'data kurang'})
+- +DI/-DI: ${d.adxVal ? d.adxVal.plusDI.toFixed(1)+' / '+d.adxVal.minusDI.toFixed(1) : '-'} (${d.adxVal ? (d.adxVal.plusDI>d.adxVal.minusDI?'buyer dominan':'seller dominan') : '-'})
+
+VOLATILITAS:
+- ATR(14): ${d.atrVal!==null ? fmtPrice(d.atrVal)+' ('+((d.atrVal/d.lastPrice)*100).toFixed(2)+'% dari harga)' : '-'}
+- Bollinger Bands: Upper ${d.bb?fmtPrice(d.bb.upper):'-'} / Mid ${d.bb?fmtPrice(d.bb.mid):'-'} / Lower ${d.bb?fmtPrice(d.bb.lower):'-'} (bandwidth ${d.bb?d.bb.bandwidthPct.toFixed(2)+'%':'-'})
+
+FIBONACCI (swing 90 candle, leg ${d.fib.direction==='up'?'naik':'turun'}):
+${d.fib.levels.map(l=>`- ${(l.ratio*100).toFixed(1)}%: ${fmtPrice(l.price)}`).join('\n')}
+
+FUTURES DATA:
+- Funding Rate: ${d.fundingRate!=null ? (d.fundingRate*100).toFixed(4)+'%' : '-'} (${d.fundingRate>0?'crowded long':d.fundingRate<0?'crowded short':'netral'})
+- Open Interest: ${d.oi!=null ? fmtNum(d.oi)+' kontrak (≈$'+fmtNum(d.oi*d.lastPrice)+')' : '-'}
+
+STRUKTUR & KONFLUENSI MULTI-TIMEFRAME (1H/4H/1D):
+${cf}
+
+SKOR SISTEM (heuristik screener, 8 faktor — Struktur Market dibobot 2x sebagai penilaian utama sesuai SOP saya: Struktur(2x)/Trend/Momentum/MACD/VWAP/Fibonacci/Volume/Funding — Trend & MACD sudah diredam ${f.adxConfidence.toFixed(2)}x sesuai kekuatan ADX):
+- Long Score: ${f.longScore.toFixed(1)}/10
+- Short Score: ${f.shortScore.toFixed(1)}/10
+
+RENCANA ENTRY OTOMATIS DARI SCREENER (referensi awal, bukan keputusan final):
+- LONG → Entry ${fmtPrice(f.entryPlan.long.entry)} (${f.entryPlan.long.entryLabel}), SL ${fmtPrice(f.entryPlan.long.sl)} (${f.entryPlan.long.slLabel}), TP ${fmtPrice(f.entryPlan.long.tp)} (${f.entryPlan.long.tpLabel}), RR 1:${f.entryPlan.long.rr.toFixed(2)}
+- SHORT → Entry ${fmtPrice(f.entryPlan.short.entry)} (${f.entryPlan.short.entryLabel}), SL ${fmtPrice(f.entryPlan.short.sl)} (${f.entryPlan.short.slLabel}), TP ${fmtPrice(f.entryPlan.short.tp)} (${f.entryPlan.short.tpLabel}), RR 1:${f.entryPlan.short.rr.toFixed(2)}
+
+=== YANG SAYA BUTUHKAN ===
+1. Menurutmu bias saat ini Long, Short, atau Netral/tunggu — dan kenapa (rujuk konfluensi antar indikator di atas, bukan cuma satu angka)?
+2. Apakah rencana entry/SL/TP dari screener di atas masuk akal secara struktur, atau ada level yang lebih baik?
+3. Risiko utama apa yang perlu saya waspadai di setup ini sekarang (termasuk funding rate & konfluensi timeframe yang campuran kalau ada)?
+4. Kalau belum layak entry, sinyal apa yang perlu saya tunggu?`;
+}
+
+async function copyAISummary(){
+  const btn = document.getElementById('aiCopyBtn');
+  const text = generateAIPrompt();
+  if(!text){ setStatus("Buka detail pair dulu sebelum copy ringkasan AI.", "err"); return; }
+  try{
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      await navigator.clipboard.writeText(text);
+    } else {
+      // fallback buat browser lama/webview yang nggak dukung Clipboard API
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+      document.body.appendChild(ta); ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+    btn.textContent = "✓ Tersalin! Membuka Claude…";
+    btn.classList.add('copied');
+    window.open('https://claude.ai/new', '_blank');
+    setTimeout(()=>{ btn.textContent = "🤖 Copy Ringkasan buat AI"; btn.classList.remove('copied'); }, 2500);
+  }catch(err){
+    console.error(err);
+    setStatus("Gagal copy ke clipboard — coba manual select teks.", "err");
+  }
+}
+document.getElementById('aiCopyBtn').addEventListener('click', copyAISummary);
+
 document.getElementById('modalCloseBtn').addEventListener('click', ()=>{
   document.getElementById('modalBackdrop').classList.remove('show');
 });
@@ -930,7 +2160,31 @@ document.querySelectorAll('.tf-btn').forEach(btn=>{
   });
 });
 
-// init
+function updateModalStarBtn(symbol){
+  const btn = document.getElementById('mhStarBtn');
+  const active = isWatchlisted(symbol);
+  btn.classList.toggle('active', active);
+  btn.textContent = active ? '★' : '☆';
+}
+document.getElementById('mhStarBtn').addEventListener('click', ()=>{
+  if(!currentDetailSymbol) return;
+  toggleWatchlist(currentDetailSymbol);
+  updateModalStarBtn(currentDetailSymbol);
+  renderTable();
+});
+
+// ===== INIT =====
+(function initSettingsUI(){
+  const s = loadAlertSettings();
+  document.getElementById('setRsiOs').value = s.rsiOs;
+  document.getElementById('setRsiOb').value = s.rsiOb;
+  document.getElementById('setFundingExt').value = s.fundingExt;
+  document.getElementById('setLevelProx').value = s.levelProximity;
+  renderAlertLog();
+  updateAlertBadge();
+  refreshNotifStatus();
+})();
+
 refreshAll();
 
 // ===== PWA: register service worker =====

@@ -1,7 +1,7 @@
 {
   "name": "Patah Pensill Live Screener",
   "short_name": "PP Screener",
-  "description": "Live screener Binance USDT-M Futures dengan indikator EMA, MA200, VWAP, Fibonacci, dan skor Long/Short berbasis SOP.",
+  "description": "Live screener Binance USDT-M Futures — EMA/MA200/Anchored VWAP, Fibonacci, MACD, StochRSI, ATR, Bollinger Bands, ADX, Struktur Market (BOS/CHoCH), Funding Rate, Open Interest, konfluensi multi-timeframe, watchlist, dan alert otomatis berbasis SOP.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
