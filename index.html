@@ -33,6 +33,8 @@
     --crimson-dim:#4A1723;
     --amber:#F5B942;
     --amber-dim:#4A3A14;
+    --violet:#B29BFF;
+    --violet-dim:#2A2050;
     --r-lg:20px;
     --r-md:14px;
     --r-sm:10px;
@@ -97,6 +99,19 @@
   @keyframes alarmPulse{0%,100%{background:var(--crimson);} 50%{background:#ff8095;}}
   .masthead h1{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(16px,2.6vw,21px); letter-spacing:-0.005em; color:var(--text-2);}
 
+  /* ===== INTRO TIP (sekali muncul buat user baru) ===== */
+  .intro-tip{
+    display:none; max-width:var(--container-max); margin:12px auto 0; padding:0 var(--side-pad);
+  }
+  .intro-tip.show{display:block;}
+  .intro-tip-inner{
+    display:flex; align-items:flex-start; gap:10px;
+    background:var(--mint-dim); border:1px solid var(--mint); border-radius:var(--r-md); padding:12px 14px;
+  }
+  .intro-tip-text{flex:1; font-size:12px; line-height:1.6; color:var(--text-1);}
+  .intro-tip-text b{color:var(--mint);}
+  .intro-tip-close{background:none; border:none; color:var(--text-2); font-size:14px; cursor:pointer; padding:0 2px; flex-shrink:0;}
+
   /* ===== HERO STAT CARD (Est. Total Value style) ===== */
   .hero-card{
     max-width:var(--container-max); margin:14px auto 0; padding:20px var(--side-pad);
@@ -126,36 +141,48 @@
     font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:15px; letter-spacing:0.03em;
     text-transform:uppercase; color:var(--text-1); margin-bottom:10px;
   }
-  .hero-mode-pills{display:flex; gap:8px; flex-wrap:wrap;}
+  .hero-mode-pills{display:flex; flex-direction:column; gap:8px;}
+  @media(min-width:768px){
+    .hero-mode-pills{display:grid; grid-template-columns:repeat(3,1fr);}
+  }
   .hero-mode-pill{
-    font-family:'JetBrains Mono',monospace; font-weight:700; font-size:11.5px; text-align:left;
+    font-family:'JetBrains Mono',monospace; font-weight:700; font-size:12px; text-align:left;
     background:var(--surface-2); border:1px solid var(--border); color:var(--text-2);
-    padding:10px 14px; border-radius:var(--r-md); cursor:pointer; text-transform:uppercase; flex:1; min-width:100px;
+    padding:12px 14px; border-radius:var(--r-md); cursor:pointer; text-transform:uppercase; width:100%;
+    display:flex; align-items:center; justify-content:space-between;
   }
   .hero-mode-pill.active{background:var(--mint-dim); border-color:var(--mint); color:var(--mint);}
-  .hero-mode-pill .hmp-sub{display:block; font-size:9px; font-weight:500; color:var(--text-3); margin-top:3px; text-transform:none; letter-spacing:0;}
+  .hero-mode-pill .hmp-sub{font-size:9.5px; font-weight:500; color:var(--text-3); text-transform:none; letter-spacing:0;}
   .hero-mode-pill.active .hmp-sub{color:var(--mint); opacity:0.8;}
   .hero-mode-status{font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--text-3); margin-bottom:12px; display:none;}
   .hero-mode-status.show{display:block;}
 
-  /* ===== MODE RESULTS SECTION (muncul di bawah hero card pas salah satu mode di-tap) ===== */
-  .mode-results-section{
-    max-width:var(--container-max); margin:16px auto 0; padding:0 var(--side-pad);
-    display:none;
+  /* ===== FULL-SCREEN PANEL — dipakai buat Mode Trading Results, Alert, Pengaturan =====
+     Setiap tools yang butuh nampilin konten cukup dalam kebuka sebagai "halaman baru" penuh satu layar,
+     bukan expand kecil di tengah halaman. Nutup lewat tombol ✕ di header. */
+  .fullscreen-panel{
+    position:fixed; inset:0; z-index:150; background:var(--bg);
+    display:none; flex-direction:column;
   }
-  .mode-results-section.show{display:block;}
-  .mode-results-close{
-    font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:700;
-    background:var(--surface-2); border:1px solid var(--border); color:var(--text-2);
-    padding:6px 12px; border-radius:var(--r-pill); cursor:pointer;
+  .fullscreen-panel.show{display:flex;}
+  .fsp-header{
+    display:flex; align-items:center; justify-content:center;
+    border-bottom:1px solid var(--border-soft); flex-shrink:0; background:var(--surface);
   }
+  .fsp-header-inner{
+    width:100%; max-width:var(--container-max); margin:0 auto;
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:16px var(--side-pad);
+  }
+  .fsp-title{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:16px; color:var(--text-1);}
+  .fsp-close{
+    background:var(--surface-2); border:1px solid var(--border); color:var(--text-2); flex-shrink:0;
+    width:34px; height:34px; border-radius:50%; font-size:15px; cursor:pointer; line-height:1;
+  }
+  .fsp-body{flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch;}
+  .fsp-body-inner{max-width:var(--container-max); margin:0 auto; padding:16px var(--side-pad) 50px;}
 
-  /* ===== QUICK ACTION CARDS (P2P/USD/Send Money/BNB style grid) ===== */
-  .quick-grid{
-    max-width:var(--container-max); margin:0 auto; padding:0 var(--side-pad);
-    display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:14px;
-  }
-  @media(max-width:640px){ .quick-grid{grid-template-columns:repeat(2,1fr);} }
+  /* ===== QUICK ACTION CARD STYLE (masih dipakai buat toggle di Pengaturan Alert) ===== */
   .quick-card.btn{
     background:var(--surface); border:1px solid var(--border-soft); border-radius:var(--r-md);
     padding:16px 10px; cursor:pointer; text-align:center; display:flex; flex-direction:column;
@@ -299,7 +326,7 @@
   .modal-backdrop{
     position:fixed; inset:0; background:rgba(3,5,8,0.82);
     display:none; align-items:flex-start; justify-content:center;
-    z-index:100; overflow-y:auto; padding:16px 10px 40px;
+    z-index:160; overflow-y:auto; padding:16px 10px 40px;
     backdrop-filter:blur(2px);
   }
   .modal-backdrop.show{display:flex;}
@@ -317,6 +344,12 @@
     background:none; border:1px solid var(--border); color:var(--text-2);
     width:30px; height:30px; font-size:16px; cursor:pointer; flex-shrink:0; border-radius:var(--r-pill);
   }
+  .modal-back-btn{
+    background:var(--surface-2); border:1px solid var(--border); color:var(--text-2);
+    font-family:'JetBrains Mono',monospace; font-weight:700; font-size:11.5px;
+    padding:8px 14px; border-radius:var(--r-pill); cursor:pointer; flex-shrink:0;
+  }
+  .modal-back-btn:active{transform:scale(0.96);}
   .tf-switch{display:flex; gap:6px; padding:14px 20px 0; flex-wrap:wrap;}
   .tf-btn{
     font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700;
@@ -354,6 +387,13 @@
   .fib-price{color:var(--text-1); font-weight:600; flex:1; text-align:right; padding-right:10px;}
   .fib-marker{width:56px; text-align:right; font-size:10px;}
 
+  .plain-verdict{
+    padding:11px 13px; border-radius:var(--r-md); border:1px solid; margin-bottom:10px;
+    font-size:12.5px; line-height:1.55; font-family:'Inter',sans-serif;
+  }
+  .plain-verdict.score-hi{background:var(--mint-dim); border-color:var(--mint); color:var(--mint);}
+  .plain-verdict.score-lo{background:var(--crimson-dim); border-color:var(--crimson); color:var(--crimson);}
+  .plain-verdict.score-mid{background:var(--amber-dim); border-color:var(--amber); color:var(--amber);}
   .score-points-row{display:flex; gap:10px; margin-bottom:8px;}
   .score-points-box{flex:1; border:1px solid; border-radius:var(--r-md); padding:12px 14px; text-align:center;}
   .score-points-box.long{border-color:var(--mint); background:var(--mint-dim);}
@@ -409,12 +449,6 @@
     background:var(--crimson); color:#fff; font-size:9.5px; font-weight:700; border-radius:var(--r-pill); padding:0 4px; margin-left:6px;
   }
 
-  .panel-drawer{
-    max-width:var(--container-max); margin:0 auto 16px; padding:0 var(--side-pad);
-    display:none;
-  }
-  .panel-drawer.show{display:block;}
-  .drawer-box{border:1px solid var(--border); background:var(--surface); padding:16px; border-radius:var(--r-lg);}
   .drawer-title{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.08em; color:var(--text-2); margin-bottom:12px; text-transform:uppercase;}
   .settings-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; margin-bottom:14px;}
   .setting-field label{display:block; font-size:10px; color:var(--text-3); margin-bottom:5px; font-family:'JetBrains Mono',monospace;}
@@ -425,25 +459,40 @@
   .setting-field textarea{resize:vertical; font-family:'Inter',sans-serif; line-height:1.5;}
   .setting-field select{appearance:none; -webkit-appearance:none; cursor:pointer;}
 
-  /* ===== JURNAL TRADING (footer, input manual, gaya Notion) ===== */
-  .journal-section{max-width:var(--container-max); margin:24px auto 0; padding:0 var(--side-pad);}
+  /* ===== JURNAL TRADING — dibikin visual DISTINCT dari section lain (aksen violet, bukan amber/mint/crimson yang udah dipakai sinyal trading) ===== */
+  .journal-frame{max-width:var(--container-max); margin:28px auto 0; padding:0 var(--side-pad);}
+  .journal-frame-inner{
+    background:linear-gradient(160deg, rgba(178,155,255,0.09) 0%, var(--surface) 50%);
+    border:1px solid var(--violet); border-radius:var(--r-lg); padding:20px;
+    box-shadow:0 10px 32px rgba(178,155,255,0.08), 0 2px 10px rgba(0,0,0,0.35);
+  }
+  .journal-frame-header{display:flex; align-items:center; gap:12px; margin-bottom:16px;}
+  .jfh-icon{
+    width:42px; height:42px; border-radius:50%; background:var(--violet-dim); border:1px solid var(--violet);
+    display:flex; align-items:center; justify-content:center; font-size:19px; flex-shrink:0;
+  }
+  .jfh-text{flex:1; min-width:0;}
+  .jfh-title{font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:17px; color:var(--text-1); letter-spacing:-0.005em;}
+  .jfh-sub{font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--text-3); margin-top:2px; letter-spacing:0.02em;}
+  .journal-frame-actions{display:flex; gap:8px; margin-bottom:16px;}
+  .journal-frame-actions .btn{flex:1; text-align:center;}
   .journal-add-btn{
     font-family:'JetBrains Mono',monospace; font-weight:700; font-size:11px;
-    background:var(--mint-dim); border:1px solid var(--mint); color:var(--mint);
-    padding:8px 14px; border-radius:var(--r-pill); cursor:pointer;
+    background:var(--violet); border:1px solid var(--violet); color:#1C1030;
+    padding:10px 14px; border-radius:var(--r-pill); cursor:pointer;
   }
   .journal-clear-btn{
     font-family:'JetBrains Mono',monospace; font-weight:700; font-size:11px;
     background:var(--surface-2); border:1px solid var(--border); color:var(--text-3);
-    padding:8px 14px; border-radius:var(--r-pill); cursor:pointer;
+    padding:10px 14px; border-radius:var(--r-pill); cursor:pointer;
   }
   .journal-clear-btn:active{color:var(--crimson); border-color:var(--crimson);}
   .journal-stats{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:14px;}
   @media(max-width:560px){ .journal-stats{grid-template-columns:repeat(2,1fr);} }
-  .journal-list{background:var(--surface); border:1px solid var(--border-soft); border-radius:var(--r-lg); overflow:hidden;}
+  .journal-list{background:var(--surface-2); border:1px solid var(--border-soft); border-radius:var(--r-md); overflow:hidden;}
   .journal-entry{padding:13px 16px; border-bottom:1px solid var(--border-soft); cursor:pointer;}
   .journal-entry:last-child{border-bottom:none;}
-  .journal-entry:active{background:var(--surface-2);}
+  .journal-entry:active{background:var(--surface);}
   .je-top{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:6px;}
   .je-symbol{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:14px; color:var(--text-1);}
   .je-date{font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text-3); margin-left:auto;}
@@ -453,6 +502,11 @@
   .je-row b{color:var(--text-1);}
   .je-pnl{font-weight:700; margin-left:auto;}
   .je-setup{font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--text-3); margin-top:6px; font-style:italic;}
+  .badge-pill.pulse-live{position:relative;}
+  .badge-pill.pulse-live::before{
+    content:''; display:inline-block; width:5px; height:5px; border-radius:50%; background:currentColor;
+    margin-right:4px; animation:pulse 1.3s ease-in-out infinite;
+  }
 
   .alert-log{max-height:260px; overflow-y:auto; border:1px solid var(--border-soft); margin-top:6px; border-radius:var(--r-md);}
   .alert-row{
@@ -502,6 +556,17 @@
   }
   .btn-ai.copied{background:var(--mint); color:#04120C; border-color:var(--mint);}
 
+  /* ===== SCROLL TO TOP (muncul pas udah scroll lumayan jauh) ===== */
+  .scroll-top-btn{
+    position:fixed; right:16px; bottom:calc(78px + env(safe-area-inset-bottom)); z-index:85;
+    width:42px; height:42px; border-radius:50%; background:var(--mint); border:none; color:#04120C;
+    display:none; align-items:center; justify-content:center; cursor:pointer;
+    box-shadow:0 4px 16px rgba(33,241,168,0.35);
+  }
+  .scroll-top-btn.show{display:flex;}
+  .scroll-top-btn svg{width:20px; height:20px; stroke:currentColor; fill:none; stroke-width:2.2;}
+  .scroll-top-btn:active{transform:scale(0.92);}
+
   /* ===== BOTTOM NAV (app-style quick switcher) ===== */
   .bottom-nav{
     position:fixed; left:0; right:0; bottom:0; z-index:90;
@@ -542,6 +607,13 @@
     <h1>Futures Screener</h1>
   </div>
 
+  <div class="intro-tip" id="introTip">
+    <div class="intro-tip-inner">
+      <div class="intro-tip-text">👋 <b>Baru pertama kali?</b> Tap salah satu <b>Mode Trading</b> di bawah buat lihat pair yang layak entry sekarang, atau tap pair mana aja di list buat analisa lengkap. Semua data real-time langsung dari Binance, gratis, tanpa API key.</div>
+      <button class="intro-tip-close" id="introTipClose" title="Tutup">✕</button>
+    </div>
+  </div>
+
   <div class="hero-card">
     <div class="hero-inner">
       <div>
@@ -558,38 +630,77 @@
           <button class="hero-mode-pill" id="modeSwingBtn" data-mode="swing">Swing<span class="hmp-sub">4H · 12H · 1D · 1W</span></button>
         </div>
       </div>
+      <div class="hero-mode-block">
+        <div class="hero-mode-title">AKSI CEPAT</div>
+        <div class="hero-mode-pills">
+          <button class="hero-mode-pill" id="autoBtn">⏱️ Auto-Refresh: OFF</button>
+          <button class="hero-mode-pill" id="scanTopBtn">⚡ Deep Scan Top 20</button>
+          <button class="hero-mode-pill" id="alertBtn">🔔 Alert<span class="badge-count" id="alertBadge" style="display:none;">0</span></button>
+        </div>
+      </div>
       <div class="hero-meta"><span id="metaInfo">Menghubungkan ke fapi.binance.com…</span> <span id="statusText"></span></div>
     </div>
   </div>
 
-  <div class="mode-results-section" id="modeResultsSection">
-    <div class="section-head">
-      <span id="modeResultsTitle">Layak Entry</span>
-      <button class="mode-results-close" id="modeResultsClose">✕ Tutup</button>
+  <div class="fullscreen-panel" id="modeResultsSection">
+    <div class="fsp-header">
+      <div class="fsp-header-inner">
+        <span class="fsp-title" id="modeResultsTitle">Layak Entry</span>
+        <button class="fsp-close" id="modeResultsClose">✕</button>
+      </div>
     </div>
-    <div class="hero-mode-status" id="heroModeStatus"></div>
-    <div class="coin-list" id="modeResultsList"></div>
+    <div class="fsp-body">
+      <div class="fsp-body-inner">
+        <div class="hero-mode-status" id="heroModeStatus"></div>
+        <div class="coin-list" id="modeResultsList"></div>
+      </div>
+    </div>
   </div>
 
-  <div class="quick-grid">
-    <button class="btn quick-card" id="autoBtn">⏱️ Auto-Refresh: OFF</button>
-    <button class="btn quick-card" id="scanTopBtn">⚡ Deep Scan Top 20</button>
-    <button class="btn quick-card" id="alertBtn">🔔 Alert<span class="badge-count" id="alertBadge" style="display:none;">0</span></button>
-    <button class="btn quick-card" id="settingsBtn">⚙ Pengaturan Alert</button>
+  <div class="journal-frame" id="journalSection">
+    <div class="journal-frame-inner">
+      <div class="journal-frame-header">
+        <div class="jfh-icon">📓</div>
+        <div class="jfh-text">
+          <div class="jfh-title">Jurnal Trading</div>
+          <div class="jfh-sub">CATATAN PRIBADI · TERSIMPAN LOKAL DI HP KAMU</div>
+        </div>
+      </div>
+      <div class="journal-frame-actions">
+        <button class="btn journal-clear-btn" id="journalClearBtn" style="display:none;">Hapus Semua</button>
+        <button class="btn journal-add-btn" id="journalAddBtn">+ Tambah Entry</button>
+      </div>
+      <div class="journal-stats" id="journalStats"></div>
+      <div class="journal-list" id="journalList"></div>
+    </div>
   </div>
 
   <div class="panel">
 
-    <div class="panel-drawer" id="alertDrawer">
-      <div class="drawer-box">
-        <div class="drawer-title">Riwayat Alert</div>
-        <div class="alert-log" id="alertLog"><div class="alert-empty">Belum ada alert terpicu.</div></div>
-        <button class="btn" id="clearAlertBtn" style="margin-top:10px;">Bersihkan Riwayat</button>
+    <div class="fullscreen-panel" id="alertDrawer">
+      <div class="fsp-header">
+        <div class="fsp-header-inner">
+          <span class="fsp-title">🔔 Riwayat Alert</span>
+          <button class="fsp-close" id="alertDrawerClose">✕</button>
+        </div>
+      </div>
+      <div class="fsp-body">
+        <div class="fsp-body-inner">
+          <div class="alert-log" id="alertLog"><div class="alert-empty">Belum ada alert terpicu.</div></div>
+          <button class="btn" id="clearAlertBtn" style="margin-top:10px; width:100%;">Bersihkan Riwayat</button>
+        </div>
       </div>
     </div>
 
-    <div class="panel-drawer" id="settingsDrawer">
-      <div class="drawer-box">
+    <div class="fullscreen-panel" id="settingsDrawer">
+      <div class="fsp-header">
+        <div class="fsp-header-inner">
+          <span class="fsp-title">⚙ Pengaturan Alert</span>
+          <button class="fsp-close" id="settingsDrawerClose">✕</button>
+        </div>
+      </div>
+      <div class="fsp-body">
+        <div class="fsp-body-inner">
         <div class="drawer-title">🚨 Alarm Mayoritas Timeframe Selaras (Semua Pair)</div>
         <div class="settings-grid">
           <div class="setting-field">
@@ -611,6 +722,7 @@
         <button class="btn" id="notifPermBtn" style="margin-left:8px;">Izinkan Notifikasi Browser</button>
         <div class="notif-status" id="notifStatus"></div>
         <div class="drawer-title" style="margin-top:16px;">Alert Watchlist dicek tiap Auto-Refresh: RSI ekstrem (1H), funding rate ekstrem, harga mendekati EMA21/EMA30/MA200/AVWAP+Band/Fibonacci (4H), dan Change of Character (CHoCH) struktur market di 4H — khusus pair yang kamu tandai ⭐.</div>
+        </div>
       </div>
     </div>
 
@@ -656,18 +768,6 @@
     </div>
   </div>
 
-  <div class="journal-section">
-    <div class="section-head">
-      <span>📓 Jurnal Trading</span>
-      <div style="display:flex; gap:8px;">
-        <button class="btn journal-clear-btn" id="journalClearBtn" style="display:none;">Hapus Semua</button>
-        <button class="btn journal-add-btn" id="journalAddBtn">+ Tambah Entry</button>
-      </div>
-    </div>
-    <div class="journal-stats" id="journalStats"></div>
-    <div class="journal-list" id="journalList"></div>
-  </div>
-
   <div class="modal-backdrop" id="journalModalBackdrop">
     <div class="modal">
       <div class="modal-head">
@@ -686,14 +786,16 @@
             <div class="setting-field"><label>Tanggal</label><input type="date" id="jfDate"></div>
             <div class="setting-field">
               <label>Status</label>
-              <select id="jfStatus"><option value="open">Open</option><option value="win">Win</option><option value="loss">Loss</option><option value="breakeven">Breakeven</option></select>
+              <select id="jfStatus"><option value="floating">Floating (posisi terbuka)</option><option value="open">Open</option><option value="win">Win</option><option value="loss">Loss</option><option value="breakeven">Breakeven</option></select>
             </div>
             <div class="setting-field"><label>Entry Price</label><input type="number" id="jfEntry" step="any"></div>
             <div class="setting-field"><label>Exit Price</label><input type="number" id="jfExit" step="any"></div>
             <div class="setting-field"><label>Stop Loss</label><input type="number" id="jfSl" step="any"></div>
-            <div class="setting-field"><label>Take Profit</label><input type="number" id="jfTp" step="any"></div>
-            <div class="setting-field"><label>PnL ($)</label><input type="number" id="jfPnlUsd" step="any"></div>
-            <div class="setting-field"><label>PnL (%)</label><input type="number" id="jfPnlPct" step="any"></div>
+            <div class="setting-field"><label>Take Profit 1</label><input type="number" id="jfTp1" step="any"></div>
+            <div class="setting-field"><label>Take Profit 2</label><input type="number" id="jfTp2" step="any"></div>
+            <div class="setting-field"><label>Take Profit 3</label><input type="number" id="jfTp3" step="any"></div>
+            <div class="setting-field"><label>PnL ($) <span style="text-transform:none; opacity:0.7;">— realized/floating</span></label><input type="number" id="jfPnlUsd" step="any"></div>
+            <div class="setting-field"><label>PnL (%) <span style="text-transform:none; opacity:0.7;">— realized/floating</span></label><input type="number" id="jfPnlPct" step="any"></div>
           </div>
           <div class="setting-field" style="margin-bottom:12px;"><label>Setup / Strategi</label><input type="text" id="jfSetup" placeholder="Break & retest 4H, dll"></div>
           <div class="setting-field" style="margin-bottom:12px;"><label>Kondisi Emosi</label><input type="text" id="jfEmotion" placeholder="Tenang / FOMO / ragu-ragu, dll"></div>
@@ -712,7 +814,7 @@
           <div class="mh-headrow"><div class="mh-sym" id="mhSym">-</div><button class="mh-star" id="mhStarBtn" title="Watchlist">☆</button></div>
           <div class="mh-price" id="mhPrice">-</div>
         </div>
-        <button class="modal-close" id="modalCloseBtn">✕</button>
+        <button class="modal-back-btn" id="modalCloseBtn">← Kembali</button>
       </div>
       <div class="tf-switch" id="tfSwitch">
         <button class="tf-btn" data-tf="15m">15M</button>
@@ -734,6 +836,10 @@
     </div>
   </div>
 
+  <button class="scroll-top-btn" id="scrollTopBtn" title="Kembali ke atas">
+    <svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+  </button>
+
   <nav class="bottom-nav">
     <div class="bottom-nav-inner">
     <button class="bn-item active" id="bnAll">
@@ -744,9 +850,9 @@
       <svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.7 6.2.6-4.7 4.2 1.4 6.1L12 16.8 6.5 19.6l1.4-6.1L3.2 9.3l6.2-.6L12 3z"/></svg>
       <span>Watchlist</span>
     </button>
-    <button class="bn-item" id="bnScan">
-      <svg viewBox="0 0 24 24"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
-      <span>Scan</span>
+    <button class="bn-item" id="bnJournal">
+      <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+      <span>Jurnal</span>
     </button>
     <button class="bn-item" id="bnAlert">
       <svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
@@ -767,6 +873,7 @@ let tickerData = [];      // merged 24hr data
 let deepData = {};        // symbol -> {rsi1h, trend4h, deepScore, label}
 let fundingData = {};     // symbol -> fundingRate (decimal, e.g. 0.0001)
 let modeQualifyData = {}; // symbol -> {bias, rsi, reason} — hasil scan "layak entry" per Mode Trading
+let modeScanToken = 0; // dinaikkan tiap scan baru dimulai — dipakai buat batalkan scan lama yang masih jalan (cegah race condition)
 let currentFilter = "all";
 let sortKey = "quoteVolume";
 let sortDir = -1;
@@ -836,12 +943,18 @@ function renderJournal(){
   }
   listEl.innerHTML = entries.map(e=>{
     const dirCls = e.direction==='long' ? 'score-hi' : 'score-lo';
-    const statusMap = { win:{label:'WIN', cls:'score-hi'}, loss:{label:'LOSS', cls:'score-lo'}, breakeven:{label:'BE', cls:'score-mid'}, open:{label:'OPEN', cls:'score-mid'} };
-    const st = statusMap[e.status] || statusMap.open;
+    const statusMap = {
+      win:{label:'WIN', cls:'score-hi'}, loss:{label:'LOSS', cls:'score-lo'}, breakeven:{label:'BE', cls:'score-mid'},
+      open:{label:'OPEN', cls:'score-mid'}, floating:{label:'FLOATING', cls:'score-mid pulse-live'},
+    };
+    const st = statusMap[e.status] || statusMap.floating;
     const pnlUsd = parseFloat(e.pnlUsd);
     const pnlPct = parseFloat(e.pnlPct);
     const hasPnl = !isNaN(pnlUsd) || !isNaN(pnlPct);
     const pnlCls = (pnlUsd>0 || pnlPct>0) ? 'chg-pos' : (pnlUsd<0 || pnlPct<0) ? 'chg-neg' : '';
+    // Kompatibel sama entry lama yang masih pakai field tunggal "tp" (sebelum ada TP1/2/3)
+    const tps = [e.tp1 ?? e.tp, e.tp2, e.tp3].filter(v => v!=null && v!=='');
+    const tpText = tps.length ? tps.map((v,i)=>`TP${i+1}: ${fmtPrice(parseFloat(v))}`).join(' · ') : null;
     return `
     <div class="journal-entry" onclick="openJournalForm('${e.id}')">
       <div class="je-top">
@@ -856,6 +969,7 @@ function renderJournal(){
         <span>Exit: <b>${e.exit!=null && e.exit!==''?fmtPrice(parseFloat(e.exit)):'-'}</b></span>
         ${hasPnl ? `<span class="je-pnl ${pnlCls}">${!isNaN(pnlUsd)?(pnlUsd>=0?'+':'')+pnlUsd.toFixed(2)+'$':''}${!isNaN(pnlPct)?' ('+(pnlPct>=0?'+':'')+pnlPct.toFixed(2)+'%)':''}</span>` : ''}
       </div>
+      ${tpText ? `<div class="je-row" style="margin-top:3px;">${tpText}</div>` : ''}
       ${e.setup ? `<div class="je-setup">${escapeHtml(e.setup)}</div>` : ''}
     </div>`;
   }).join('');
@@ -886,11 +1000,14 @@ function openJournalForm(id){
       document.getElementById('jfSymbol').value = entry.symbol || '';
       document.getElementById('jfDirection').value = entry.direction || 'long';
       document.getElementById('jfDate').value = entry.date || '';
-      document.getElementById('jfStatus').value = entry.status || 'open';
+      document.getElementById('jfStatus').value = entry.status || 'floating';
       document.getElementById('jfEntry').value = entry.entry ?? '';
       document.getElementById('jfExit').value = entry.exit ?? '';
       document.getElementById('jfSl').value = entry.sl ?? '';
-      document.getElementById('jfTp').value = entry.tp ?? '';
+      // Kompatibel sama entry lama yang masih pakai field tunggal "tp" (sebelum ada TP1/2/3)
+      document.getElementById('jfTp1').value = (entry.tp1 ?? entry.tp) ?? '';
+      document.getElementById('jfTp2').value = entry.tp2 ?? '';
+      document.getElementById('jfTp3').value = entry.tp3 ?? '';
       document.getElementById('jfPnlUsd').value = entry.pnlUsd ?? '';
       document.getElementById('jfPnlPct').value = entry.pnlPct ?? '';
       document.getElementById('jfSetup').value = entry.setup || '';
@@ -901,6 +1018,7 @@ function openJournalForm(id){
   } else {
     document.getElementById('journalModalTitle').textContent = 'Tambah Entry Jurnal';
     document.getElementById('jfDate').value = new Date().toISOString().slice(0,10);
+    document.getElementById('jfStatus').value = 'floating'; // posisi baru biasanya masih terbuka/mengambang
   }
   document.getElementById('journalModalBackdrop').classList.add('show');
 }
@@ -1321,6 +1439,7 @@ function rsi(closes, period){
     avgGain = (avgGain*(period-1)+g)/period;
     avgLoss = (avgLoss*(period-1)+l)/period;
   }
+  if(avgGain===0 && avgLoss===0) return 50; // harga sama sekali nggak bergerak — netral, bukan "all gains"
   if(avgLoss===0) return 100;
   const rs = avgGain/avgLoss;
   return 100 - (100/(1+rs));
@@ -1336,13 +1455,13 @@ function rsiSeries(closes, period){
     if(diff>=0) gains+=diff; else losses -= diff;
   }
   let avgGain = gains/period, avgLoss = losses/period;
-  out[period] = avgLoss===0 ? 100 : 100-(100/(1+avgGain/avgLoss));
+  out[period] = (avgGain===0 && avgLoss===0) ? 50 : avgLoss===0 ? 100 : 100-(100/(1+avgGain/avgLoss));
   for(let i=period+1;i<closes.length;i++){
     const diff = closes[i]-closes[i-1];
     const g = diff>0?diff:0, l = diff<0?-diff:0;
     avgGain = (avgGain*(period-1)+g)/period;
     avgLoss = (avgLoss*(period-1)+l)/period;
-    out[i] = avgLoss===0 ? 100 : 100-(100/(1+avgGain/avgLoss));
+    out[i] = (avgGain===0 && avgLoss===0) ? 50 : avgLoss===0 ? 100 : 100-(100/(1+avgGain/avgLoss));
   }
   return out;
 }
@@ -1678,6 +1797,7 @@ async function qualifyForMode(symbol, tf){
 
 async function runModeScan(mode){
   if(tickerData.length === 0){ setStatus("Tunggu data pair dimuat dulu.", "err"); return; }
+  const myToken = ++modeScanToken; // token unik buat scan ini — kalau ada scan baru mulai, token global berubah dan scan ini tau harus berhenti
   const info = MODE_TIMEFRAMES[mode];
   document.querySelectorAll('.hero-mode-pill').forEach(p=>p.classList.toggle('active', p.dataset.mode===mode));
 
@@ -1689,7 +1809,6 @@ async function runModeScan(mode){
   statusEl.classList.add('show');
   titleEl.textContent = `Layak Entry — ${info.label}`;
   listEl.innerHTML = `<div class="empty-state"><span class="loader"></span>Menyiapkan scan…</div>`;
-  section.scrollIntoView({behavior:'smooth', block:'start'});
 
   // Fokus ke pair paling likuid (volume tertinggi) biar hasil relevan buat dieksekusi & jumlah request terkendali
   const CANDIDATE_POOL = 40;
@@ -1704,12 +1823,15 @@ async function runModeScan(mode){
   async function worker(){
     while(idx < candidates.length){
       const item = candidates[idx++];
-      modeQualifyData[item.symbol] = await qualifyForMode(item.symbol, info.tf);
+      const result = await qualifyForMode(item.symbol, info.tf);
+      if(myToken !== modeScanToken) return; // scan ini udah disusul scan yang lebih baru — berhenti diam-diam, jangan tulis hasil basi
+      modeQualifyData[item.symbol] = result;
       done++;
       statusEl.textContent = `Scanning ${candidates.length} pair paling likuid di timeframe ${info.tf.toUpperCase()}… ${done}/${candidates.length}`;
     }
   }
   await Promise.all(Array.from({length:CONCURRENCY}, worker));
+  if(myToken !== modeScanToken) return; // scan ini udah usang pas semua worker kelar — jangan render ke layar
 
   const qualifiedSymbols = Object.keys(modeQualifyData).filter(sym => modeQualifyData[sym].bias);
   statusEl.textContent = `✓ ${info.label}: ${qualifiedSymbols.length} dari ${candidates.length} pair likuid layak entry (timeframe ${info.tf.toUpperCase()})`;
@@ -1968,15 +2090,18 @@ document.getElementById('autoBtn').addEventListener('click', function(){
   }
 });
 
-// ===== ALERT DRAWER & SETTINGS DRAWER =====
+// ===== ALERT DRAWER & SETTINGS DRAWER (full-screen panel) =====
 document.getElementById('alertBtn').addEventListener('click', ()=>{
   document.getElementById('settingsDrawer').classList.remove('show');
   document.getElementById('alertDrawer').classList.toggle('show');
   syncDrawerNavState();
 });
-document.getElementById('settingsBtn').addEventListener('click', ()=>{
+document.getElementById('alertDrawerClose').addEventListener('click', ()=>{
   document.getElementById('alertDrawer').classList.remove('show');
-  document.getElementById('settingsDrawer').classList.toggle('show');
+  syncDrawerNavState();
+});
+document.getElementById('settingsDrawerClose').addEventListener('click', ()=>{
+  document.getElementById('settingsDrawer').classList.remove('show');
   syncDrawerNavState();
 });
 document.getElementById('clearAlertBtn').addEventListener('click', ()=>{
@@ -2030,7 +2155,6 @@ function syncDrawerNavState(){
   document.getElementById('bnAlert').classList.toggle('active', alertOpen);
   document.getElementById('bnSettings').classList.toggle('active', settingsOpen);
   document.getElementById('alertBtn').classList.toggle('active', alertOpen);
-  document.getElementById('settingsBtn').classList.toggle('active', settingsOpen);
 }
 document.getElementById('bnAll').addEventListener('click', ()=>{
   document.getElementById('alertDrawer').classList.remove('show');
@@ -2046,27 +2170,21 @@ document.getElementById('bnWatchlist').addEventListener('click', ()=>{
   applyFilter('watchlist');
   document.querySelector('.coin-list').scrollIntoView({behavior:'smooth', block:'start'});
 });
-document.getElementById('bnScan').addEventListener('click', ()=>{
+document.getElementById('bnJournal').addEventListener('click', ()=>{
   document.getElementById('alertDrawer').classList.remove('show');
   document.getElementById('settingsDrawer').classList.remove('show');
   syncDrawerNavState();
-  scanTopVisible(20);
+  document.getElementById('journalSection').scrollIntoView({behavior:'smooth', block:'start'});
 });
 document.getElementById('bnAlert').addEventListener('click', ()=>{
   document.getElementById('settingsDrawer').classList.remove('show');
   document.getElementById('alertDrawer').classList.toggle('show');
   syncDrawerNavState();
-  if(document.getElementById('alertDrawer').classList.contains('show')){
-    document.getElementById('alertDrawer').scrollIntoView({behavior:'smooth', block:'start'});
-  }
 });
 document.getElementById('bnSettings').addEventListener('click', ()=>{
   document.getElementById('alertDrawer').classList.remove('show');
   document.getElementById('settingsDrawer').classList.toggle('show');
   syncDrawerNavState();
-  if(document.getElementById('settingsDrawer').classList.contains('show')){
-    document.getElementById('settingsDrawer').scrollIntoView({behavior:'smooth', block:'start'});
-  }
 });
 
 // ===== DETAIL MODAL: EMA21/EMA30/MA200/VWAP/Fibonacci + Long/Short Score =====
@@ -2311,6 +2429,29 @@ function evaluateTrendAlignment(confluence){
   return { verdict:'mixed', label:'TREN CAMPURAN — timeframe belum sepakat', sub:'Entry di kondisi ini lebih berisiko. Sebaiknya tunggu sampai mayoritas timeframe sejalan, atau kecilkan ukuran posisi kalau tetap mau eksekusi.', cls:'score-mid' };
 }
 
+// Terjemahkan tumpukan poin + verdict tren jadi SATU kalimat simpel — biar orang awam nggak harus
+// baca semua kriteria satu-satu buat ngerti "jadi kesimpulannya gimana?"
+function plainVerdict(longPoints, shortPoints, maxPoints, trendAlign){
+  const longWins = longPoints > shortPoints && longPoints >= maxPoints/2;
+  const shortWins = shortPoints > longPoints && shortPoints >= maxPoints/2;
+  const bullishTrend = trendAlign.verdict==='aligned-bullish' || trendAlign.verdict==='mostly-bullish';
+  const bearishTrend = trendAlign.verdict==='aligned-bearish' || trendAlign.verdict==='mostly-bearish';
+
+  if(!longWins && !shortWins){
+    return { text:`Belum ada arah yang dominan (${longPoints} vs ${shortPoints} dari ${maxPoints} syarat) — sebaiknya tunggu sinyal lebih jelas sebelum entry.`, cls:'score-mid' };
+  }
+  if(longWins){
+    if(trendAlign.verdict==='aligned-bearish'){
+      return { text:`Poin condong LONG (${longPoints}/${maxPoints}), TAPI tren di SEMUA timeframe lagi turun — dua sinyal ini saling bertentangan. Lebih aman tunggu dulu.`, cls:'score-mid' };
+    }
+    return { text:`Condong LONG (${longPoints} dari ${maxPoints} syarat)${bullishTrend?', dan didukung juga oleh tren multi-timeframe di atas':''}.`, cls:'score-hi' };
+  }
+  if(trendAlign.verdict==='aligned-bullish'){
+    return { text:`Poin condong SHORT (${shortPoints}/${maxPoints}), TAPI tren di SEMUA timeframe lagi naik — dua sinyal ini saling bertentangan. Lebih aman tunggu dulu.`, cls:'score-mid' };
+  }
+  return { text:`Condong SHORT (${shortPoints} dari ${maxPoints} syarat)${bearishTrend?', dan didukung juga oleh tren multi-timeframe di atas':''}.`, cls:'score-lo' };
+}
+
 function renderDetail(d){
   const posBadge = (val) => {
     if(val===null || val===undefined) return `<span class="ib">-</span>`;
@@ -2333,6 +2474,7 @@ function renderDetail(d){
   const { longPoints, shortPoints, maxPoints, criteria } = entryScore;
   const longPct = maxPoints>0 ? (longPoints/maxPoints)*100 : 0;
   const shortPct = maxPoints>0 ? (shortPoints/maxPoints)*100 : 0;
+  const verdict = plainVerdict(longPoints, shortPoints, maxPoints, trendAlign);
 
   const entryPlan = computeEntryPlan(d);
 
@@ -2507,6 +2649,7 @@ function renderDetail(d){
     ${(d.lsLatest && d.topLatest && Math.sign(d.lsLatest.longPct-50) !== Math.sign(d.topLatest.longPct-50)) ? `<div class="sop-note" style="margin-top:8px; border-color:var(--amber);"><b>⚠ Retail vs Top Trader beda arah:</b> Mayoritas akun retail condong ${d.lsLatest.longPct>50?'LONG':'SHORT'}, tapi top trader (posisi besar) justru condong ${d.topLatest.longPct>50?'LONG':'SHORT'}. Pola ini sering diasosiasikan dengan retail sebagai "exit liquidity" — pertimbangkan lebih hati-hati ikut arah crowd retail di sini.</div>` : ''}
 
     <div class="ind-section-title">SKOR ENTRY (SISTEM POIN)</div>
+    <div class="plain-verdict ${verdict.cls}">💬 Kesimpulan: ${verdict.text}</div>
     <div class="score-points-row">
       <div class="score-points-box long">
         <div class="spb-label">LONG</div>
@@ -2663,8 +2806,14 @@ function computeEntryScore(ctx){
   }
 
   if(ctx.divergence && (ctx.divergence.bullishDiv || ctx.divergence.bearishDiv)){
-    const side = ctx.divergence.bullishDiv ? 'long' : 'short';
-    criteria.push({name:'Divergence RSI', side, note: side==='long' ? 'Bullish divergence terdeteksi' : 'Bearish divergence terdeteksi'});
+    // Kalau dua-duanya kedeteksi bersamaan (jarang, tapi bisa terjadi dari pasangan swing yang beda), itu sinyal
+    // yang saling bertentangan — jangan asal condongin ke salah satu, anggap netral/konflik.
+    const conflicting = !!(ctx.divergence.bullishDiv && ctx.divergence.bearishDiv);
+    const side = conflicting ? null : (ctx.divergence.bullishDiv ? 'long' : 'short');
+    const note = conflicting
+      ? 'Bullish & bearish divergence terdeteksi bersamaan — sinyal saling bertentangan, diabaikan'
+      : (side==='long' ? 'Bullish divergence terdeteksi' : 'Bearish divergence terdeteksi');
+    criteria.push({name:'Divergence RSI', side, note});
   }
 
   if(ctx.oiTrend){
@@ -2904,7 +3053,9 @@ document.getElementById('journalForm').addEventListener('submit', (e)=>{
     entry: document.getElementById('jfEntry').value,
     exit: document.getElementById('jfExit').value,
     sl: document.getElementById('jfSl').value,
-    tp: document.getElementById('jfTp').value,
+    tp1: document.getElementById('jfTp1').value,
+    tp2: document.getElementById('jfTp2').value,
+    tp3: document.getElementById('jfTp3').value,
     pnlUsd: document.getElementById('jfPnlUsd').value,
     pnlPct: document.getElementById('jfPnlPct').value,
     setup: document.getElementById('jfSetup').value.trim(),
@@ -2975,6 +3126,25 @@ document.getElementById('mhStarBtn').addEventListener('click', ()=>{
 })();
 
 document.getElementById('alarmFlash').addEventListener('click', function(){ this.classList.remove('show'); });
+
+// ===== SCROLL TO TOP =====
+const scrollTopBtn = document.getElementById('scrollTopBtn');
+window.addEventListener('scroll', ()=>{
+  scrollTopBtn.classList.toggle('show', window.scrollY > 500);
+});
+scrollTopBtn.addEventListener('click', ()=>{
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+
+// ===== INTRO TIP: tampil sekali buat user baru =====
+const LS_SEEN_INTRO = "pp_seen_intro";
+if(!localStorage.getItem(LS_SEEN_INTRO)){
+  document.getElementById('introTip').classList.add('show');
+}
+document.getElementById('introTipClose').addEventListener('click', ()=>{
+  localStorage.setItem(LS_SEEN_INTRO, '1');
+  document.getElementById('introTip').classList.remove('show');
+});
 
 renderJournal();
 refreshAll();
