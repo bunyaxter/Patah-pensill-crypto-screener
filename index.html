@@ -63,10 +63,7 @@
     background:var(--surface); border:1px solid var(--border-soft); border-radius:var(--r-pill);
     overflow:hidden; white-space:nowrap; padding:10px 0; display:flex; align-items:center;
   }
-  .ticker-pill::before{
-    content:'⚡'; flex-shrink:0; margin:0 4px 0 16px; font-size:13px;
-  }
-  .ticker{display:inline-block; animation:scroll 22s linear infinite;}
+  .ticker{display:inline-block; animation:scroll 55s linear infinite;}
   .ticker span{font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600; padding:0 22px; color:var(--text-2);}
   .ticker span b{color:var(--text-1); font-weight:700;}
   .up{color:var(--mint) !important;}
@@ -222,7 +219,7 @@
   .filter-row .btn{border-radius:var(--r-pill); flex-shrink:0;}
 
   /* scoreboard */
-  .scoreboard{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:16px;}
+  .scoreboard{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:0 auto 16px; max-width:var(--container-max); padding:0 var(--side-pad);}
   .sb-cell{background:var(--surface); border:1px solid var(--border-soft); border-radius:var(--r-md); padding:13px 14px;}
   .sb-cell .lbl{font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--text-3); letter-spacing:0.08em;}
   .sb-cell .val{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:18px; margin-top:2px;}
@@ -362,14 +359,14 @@
   .modal-loading{padding:40px 0; text-align:center; color:var(--text-3); font-family:'JetBrains Mono',monospace; font-size:12px;}
 
   .ind-section-title{
-    font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:0.1em; color:var(--text-3);
+    font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:700; letter-spacing:0.1em; color:var(--text-1);
     margin:16px 0 8px;
   }
   .ind-section-title:first-child{margin-top:0;}
 
   .ind-grid{display:grid; grid-template-columns:1fr 1fr; gap:8px;}
   .ind-cell{background:var(--surface-2); padding:12px 13px; border-radius:var(--r-md); border:1px solid var(--border-soft);}
-  .ind-cell .il{font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text-3); letter-spacing:0.05em;}
+  .ind-cell .il{font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; color:var(--text-3); letter-spacing:0.05em;}
   .ind-cell .iv{font-family:'JetBrains Mono',monospace; font-size:13.5px; font-weight:700; margin-top:3px;}
   .ind-cell .ib{font-size:10px; margin-top:3px; font-weight:600;}
   .pos-above{color:var(--mint);}
@@ -411,7 +408,7 @@
 
   .bd-row2{display:flex; justify-content:space-between; gap:8px; font-size:11.5px; padding:7px 0; border-bottom:1px dashed var(--border-soft);}
   .bd-row2:last-child{border-bottom:none;}
-  .bd-factor2{color:var(--text-2); flex-shrink:0; width:80px;}
+  .bd-factor2{color:var(--text-2); font-weight:700; flex-shrink:0; width:80px;}
   .bd-reason2{color:var(--text-3); flex:1; line-height:1.4;}
   .bd-num2{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:11.5px; flex-shrink:0; width:34px; text-align:right;}
 
@@ -428,7 +425,7 @@
   .entry-card.short .entry-card-head{color:var(--crimson); background:var(--crimson-dim);}
   .entry-row{display:flex; justify-content:space-between; padding:8px 12px; font-family:'JetBrains Mono',monospace; font-size:11.5px; border-bottom:1px dashed var(--border-soft);}
   .entry-row:last-child{border-bottom:none;}
-  .entry-row .el{color:var(--text-3);}
+  .entry-row .el{color:var(--text-3); font-weight:700;}
   .entry-row .ev{color:var(--text-1); font-weight:700; text-align:right;}
   .entry-row .ez{color:var(--text-3); font-size:9.5px; display:block; text-align:right; font-weight:400; margin-top:1px;}
   .entry-caveat{padding:9px 12px; font-size:10.5px; color:var(--text-3); line-height:1.5; border-top:1px solid var(--border-soft);}
@@ -436,7 +433,7 @@
     margin-top:12px; padding:11px 13px; border:1px solid var(--border-soft); background:var(--surface);
     font-size:10.5px; color:var(--text-3); line-height:1.7; border-radius:var(--r-md);
   }
-  .sop-note b{color:var(--text-2);}
+  .sop-note b{color:var(--text-1);}
 
   /* ===== WATCHLIST STAR (modal header) ===== */
   .mh-star{background:none; border:1px solid var(--border); color:var(--text-3); width:34px; height:34px; font-size:16px; cursor:pointer; margin-left:8px; border-radius:var(--r-pill);}
@@ -460,20 +457,49 @@
   .setting-field select{appearance:none; -webkit-appearance:none; cursor:pointer;}
 
   /* ===== JURNAL TRADING — dibikin visual DISTINCT dari section lain (aksen violet, bukan amber/mint/crimson yang udah dipakai sinyal trading) ===== */
-  .journal-frame{max-width:var(--container-max); margin:28px auto 0; padding:0 var(--side-pad);}
+
+  /* ===== WIDGET GRID (gaya Crypto.com — kartu kecil rapi, 2 kolom) ===== */
+  .widgets-section{max-width:var(--container-max); margin:0 auto 20px; padding:0 var(--side-pad);}
+  .widget-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-bottom:10px;}
+  @media(max-width:480px){ .widget-grid{grid-template-columns:1fr;} }
+  .widget-card{background:var(--surface); border:1px solid var(--border-soft); border-radius:var(--r-lg); padding:14px; min-height:120px;}
+  .widget-card-head{display:flex; align-items:center; gap:8px; margin-bottom:10px;}
+  .widget-icon{width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0;}
+  .widget-icon.wi-mint{background:var(--mint-dim);}
+  .widget-icon.wi-violet{background:var(--violet-dim);}
+  .widget-icon.wi-amber{background:var(--amber-dim);}
+  .widget-icon.wi-crimson{background:var(--crimson-dim);}
+  .widget-title{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:12px; color:var(--text-1); flex:1; line-height:1.3;}
+  .widget-count{font-family:'JetBrains Mono',monospace; font-weight:800; font-size:14px; color:var(--text-1); background:var(--surface-2); border-radius:var(--r-pill); padding:2px 9px; flex-shrink:0;}
+  .widget-empty{font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text-3); line-height:1.5;}
+  .widget-row{display:flex; align-items:center; gap:8px; padding:6px 0; font-family:'JetBrains Mono',monospace; font-size:11px; border-top:1px dashed var(--border-soft);}
+  .widget-row:first-child{border-top:none; padding-top:0;}
+  .widget-row-sym{font-weight:700; color:var(--text-1); flex-shrink:0;}
+  .widget-row-meta{color:var(--text-3); margin-left:auto; text-align:right; font-size:10px;}
+
+  /* ===== MENU ITEM CARDS ===== */
+  .menu-item-card{
+    display:flex; align-items:center; gap:14px; width:100%; text-align:left; cursor:pointer;
+    background:var(--surface-2); border:1px solid var(--border-soft); border-radius:var(--r-lg);
+    padding:16px; margin-bottom:12px;
+  }
+  .menu-item-card:active{background:var(--surface-3); transform:scale(0.98);}
+  .mic-icon{font-size:26px; flex-shrink:0; width:46px; height:46px; display:flex; align-items:center; justify-content:center; background:var(--surface); border-radius:50%;}
+  .mic-title{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:15px; color:var(--text-1);}
+  .mic-sub{font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--text-3); margin-top:3px; line-height:1.4;}
+
+  /* ===== PRICE CROSS ALERT LIST ===== */
+  .price-alert-list{display:flex; flex-direction:column; gap:8px;}
+  .price-alert-row{display:flex; align-items:center; gap:10px; padding:10px 12px; background:var(--surface-2); border:1px solid var(--border-soft); border-radius:var(--r-md); font-family:'JetBrains Mono',monospace; font-size:11.5px;}
+  .price-alert-row .pa-del{margin-left:auto; background:none; border:none; color:var(--text-3); cursor:pointer; font-size:14px;}
+  .price-alert-row .pa-del:active{color:var(--crimson);}
+
   .journal-frame-inner{
     background:linear-gradient(160deg, rgba(178,155,255,0.09) 0%, var(--surface) 50%);
     border:1px solid var(--violet); border-radius:var(--r-lg); padding:20px;
     box-shadow:0 10px 32px rgba(178,155,255,0.08), 0 2px 10px rgba(0,0,0,0.35);
   }
-  .journal-frame-header{display:flex; align-items:center; gap:12px; margin-bottom:16px;}
-  .jfh-icon{
-    width:42px; height:42px; border-radius:50%; background:var(--violet-dim); border:1px solid var(--violet);
-    display:flex; align-items:center; justify-content:center; font-size:19px; flex-shrink:0;
-  }
-  .jfh-text{flex:1; min-width:0;}
-  .jfh-title{font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:17px; color:var(--text-1); letter-spacing:-0.005em;}
-  .jfh-sub{font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--text-3); margin-top:2px; letter-spacing:0.02em;}
+  .jfh-sub{font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--text-3); letter-spacing:0.02em;}
   .journal-frame-actions{display:flex; gap:8px; margin-bottom:16px;}
   .journal-frame-actions .btn{flex:1; text-align:center;}
   .journal-add-btn{
@@ -605,6 +631,7 @@
     </div>
     <div class="brand-live">Real-time · Binance Futures</div>
     <h1>Futures Screener</h1>
+    <input type="text" class="searchbar" id="searchBox" placeholder="Cari pair… (contoh: BTC, HYPE, INJ)" style="margin-top:14px; margin-bottom:0;">
   </div>
 
   <div class="intro-tip" id="introTip">
@@ -642,6 +669,55 @@
     </div>
   </div>
 
+  <div class="scoreboard" id="scoreboard"></div>
+
+  <div class="section-head" style="max-width:var(--container-max); margin:0 auto; padding:0 var(--side-pad);">
+    <span>Sinyal Teratas</span>
+    <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+  </div>
+  <div class="top-signal-grid" id="topSignalGrid" style="max-width:var(--container-max); margin:0 auto 20px; padding:0 var(--side-pad);"></div>
+
+  <div class="widgets-section">
+    <div class="section-head">
+      <span>⚡ SCAN LANJUTAN — KONFLUENSI SINYAL</span>
+    </div>
+    <div class="widget-grid">
+      <div class="widget-card">
+        <div class="widget-card-head">
+          <span class="widget-icon wi-mint">🎯</span>
+          <span class="widget-title">Alarm Konfluensi</span>
+          <span class="widget-count" id="confluenceCount">0</span>
+        </div>
+        <div class="widget-body" id="confluenceWidgetBody"><div class="widget-empty">Belum ada sinyal konfluensi (tren selaras + skor entry menang)</div></div>
+      </div>
+      <div class="widget-card">
+        <div class="widget-card-head">
+          <span class="widget-icon wi-violet">📉</span>
+          <span class="widget-title">Volatility Squeeze</span>
+          <span class="widget-count" id="squeezeCount">0</span>
+        </div>
+        <div class="widget-body" id="squeezeWidgetBody"><div class="widget-empty">Belum ada Bollinger Band yang menyempit ekstrem</div></div>
+      </div>
+      <div class="widget-card">
+        <div class="widget-card-head">
+          <span class="widget-icon wi-amber">🔀</span>
+          <span class="widget-title">Divergence Scanner</span>
+          <span class="widget-count" id="divergenceCount">0</span>
+        </div>
+        <div class="widget-body" id="divergenceWidgetBody"><div class="widget-empty">Belum ada divergence RSI vs harga terdeteksi</div></div>
+      </div>
+      <div class="widget-card">
+        <div class="widget-card-head">
+          <span class="widget-icon wi-crimson">📐</span>
+          <span class="widget-title">Structure Break Feed</span>
+          <span class="widget-count" id="structBreakCount">0</span>
+        </div>
+        <div class="widget-body" id="structBreakWidgetBody"><div class="widget-empty">Belum ada break struktur (BOS) baru</div></div>
+      </div>
+    </div>
+    <div class="sop-note" style="margin-top:2px;">Discan otomatis tiap 3 menit (saat Auto-Refresh nyala) dari 25 pair paling likuid — murni memanfaatkan ulang indikator yang sudah ada (Struktur Market, Divergence, Bollinger Bands, Skor Entry), bukan indikator baru.</div>
+  </div>
+
   <div class="fullscreen-panel" id="modeResultsSection">
     <div class="fsp-header">
       <div class="fsp-header-inner">
@@ -657,114 +733,193 @@
     </div>
   </div>
 
-  <div class="journal-frame" id="journalSection">
-    <div class="journal-frame-inner">
-      <div class="journal-frame-header">
-        <div class="jfh-icon">📓</div>
-        <div class="jfh-text">
-          <div class="jfh-title">Jurnal Trading</div>
-          <div class="jfh-sub">CATATAN PRIBADI · TERSIMPAN LOKAL DI HP KAMU</div>
+  <div class="fullscreen-panel" id="journalSection">
+    <div class="fsp-header">
+      <div class="fsp-header-inner">
+        <span class="fsp-title">📓 Jurnal Trading</span>
+        <button class="fsp-close" id="journalSectionClose">✕</button>
+      </div>
+    </div>
+    <div class="fsp-body">
+      <div class="fsp-body-inner">
+        <div class="journal-frame-inner">
+          <div class="jfh-sub" style="margin-bottom:14px;">CATATAN PRIBADI · TERSIMPAN LOKAL DI HP KAMU</div>
+          <div class="journal-frame-actions">
+            <button class="btn journal-clear-btn" id="journalClearBtn" style="display:none;">Hapus Semua</button>
+            <button class="btn journal-add-btn" id="journalAddBtn">+ Tambah Entry</button>
+          </div>
+          <div class="journal-stats" id="journalStats"></div>
+          <div class="journal-list" id="journalList"></div>
         </div>
       </div>
-      <div class="journal-frame-actions">
-        <button class="btn journal-clear-btn" id="journalClearBtn" style="display:none;">Hapus Semua</button>
-        <button class="btn journal-add-btn" id="journalAddBtn">+ Tambah Entry</button>
-      </div>
-      <div class="journal-stats" id="journalStats"></div>
-      <div class="journal-list" id="journalList"></div>
     </div>
   </div>
 
-  <div class="panel">
-
-    <div class="fullscreen-panel" id="alertDrawer">
-      <div class="fsp-header">
-        <div class="fsp-header-inner">
-          <span class="fsp-title">🔔 Riwayat Alert</span>
-          <button class="fsp-close" id="alertDrawerClose">✕</button>
-        </div>
-      </div>
-      <div class="fsp-body">
-        <div class="fsp-body-inner">
-          <div class="alert-log" id="alertLog"><div class="alert-empty">Belum ada alert terpicu.</div></div>
-          <button class="btn" id="clearAlertBtn" style="margin-top:10px; width:100%;">Bersihkan Riwayat</button>
-        </div>
+  <div class="fullscreen-panel" id="alertDrawer">
+    <div class="fsp-header">
+      <div class="fsp-header-inner">
+        <span class="fsp-title">🔔 Riwayat Alert</span>
+        <button class="fsp-close" id="alertDrawerClose">✕</button>
       </div>
     </div>
-
-    <div class="fullscreen-panel" id="settingsDrawer">
-      <div class="fsp-header">
-        <div class="fsp-header-inner">
-          <span class="fsp-title">⚙ Pengaturan Alert</span>
-          <button class="fsp-close" id="settingsDrawerClose">✕</button>
-        </div>
+    <div class="fsp-body">
+      <div class="fsp-body-inner">
+        <div class="sop-note" style="margin-top:0;">Semua alert & alarm yang pernah terpicu — dari Watchlist, Alarm Mayoritas Timeframe, Alarm Konfluensi, sampai Alert Harga. 🚨 = alarm (getar+bunyi+notifikasi), 🔔 = alert biasa (cuma tercatat di sini).</div>
+        <div class="journal-stats" id="alertStats"></div>
+        <div class="alert-log" id="alertLog"><div class="alert-empty">Belum ada alert yang terpicu. Bakal muncul di sini otomatis begitu ada kondisi yang kesentuh.</div></div>
+        <button class="btn" id="clearAlertBtn" style="margin-top:10px; width:100%;">🗑 Bersihkan Semua Riwayat</button>
       </div>
-      <div class="fsp-body">
-        <div class="fsp-body-inner">
-        <div class="drawer-title">🚨 Alarm Mayoritas Timeframe Selaras (Semua Pair)</div>
+    </div>
+  </div>
+
+  <div class="fullscreen-panel" id="settingsDrawer">
+    <div class="fsp-header">
+      <div class="fsp-header-inner">
+        <span class="fsp-title">⚙ Pengaturan Alert</span>
+        <button class="fsp-close" id="settingsDrawerClose">✕</button>
+      </div>
+    </div>
+    <div class="fsp-body">
+      <div class="fsp-body-inner">
+        <div class="drawer-title">🚨 Scan Pasar Otomatis (Alarm Mayoritas Timeframe + Alarm Konfluensi)</div>
+        <div class="sop-note" style="margin-top:0; margin-bottom:14px;">Satu tombol ini menghidupkan SEMUA scan otomatis latar belakang: cek tren 1H/4H/1D tiap pair paling likuid tiap 3 menit (waktu Auto-Refresh nyala), lalu lanjut ke Alarm Konfluensi, Volatility Squeeze, Divergence Scanner, dan Structure Break Feed di halaman Home. Alarm getar+bunyi+notifikasi persisten kalau kena, <b>walaupun pair-nya nggak ada di Watchlist kamu</b>.</div>
         <div class="settings-grid">
           <div class="setting-field">
-            <label>Status Alarm</label>
+            <label>Nyala / Mati</label>
             <button class="btn quick-card" id="toggleMarketAlignBtn" style="width:100%; min-height:auto; padding:9px 12px;">ON</button>
           </div>
           <div class="setting-field"><label>Jumlah Pair Dipantau (paling likuid)</label><input type="number" id="setMarketAlignPool" value="30" min="5" max="100" step="5"></div>
         </div>
-        <div class="sop-note" style="margin-top:0; margin-bottom:14px;">Cek tren 1H/4H/1D tiap pair paling likuid tiap 3 menit (waktu Auto-Refresh nyala). Kalau ketiganya kompak satu arah — bullish semua atau bearish semua — langsung alarm (getar + bunyi + notifikasi persisten), <b>walaupun pair itu nggak ada di Watchlist kamu</b>.</div>
 
-        <div class="drawer-title">Pengaturan Alert Watchlist</div>
+        <div class="drawer-title" style="margin-top:20px;">⭐ Alert Watchlist — Ambang Batas</div>
+        <div class="sop-note" style="margin-top:0; margin-bottom:12px;">Khusus pair yang kamu tandai bintang. Dicek tiap Auto-Refresh: RSI ekstrem (1H), funding rate ekstrem, harga mendekati level struktural (EMA/MA200/AVWAP/Fibonacci di 4H), dan pergantian struktur (CHoCH) di 4H.</div>
         <div class="settings-grid">
-          <div class="setting-field"><label>RSI Oversold ≤</label><input type="number" id="setRsiOs" value="30"></div>
-          <div class="setting-field"><label>RSI Overbought ≥</label><input type="number" id="setRsiOb" value="70"></div>
-          <div class="setting-field"><label>Funding Rate Ekstrem ±%</label><input type="number" id="setFundingExt" value="0.05" step="0.01"></div>
-          <div class="setting-field"><label>Jarak Alert ke Level Struktural (%)</label><input type="number" id="setLevelProx" value="0.5" step="0.1"></div>
+          <div class="setting-field"><label>RSI Oversold (di bawah/sama dengan)</label><input type="number" id="setRsiOs" value="30"></div>
+          <div class="setting-field"><label>RSI Overbought (di atas/sama dengan)</label><input type="number" id="setRsiOb" value="70"></div>
+          <div class="setting-field"><label>Funding Rate Ekstrem (± persen)</label><input type="number" id="setFundingExt" value="0.05" step="0.01"></div>
+          <div class="setting-field"><label>Jarak ke Level Struktural (persen)</label><input type="number" id="setLevelProx" value="0.5" step="0.1"></div>
         </div>
-        <button class="btn btn-primary" id="saveSettingsBtn">Simpan Pengaturan</button>
-        <button class="btn" id="notifPermBtn" style="margin-left:8px;">Izinkan Notifikasi Browser</button>
+        <button class="btn btn-primary" id="saveSettingsBtn">💾 Simpan Ambang Batas</button>
+        <button class="btn" id="notifPermBtn" style="margin-left:8px;">🔔 Izinkan Notifikasi Browser</button>
         <div class="notif-status" id="notifStatus"></div>
-        <div class="drawer-title" style="margin-top:16px;">Alert Watchlist dicek tiap Auto-Refresh: RSI ekstrem (1H), funding rate ekstrem, harga mendekati EMA21/EMA30/MA200/AVWAP+Band/Fibonacci (4H), dan Change of Character (CHoCH) struktur market di 4H — khusus pair yang kamu tandai ⭐.</div>
+
+        <div class="drawer-title" style="margin-top:20px;">🎯 Alert Harga Sederhana (Price Cross)</div>
+        <div class="sop-note" style="margin-top:0; margin-bottom:12px;">Dapat notifikasi begitu harga sebuah pair menembus level tertentu — naik atau turun, terserah kamu pilih pair mana aja (nggak perlu ada di Watchlist).</div>
+        <div class="settings-grid">
+          <div class="setting-field"><label>Nama Pair (tanpa "USDT")</label><input type="text" id="paSymbol" placeholder="Contoh: BTC"></div>
+          <div class="setting-field"><label>Arah Tembusan</label><select id="paDirection"><option value="above">📈 Naik tembus ke ATAS</option><option value="below">📉 Turun tembus ke BAWAH</option></select></div>
+          <div class="setting-field"><label>Harga Target ($)</label><input type="number" id="paPrice" placeholder="Contoh: 70000" step="any"></div>
+        </div>
+        <button class="btn btn-primary" id="paAddBtn" style="width:100%;">+ Tambah Alert Harga Ini</button>
+        <div class="price-alert-list" id="priceAlertList" style="margin-top:12px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fullscreen-panel" id="marketPanel">
+    <div class="fsp-header">
+      <div class="fsp-header-inner">
+        <span class="fsp-title">📊 Market</span>
+        <button class="fsp-close" id="marketPanelClose">✕</button>
+      </div>
+    </div>
+    <div class="fsp-body">
+      <div class="fsp-body-inner">
+
+        <div class="tab-row">
+          <button class="tab-item active" data-filter="all">Semua</button>
+          <button class="tab-item" data-filter="watchlist">Watchlist</button>
+          <button class="tab-item" data-filter="gainers">Top Gainers</button>
+          <button class="tab-item" data-filter="losers">Top Losers</button>
+        </div>
+
+        <div class="filter-row">
+          <button class="btn" data-filter="volume">💠 Volume Tertinggi</button>
+          <button class="btn" data-filter="nearhigh">📈 Dekat 24H High</button>
+          <button class="btn" data-filter="nearlow">📉 Dekat 24H Low</button>
+          <button class="btn" data-filter="fundingext">🌡️ Funding Ekstrem</button>
+        </div>
+
+        <div class="section-head">
+          <span id="listTitle">Semua Pair</span>
+          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+        </div>
+
+        <div class="sort-row">
+          <span class="sort-label">Urutkan:</span>
+          <button class="sort-pill active" data-sort="quoteVolume">Volume</button>
+          <button class="sort-pill" data-sort="priceChangePercent">Perubahan 24H</button>
+          <button class="sort-pill" data-sort="quickScore">Skor Momentum</button>
+          <button class="sort-pill" data-sort="symbol">Nama</button>
+        </div>
+
+        <div class="coin-list" id="tbody">
+          <div class="empty-state"><span class="loader"></span>Mengambil data dari Binance…</div>
         </div>
       </div>
     </div>
+  </div>
 
-    <input type="text" class="searchbar" id="searchBox" placeholder="Cari pair… (contoh: BTC, HYPE, INJ)">
-
-    <div class="tab-row">
-      <button class="tab-item active" data-filter="all">Semua</button>
-      <button class="tab-item" data-filter="watchlist">Watchlist</button>
-      <button class="tab-item" data-filter="gainers">Top Gainers</button>
-      <button class="tab-item" data-filter="losers">Top Losers</button>
+  <div class="fullscreen-panel" id="menuPanel">
+    <div class="fsp-header">
+      <div class="fsp-header-inner">
+        <span class="fsp-title">☰ Menu</span>
+        <button class="fsp-close" id="menuPanelClose">✕</button>
+      </div>
     </div>
-
-    <div class="filter-row">
-      <button class="btn" data-filter="volume">💠 Volume Tertinggi</button>
-      <button class="btn" data-filter="nearhigh">📈 Dekat 24H High</button>
-      <button class="btn" data-filter="nearlow">📉 Dekat 24H Low</button>
-      <button class="btn" data-filter="fundingext">🌡️ Funding Ekstrem</button>
+    <div class="fsp-body">
+      <div class="fsp-body-inner">
+        <button class="menu-item-card" id="menuMarketBtn">
+          <div class="mic-icon">📊</div>
+          <div class="mic-text"><div class="mic-title">Market</div><div class="mic-sub">Semua pair USDT-M Futures — filter, sort, dan cari lengkap</div></div>
+        </button>
+        <button class="menu-item-card" id="menuCalcBtn">
+          <div class="mic-icon">🧮</div>
+          <div class="mic-text"><div class="mic-title">Kalkulator Trading</div><div class="mic-sub">Hitung position size otomatis berdasarkan risk % modal kamu</div></div>
+        </button>
+        <button class="menu-item-card" id="menuHistoryBtn">
+          <div class="mic-icon">📈</div>
+          <div class="mic-text"><div class="mic-title">Histori Skor</div><div class="mic-sub">Simpan & validasi apakah Skor Entry akurat dari waktu ke waktu</div></div>
+        </button>
+      </div>
     </div>
+  </div>
 
-    <div class="scoreboard" id="scoreboard"></div>
-
-    <div class="section-head">
-      <span>Sinyal Teratas</span>
-      <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+  <div class="fullscreen-panel" id="calcPanel">
+    <div class="fsp-header">
+      <div class="fsp-header-inner">
+        <span class="fsp-title">🧮 Kalkulator Position Size</span>
+        <button class="fsp-close" id="calcPanelClose">✕</button>
+      </div>
     </div>
-    <div class="top-signal-grid" id="topSignalGrid"></div>
-
-    <div class="section-head">
-      <span id="listTitle">Semua Pair</span>
-      <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+    <div class="fsp-body">
+      <div class="fsp-body-inner">
+        <div class="sop-note" style="margin-top:0;">Hitung ukuran posisi berdasarkan berapa % modal yang mau kamu risikokan per trade — bukan asal nebak nominal. Aturan umum: 1-2% per trade.</div>
+        <div class="settings-grid">
+          <div class="setting-field"><label>Modal / Balance ($)</label><input type="number" id="calcBalance" placeholder="1000" step="any"></div>
+          <div class="setting-field"><label>Risk per Trade (%)</label><input type="number" id="calcRiskPct" value="1" step="0.1"></div>
+          <div class="setting-field"><label>Entry Price</label><input type="number" id="calcEntry" step="any"></div>
+          <div class="setting-field"><label>Stop Loss Price</label><input type="number" id="calcSl" step="any"></div>
+        </div>
+        <button class="btn btn-primary" id="calcRunBtn" style="width:100%;">Hitung Position Size</button>
+        <div id="calcResult" style="margin-top:16px;"></div>
+      </div>
     </div>
+  </div>
 
-    <div class="sort-row">
-      <span class="sort-label">Urutkan:</span>
-      <button class="sort-pill active" data-sort="quoteVolume">Volume</button>
-      <button class="sort-pill" data-sort="priceChangePercent">Perubahan 24H</button>
-      <button class="sort-pill" data-sort="quickScore">Skor Momentum</button>
-      <button class="sort-pill" data-sort="symbol">Nama</button>
+  <div class="fullscreen-panel" id="historyPanel">
+    <div class="fsp-header">
+      <div class="fsp-header-inner">
+        <span class="fsp-title">📈 Histori Skor</span>
+        <button class="fsp-close" id="historyPanelClose">✕</button>
+      </div>
     </div>
-
-    <div class="coin-list" id="tbody">
-      <div class="empty-state"><span class="loader"></span>Mengambil data dari Binance…</div>
+    <div class="fsp-body">
+      <div class="fsp-body-inner">
+        <div class="sop-note" style="margin-top:0;">Tiap kamu tap "📌 Simpan ke Histori" di modal detail pair, skornya kesimpen di sini. Tap "Cek Sekarang" buat lihat apakah arah skor waktu itu ternyata benar dibanding harga sekarang.</div>
+        <div class="journal-stats" id="historyStats"></div>
+        <div class="journal-list" id="historyList"></div>
+      </div>
     </div>
   </div>
 
@@ -843,21 +998,20 @@
   <nav class="bottom-nav">
     <div class="bottom-nav-inner">
     <button class="bn-item active" id="bnAll">
-      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-      <span>Semua</span>
+      <svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>
+      <span>Home</span>
     </button>
     <button class="bn-item" id="bnWatchlist">
       <svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.7 6.2.6-4.7 4.2 1.4 6.1L12 16.8 6.5 19.6l1.4-6.1L3.2 9.3l6.2-.6L12 3z"/></svg>
       <span>Watchlist</span>
     </button>
+    <button class="bn-item" id="bnMenu">
+      <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      <span>Menu</span>
+    </button>
     <button class="bn-item" id="bnJournal">
       <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
       <span>Jurnal</span>
-    </button>
-    <button class="bn-item" id="bnAlert">
-      <svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
-      <span>Alert</span>
-      <span class="bn-badge" id="bnAlertBadge" style="display:none;">0</span>
     </button>
     <button class="bn-item" id="bnSettings">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.9-.3 1.7 1.7 0 00-1 1.6V21a2 2 0 11-4 0v-.2a1.7 1.7 0 00-1-1.5 1.7 1.7 0 00-1.9.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.9 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.2a1.7 1.7 0 001.5-1 1.7 1.7 0 00-.3-1.9l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.9.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.2a1.7 1.7 0 001 1.6 1.7 1.7 0 001.9-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.9V9a1.7 1.7 0 001.6 1H21a2 2 0 110 4h-.2a1.7 1.7 0 00-1.6 1z"/></svg>
@@ -873,6 +1027,11 @@ let tickerData = [];      // merged 24hr data
 let deepData = {};        // symbol -> {rsi1h, trend4h, deepScore, label}
 let fundingData = {};     // symbol -> fundingRate (decimal, e.g. 0.0001)
 let modeQualifyData = {}; // symbol -> {bias, rsi, reason} — hasil scan "layak entry" per Mode Trading
+let marketAlignData = {}; // symbol -> 'bullish'/'bearish'/null — hasil terakhir scanMarketTrendAlignment, dipakai ulang oleh Alarm Konfluensi
+let confluenceResults = []; // [{symbol, bias, points, maxPoints}] — pair yang tren-nya selaras DAN skor entry-nya menang
+let squeezeResults = [];    // [{symbol, percentileRank, bandwidth}] — pair yang Bollinger Band-nya lagi menyempit ekstrem
+let divergenceResults = []; // [{symbol, type:'bullish'/'bearish'}] — pair yang lagi divergence RSI vs harga
+let structureBreakFeed = []; // [{symbol, direction, level, time}] — feed BOS/CHoCH terbaru dari seluruh pair yang discan
 let modeScanToken = 0; // dinaikkan tiap scan baru dimulai — dipakai buat batalkan scan lama yang masih jalan (cegah race condition)
 let currentFilter = "all";
 let sortKey = "quoteVolume";
@@ -912,6 +1071,166 @@ function loadJournal(){
   try{ return JSON.parse(localStorage.getItem(LS_JOURNAL) || "[]"); }catch(e){ return []; }
 }
 function saveJournalEntries(entries){ localStorage.setItem(LS_JOURNAL, JSON.stringify(entries)); }
+
+// ===== HISTORI SKOR — validasi apakah Skor Entry beneran akurat, dicek belakangan vs harga aktual =====
+const LS_SCOREHISTORY = "pp_score_history";
+function loadScoreHistory(){
+  try{ return JSON.parse(localStorage.getItem(LS_SCOREHISTORY) || "[]"); }catch(e){ return []; }
+}
+function saveScoreHistory(entries){ localStorage.setItem(LS_SCOREHISTORY, JSON.stringify(entries.slice(0,200))); }
+
+function saveScoreSnapshot(){
+  const f = lastDetailFull;
+  if(!f) return;
+  const entries = loadScoreHistory();
+  const verdict = f.longPoints > f.shortPoints ? 'long' : f.shortPoints > f.longPoints ? 'short' : 'neutral';
+  entries.unshift({
+    id: 'h_' + Date.now() + '_' + Math.random().toString(36).slice(2,8),
+    symbol: f.d.symbol, tf: f.d.tf, date: new Date().toISOString(),
+    longPoints: f.longPoints, shortPoints: f.shortPoints, maxPoints: f.maxPoints, verdict,
+    priceAtScoring: f.d.lastPrice, checkedPrice: null, checkedAt: null, result: null,
+  });
+  saveScoreHistory(entries);
+  setStatus(`✓ Skor ${f.d.symbol.replace('USDT','')} disimpan ke Histori`, 'ok');
+}
+
+function computeScoreHistoryStats(entries){
+  const checked = entries.filter(e => e.result);
+  const matches = checked.filter(e => e.result==='match').length;
+  const accuracy = checked.length>0 ? (matches/checked.length)*100 : 0;
+  return { total: entries.length, checkedCount: checked.length, matches, accuracy };
+}
+
+// Logika inti cocok/meleset — dipakai bareng oleh cek manual (tombol) dan auto-validasi (otomatis tiap refresh)
+function computeScoreCheckResult(entry, currentPrice){
+  const priceMoved = currentPrice > entry.priceAtScoring ? 'long' : currentPrice < entry.priceAtScoring ? 'short' : 'flat';
+  return (entry.verdict === 'neutral' || priceMoved === 'flat') ? null : (entry.verdict === priceMoved ? 'match' : 'miss');
+}
+
+function checkScoreHistoryEntry(id){
+  const entries = loadScoreHistory();
+  const entry = entries.find(e=>e.id===id);
+  if(!entry) return;
+  const row = tickerData.find(d=>d.symbol===entry.symbol);
+  if(!row){ setStatus('Data harga pair ini nggak ditemukan (mungkin sudah delisting).', 'err'); return; }
+  entry.checkedPrice = row.lastPrice;
+  entry.checkedAt = new Date().toISOString();
+  entry.result = computeScoreCheckResult(entry, row.lastPrice);
+  saveScoreHistory(entries);
+  renderScoreHistory();
+}
+
+// ===== AUTO-VALIDASI: entry yang udah lewat 24 jam DAN belum pernah dicek, otomatis divalidasi sendiri
+// tiap kali data pair fresh (refreshAll) — nggak perlu tap "Cek Sekarang" manual satu-satu lagi. =====
+function autoValidateScoreHistory(){
+  const entries = loadScoreHistory();
+  if(entries.length === 0 || tickerData.length === 0) return;
+  const now = Date.now();
+  const DAY_MS = 24*60*60*1000;
+  let changed = false;
+  entries.forEach(entry=>{
+    if(entry.checkedAt) return; // udah pernah dicek (manual/otomatis), jangan diulang
+    const ageMs = now - new Date(entry.date).getTime();
+    if(ageMs < DAY_MS) return; // belum 24 jam sejak disimpan, tunggu dulu
+    const row = tickerData.find(d=>d.symbol===entry.symbol);
+    if(!row) return; // pair mungkin sudah delisting, skip diam-diam
+    entry.checkedPrice = row.lastPrice;
+    entry.checkedAt = new Date().toISOString();
+    entry.result = computeScoreCheckResult(entry, row.lastPrice);
+    changed = true;
+  });
+  if(changed){
+    saveScoreHistory(entries);
+    if(document.getElementById('historyPanel').classList.contains('show')) renderScoreHistory();
+  }
+}
+
+function deleteScoreHistoryEntry(id){
+  if(!confirm('Hapus entry histori ini?')) return;
+  saveScoreHistory(loadScoreHistory().filter(e=>e.id!==id));
+  renderScoreHistory();
+}
+
+function renderScoreHistory(){
+  const entries = loadScoreHistory();
+  const stats = computeScoreHistoryStats(entries);
+  document.getElementById('historyStats').innerHTML = `
+    <div class="sb-cell"><div class="lbl">TOTAL DISIMPAN</div><div class="val">${stats.total}</div></div>
+    <div class="sb-cell"><div class="lbl">SUDAH DICEK</div><div class="val">${stats.checkedCount}</div></div>
+    <div class="sb-cell"><div class="lbl">AKURASI</div><div class="val" style="color:${stats.accuracy>=50?'var(--mint)':'var(--crimson)'}">${stats.checkedCount>0?stats.accuracy.toFixed(0)+'%':'-'}</div></div>
+    <div class="sb-cell"><div class="lbl">COCOK</div><div class="val">${stats.matches}/${stats.checkedCount}</div></div>
+  `;
+  const listEl = document.getElementById('historyList');
+  if(entries.length === 0){
+    listEl.innerHTML = `<div class="empty-state">Belum ada skor yang disimpan. Buka detail pair mana aja, scroll ke SKOR ENTRY, lalu tap "📌 Simpan ke Histori".</div>`;
+    return;
+  }
+  listEl.innerHTML = entries.map(e=>{
+    const verdictLabel = e.verdict==='long'?'LONG':e.verdict==='short'?'SHORT':'NETRAL';
+    const verdictCls = e.verdict==='long'?'score-hi':e.verdict==='short'?'score-lo':'score-mid';
+    let resultBadge = `<button class="btn" onclick="checkScoreHistoryEntry('${e.id}')" style="font-size:10px; padding:6px 10px;">Cek Sekarang</button>`;
+    if(e.result==='match') resultBadge = `<span class="badge-pill score-hi">✓ COCOK</span>`;
+    else if(e.result==='miss') resultBadge = `<span class="badge-pill score-lo">✗ MELESET</span>`;
+    return `
+    <div class="journal-entry">
+      <div class="je-top">
+        <span class="je-symbol">${escapeHtml(e.symbol.replace('USDT',''))}</span>
+        <span class="badge-pill ${verdictCls}">${verdictLabel} ${e.verdict!=='neutral'?(e.verdict==='long'?e.longPoints:e.shortPoints)+'/'+e.maxPoints:''}</span>
+        <span class="je-date">${new Date(e.date).toLocaleDateString('id-ID')}</span>
+        <button class="je-delete" onclick="deleteScoreHistoryEntry('${e.id}')" title="Hapus">🗑</button>
+      </div>
+      <div class="je-row">
+        <span>Harga saat disimpan: <b>${fmtPrice(e.priceAtScoring)}</b></span>
+        ${e.checkedPrice ? `<span>Harga saat dicek: <b>${fmtPrice(e.checkedPrice)}</b></span>` : ''}
+      </div>
+      <div style="margin-top:8px;">${resultBadge}</div>
+    </div>`;
+  }).join('');
+}
+
+// ===== ALERT HARGA SEDERHANA (PRICE CROSS) — notif begitu harga tembus level tertentu =====
+const LS_PRICEALERTS = "pp_price_alerts";
+function loadPriceAlerts(){
+  try{ return JSON.parse(localStorage.getItem(LS_PRICEALERTS) || "[]"); }catch(e){ return []; }
+}
+function savePriceAlerts(list){ localStorage.setItem(LS_PRICEALERTS, JSON.stringify(list)); }
+
+function renderPriceAlertList(){
+  const list = loadPriceAlerts();
+  const el = document.getElementById('priceAlertList');
+  if(!el) return;
+  if(list.length===0){ el.innerHTML = `<div class="alert-empty">Belum ada alert harga.</div>`; return; }
+  el.innerHTML = list.map(a=>`
+    <div class="price-alert-row">
+      <span>${a.triggered?'✓ ':''}<b>${escapeHtml(a.symbol.replace('USDT',''))}</b> ${a.direction==='above'?'▲ di atas':'▼ di bawah'} ${fmtPrice(a.price)}${a.triggered?' — sudah terpicu':''}</span>
+      <button class="pa-del" onclick="deletePriceAlert('${a.id}')" title="Hapus">🗑</button>
+    </div>
+  `).join('');
+}
+
+function deletePriceAlert(id){
+  savePriceAlerts(loadPriceAlerts().filter(a=>a.id!==id));
+  renderPriceAlertList();
+}
+
+function checkPriceAlerts(){
+  const list = loadPriceAlerts();
+  if(list.length===0 || tickerData.length===0) return;
+  let changed = false;
+  list.forEach(a=>{
+    if(a.triggered) return;
+    const row = tickerData.find(d=>d.symbol===a.symbol);
+    if(!row) return;
+    const price = row.lastPrice;
+    const crossed = a.direction==='above' ? price >= a.price : price <= a.price;
+    if(crossed){
+      a.triggered = true;
+      changed = true;
+      pushAlert(`Harga tembus ${a.direction==='above'?'ke ATAS':'ke BAWAH'} ${fmtPrice(a.price)} (sekarang ${fmtPrice(price)})`, a.symbol, true);
+    }
+  });
+  if(changed){ savePriceAlerts(list); renderPriceAlertList(); }
+}
 
 function computeJournalStats(entries){
   const closed = entries.filter(e => e.status==='win' || e.status==='loss' || e.status==='breakeven');
@@ -1069,6 +1388,7 @@ function pushAlert(msg, symbol, isAlarm){
   saveAlertLog(log);
   renderAlertLog();
   updateAlertBadge();
+  renderTicker();
   if(isAlarm){
     if(navigator.vibrate) navigator.vibrate([250,120,250,120,500]);
     playAlarmBeep();
@@ -1089,23 +1409,29 @@ const alertFiredThisSession = new Set(); // dedupe: "SYMBOL|type" so tiap kondis
 function updateAlertBadge(){
   const log = loadAlertLog();
   const badge = document.getElementById('alertBadge');
-  const bnBadge = document.getElementById('bnAlertBadge');
   const text = log.length > 99 ? "99+" : String(log.length);
   if(log.length > 0){
     badge.style.display = "inline-flex"; badge.textContent = text;
-    if(bnBadge){ bnBadge.style.display = "flex"; bnBadge.textContent = text; }
   } else {
     badge.style.display = "none";
-    if(bnBadge) bnBadge.style.display = "none";
   }
 }
 function renderAlertLog(){
   const log = loadAlertLog();
   const el = document.getElementById('alertLog');
-  if(log.length === 0){ el.innerHTML = `<div class="alert-empty">Belum ada alert terpicu.</div>`; return; }
+  const statsEl = document.getElementById('alertStats');
+  if(statsEl){
+    const alarmCount = log.filter(a=>a.alarm).length;
+    statsEl.innerHTML = `
+      <div class="sb-cell"><div class="lbl">TOTAL</div><div class="val">${log.length}</div></div>
+      <div class="sb-cell"><div class="lbl">🚨 ALARM</div><div class="val" style="color:var(--crimson);">${alarmCount}</div></div>
+      <div class="sb-cell"><div class="lbl">🔔 ALERT BIASA</div><div class="val" style="color:var(--text-2);">${log.length-alarmCount}</div></div>
+    `;
+  }
+  if(log.length === 0){ el.innerHTML = `<div class="alert-empty">Belum ada alert yang terpicu. Bakal muncul di sini otomatis begitu ada kondisi yang kesentuh.</div>`; return; }
   el.innerHTML = log.map(a => `
     <div class="alert-row" style="${a.alarm ? 'border-left:3px solid var(--crimson); padding-left:9px;' : ''}">
-      <span>${a.alarm ? '🚨 ' : ''}${a.symbol ? `<b>${a.symbol.replace('USDT','')}</b> — ` : ""}${a.msg}</span>
+      <span>${a.alarm ? '🚨 ' : '🔔 '}${a.symbol ? `<b>${escapeHtml(a.symbol.replace('USDT',''))}</b> — ` : ""}${escapeHtml(a.msg)}</span>
       <span class="at">${new Date(a.ts).toLocaleTimeString('id-ID')}</span>
     </div>`).join('');
 }
@@ -1126,6 +1452,52 @@ function fmtNum(n, digits){
   if(Math.abs(n) >= 1e3) return (n/1e3).toFixed(2)+"K";
   return n.toFixed(digits!==undefined?digits:2);
 }
+// ===== KALKULATOR POSITION SIZE — hitung ukuran posisi dari risk % modal, bukan asal nebak nominal =====
+function computePositionSize(balance, riskPct, entry, sl){
+  if(!balance || !riskPct || !entry || !sl || entry===sl) return null;
+  const riskAmount = balance * (riskPct/100);
+  const priceDistance = Math.abs(entry - sl);
+  const priceDistancePct = (priceDistance/entry)*100;
+  const positionSizeUnit = riskAmount / priceDistance;
+  const positionValue = positionSizeUnit * entry;
+  const impliedLeverage = positionValue / balance;
+  return { riskAmount, priceDistance, priceDistancePct, positionSizeUnit, positionValue, impliedLeverage };
+}
+
+document.getElementById('calcRunBtn').addEventListener('click', ()=>{
+  const balance = parseFloat(document.getElementById('calcBalance').value);
+  const riskPct = parseFloat(document.getElementById('calcRiskPct').value);
+  const entry = parseFloat(document.getElementById('calcEntry').value);
+  const sl = parseFloat(document.getElementById('calcSl').value);
+  const resEl = document.getElementById('calcResult');
+
+  if(!balance || balance<=0){ resEl.innerHTML = `<div class="empty-state">Isi Modal/Balance dulu.</div>`; return; }
+  if(!riskPct || riskPct<=0){ resEl.innerHTML = `<div class="empty-state">Isi Risk per Trade (%) dulu.</div>`; return; }
+  if(!entry || !sl){ resEl.innerHTML = `<div class="empty-state">Isi Entry Price dan Stop Loss Price dulu.</div>`; return; }
+  if(entry === sl){ resEl.innerHTML = `<div class="empty-state">Entry dan Stop Loss nggak boleh sama.</div>`; return; }
+
+  const r = computePositionSize(balance, riskPct, entry, sl);
+  const leverageWarn = r.impliedLeverage > 20 ? `<div class="sop-note" style="border-color:var(--crimson);"><b>⚠ Leverage tersirat ${r.impliedLeverage.toFixed(1)}x</b> — itu tinggi banget buat jarak SL sekecil ini (${r.priceDistancePct.toFixed(2)}%). Pertimbangkan SL yang lebih longgar atau risk % lebih kecil.</div>` : '';
+
+  resEl.innerHTML = `
+    <div class="score-points-row">
+      <div class="score-points-box short">
+        <div class="spb-label">RISK AMOUNT</div>
+        <div class="spb-value" style="font-size:20px;">$${r.riskAmount.toFixed(2)}</div>
+      </div>
+      <div class="score-points-box long">
+        <div class="spb-label">POSITION SIZE</div>
+        <div class="spb-value" style="font-size:20px;">${r.positionSizeUnit.toFixed(6)}</div>
+      </div>
+    </div>
+    <div class="bd-row2"><span class="bd-factor2">Position Value</span><span class="bd-reason2">Total nilai posisi di harga entry</span><span class="bd-num2" style="width:auto;">$${fmtNum(r.positionValue)}</span></div>
+    <div class="bd-row2"><span class="bd-factor2">Jarak ke SL</span><span class="bd-reason2">Selisih Entry vs Stop Loss</span><span class="bd-num2" style="width:auto;">${r.priceDistancePct.toFixed(2)}%</span></div>
+    <div class="bd-row2"><span class="bd-factor2">Leverage Tersirat</span><span class="bd-reason2">Kalau modal dipakai penuh sebagai margin</span><span class="bd-num2" style="width:auto;">${r.impliedLeverage.toFixed(1)}x</span></div>
+    ${leverageWarn}
+    <div class="sop-note">Ini murni matematika risk management — bukan saran ukuran leverage exchange. Sesuaikan lagi dengan aturan risk pribadi & likuiditas pair yang mau ditrading.</div>
+  `;
+});
+
 function fmtPrice(p){
   const n = parseFloat(p);
   if(n >= 100) return n.toFixed(2);
@@ -1233,6 +1605,8 @@ async function refreshAll(){
     renderTopSignals();
     renderTable();
     checkWatchlistAlerts();
+    checkPriceAlerts();
+    autoValidateScoreHistory();
   }catch(err){
     console.error(err);
     setStatus("Gagal memuat: mungkin domain Binance diblokir jaringan/ISP kamu. Coba VPN.", "err");
@@ -1246,15 +1620,23 @@ async function refreshAll(){
   }
 }
 
+// Running teks sekarang nampilin hasil Alert & Alarm (bukan harga pair lagi) — auto-update tiap ada alert baru,
+// dan otomatis kosong lagi begitu riwayat alert dihapus (lihat pushAlert() dan clearAlertBtn).
 function renderTicker(){
-  const sorted = [...tickerData].sort((a,b)=> parseFloat(b.priceChangePercent) - parseFloat(a.priceChangePercent));
-  const top = sorted.slice(0,8).concat(sorted.slice(-8));
+  const log = loadAlertLog();
+  const tickerEl = document.getElementById('ticker');
+  if(log.length === 0){
+    tickerEl.innerHTML = `<span class="mono">Belum ada alert atau alarm konfluensi terpicu — bakal muncul di sini begitu ada.</span>`;
+    return;
+  }
+  const top = log.slice(0, 20);
   let html = "";
-  [...top, ...top].forEach(d=>{
-    const up = parseFloat(d.priceChangePercent) >= 0;
-    html += `<span>${d.symbol} <b>${fmtPrice(d.lastPrice)}</b> <span class="${up?'up':'down'}">${up?'▲':'▼'} ${d.priceChangePercent}%</span></span>`;
+  [...top, ...top].forEach(a=>{
+    const icon = a.alarm ? '🚨' : '🔔';
+    const cls = a.alarm ? 'down' : 'up';
+    html += `<span>${icon} ${a.symbol?`<b>${escapeHtml(a.symbol.replace('USDT',''))}</b> — `:''}<span class="${cls}">${escapeHtml(a.msg)}</span></span>`;
   });
-  document.getElementById('ticker').innerHTML = html;
+  tickerEl.innerHTML = html;
 }
 
 function renderScoreboard(){
@@ -1738,6 +2120,8 @@ async function scanTopVisible(n){
   await Promise.all(Array.from({length:CONCURRENCY}, worker));
   setStatus(`✓ Deep scan selesai untuk ${list.length} pair`, "ok");
   document.getElementById('scanTopBtn').disabled = false;
+  closeOtherFullscreenPanels('marketPanel');
+  document.getElementById('marketPanel').classList.add('show');
 }
 
 // Timeframe yang lebih tinggi buat gate konfirmasi tren — dicek juga di scan Mode Trading (bukan cuma di modal detail),
@@ -1805,6 +2189,7 @@ async function runModeScan(mode){
   const statusEl = document.getElementById('heroModeStatus');
   const titleEl = document.getElementById('modeResultsTitle');
   const listEl = document.getElementById('modeResultsList');
+  closeOtherFullscreenPanels('modeResultsSection');
   section.classList.add('show');
   statusEl.classList.add('show');
   titleEl.textContent = `Layak Entry — ${info.label}`;
@@ -1988,6 +2373,7 @@ async function scanMarketTrendAlignment(){
 
   const poolSize = Math.max(5, Math.min(100, settings.marketAlignPool || 30));
   const candidates = [...tickerData].sort((a,b)=>b.quoteVolume-a.quoteVolume).slice(0, poolSize);
+  marketAlignData = {};
 
   const CONCURRENCY = 5;
   let idx = 0;
@@ -2004,6 +2390,7 @@ async function scanMarketTrendAlignment(){
       let aligned = null;
       if(bullCount===total) aligned = 'bullish';
       else if(bearCount===total) aligned = 'bearish';
+      marketAlignData[item.symbol] = aligned;
 
       const keyBull = `${item.symbol}|marketalign|bullish`, keyBear = `${item.symbol}|marketalign|bearish`;
       if(aligned==='bullish'){
@@ -2025,6 +2412,161 @@ async function scanMarketTrendAlignment(){
     }
   }
   await Promise.all(Array.from({length:CONCURRENCY}, worker));
+  runAdvancedScan(); // lanjut ke scan konfluensi/squeeze/divergence/structure-break, reuse hasil marketAlignData di atas
+}
+
+// Bollinger Bandwidth SEKARANG dibandingkan ke histori bandwidth-nya SENDIRI (bukan angka mutlak) —
+// band dianggap "squeeze" kalau lebar sekarang ada di 15% paling sempit dari 50 candle terakhir buat pair itu.
+// Pakai ulang fungsi bollinger() yang sudah ada (dipanggil berulang buat dapetin bandwidth di tiap titik) —
+// biar cuma ada SATU sumber kebenaran buat rumus Bollinger Band di seluruh app, nggak ada implementasi ganda yang bisa beda hasil.
+function computeBBSqueeze(closes){
+  if(closes.length < 50) return null;
+  const period = 20, mult = 2;
+  const bwSeries = [];
+  for(let i=period-1; i<closes.length; i++){
+    const bb = bollinger(closes.slice(0, i+1), period, mult);
+    bwSeries.push(bb.bandwidthPct);
+  }
+  if(bwSeries.length < 20) return null;
+  const current = bwSeries[bwSeries.length-1];
+  const sorted = [...bwSeries].sort((a,b)=>a-b);
+  const percentileRank = (sorted.indexOf(current) / sorted.length) * 100;
+  return { bandwidth: current, percentileRank };
+}
+
+// ===== SCAN LANJUTAN: gabung 4 hal dalam SATU scan biar hemat request —
+// tiap pair cuma di-fetch candle-nya SEKALI, dipakai bareng buat Konfluensi + Squeeze + Divergence + Structure Break.
+// Ini murni MEMANFAATKAN ULANG indikator yang udah ada, bukan nambah indikator baru. =====
+let advancedScanRunning = false;
+async function runAdvancedScan(){
+  if(advancedScanRunning || tickerData.length===0) return;
+  advancedScanRunning = true;
+  try{
+    const poolSize = 25; // dijaga kecil karena tiap pair butuh 1 full-candle fetch (lebih berat dari cek tren doang)
+    const candidates = [...tickerData].sort((a,b)=>b.quoteVolume-a.quoteVolume).slice(0, poolSize);
+
+    const newConfluence = [], newSqueeze = [], newDivergence = [];
+    const CONCURRENCY = 5;
+    let idx = 0;
+    async function worker(){
+      while(idx < candidates.length){
+        const item = candidates[idx++];
+        try{
+          const candles = await fetchKlinesFull(item.symbol, '4h', 150);
+          if(candles.length < 50) continue;
+          const closes = candles.map(c=>c.close);
+          const structure = analyzeMarketStructure(candles);
+          const divergence = detectDivergence(candles, closes);
+          const squeeze = computeBBSqueeze(closes);
+
+          // 1) STRUCTURE BREAK FEED — BOS segar (baru kejadian di candle terakhir)
+          if(structure && structure.event && structure.event.type === 'BOS'){
+            const key = `${item.symbol}|structbreak|${structure.event.level}`;
+            if(!alertFiredThisSession.has(key)){
+              alertFiredThisSession.add(key);
+              structureBreakFeed.unshift({ symbol:item.symbol, direction:structure.event.direction, level:structure.event.level, time: Date.now() });
+              structureBreakFeed = structureBreakFeed.slice(0, 30);
+            }
+          }
+
+          // 2) DIVERGENCE SCANNER
+          if(divergence && divergence.bearishDiv) newDivergence.push({ symbol:item.symbol, type:'bearish' });
+          else if(divergence && divergence.bullishDiv) newDivergence.push({ symbol:item.symbol, type:'bullish' });
+
+          // 3) VOLATILITY SQUEEZE SCANNER
+          if(squeeze && squeeze.percentileRank <= 15) newSqueeze.push({ symbol:item.symbol, percentileRank:squeeze.percentileRank, bandwidth:squeeze.bandwidth });
+
+          // 4) ALARM KONFLUENSI — tren 1H/4H/1D SELARAS (dari marketAlignData) DITAMBAH skor entry menang mayoritas di 4H
+          const trendBias = marketAlignData[item.symbol];
+          if(trendBias){
+            const ema21arr = ema(closes,21), ema50arr = ema(closes,50);
+            const rsiVal = rsi(closes,14);
+            const macdVal = macd(closes,12,26,9);
+            const avwap = computeAnchoredVWAP(candles, 90, 0.5);
+            const fib = computeFibonacci(candles, 90);
+            const adxVal = adx(candles,14);
+            const vols = candles.map(c=>c.volume);
+            const prevVols = vols.slice(-21,-1);
+            const avgVol20 = prevVols.length>0 ? prevVols.reduce((a,b)=>a+b,0)/prevVols.length : 0;
+            const volRatio = avgVol20>0 ? vols[vols.length-1]/avgVol20 : 1;
+            const priceUp = closes.length>1 ? closes[closes.length-1] >= closes[closes.length-2] : true;
+            const fundingRow = tickerData.find(x=>x.symbol===item.symbol);
+            const fundingRate = fundingRow && fundingRow.fundingRate!==undefined ? fundingRow.fundingRate : null;
+            const es = computeEntryScore({
+              lastPrice: closes[closes.length-1], emaFast: ema21arr[ema21arr.length-1], emaSlow: ema50arr[ema50arr.length-1], emaFastLabel:'21', emaSlowLabel:'50',
+              rsiVal, macdVal, avwap, fib, volRatio, priceUp, fundingRate, structure, adxVal, candles, tf:'4h',
+            });
+            const scoreWins = trendBias==='bullish'
+              ? (es.longPoints > es.shortPoints && es.longPoints >= es.maxPoints/2)
+              : (es.shortPoints > es.longPoints && es.shortPoints >= es.maxPoints/2);
+            if(scoreWins){
+              const points = trendBias==='bullish' ? es.longPoints : es.shortPoints;
+              newConfluence.push({ symbol:item.symbol, bias:trendBias, points, maxPoints:es.maxPoints });
+              const key = `${item.symbol}|confluence|${trendBias}`;
+              if(!alertFiredThisSession.has(key)){
+                alertFiredThisSession.add(key);
+                pushAlert(`🎯 Konfluensi kuat: tren 1H/4H/1D SELARAS ${trendBias==='bullish'?'BULLISH':'BEARISH'} + skor entry ${points}/${es.maxPoints} — 2 sinyal sepakat`, item.symbol, true);
+              }
+            }
+          }
+        }catch(e){ /* skip pair kalau fetch gagal */ }
+      }
+    }
+    await Promise.all(Array.from({length:CONCURRENCY}, worker));
+    confluenceResults = newConfluence.sort((a,b)=>b.points-a.points);
+    squeezeResults = newSqueeze.sort((a,b)=>a.percentileRank-b.percentileRank);
+    divergenceResults = newDivergence;
+    renderAdvancedWidgets();
+  } finally {
+    advancedScanRunning = false;
+  }
+}
+
+function renderAdvancedWidgets(){
+  // 1) Alarm Konfluensi
+  document.getElementById('confluenceCount').textContent = confluenceResults.length;
+  document.getElementById('confluenceWidgetBody').innerHTML = confluenceResults.length===0
+    ? `<div class="widget-empty">Belum ada sinyal konfluensi (tren selaras + skor entry menang)</div>`
+    : confluenceResults.slice(0,5).map(r=>`
+      <div class="widget-row">
+        <span class="widget-row-sym">${escapeHtml(r.symbol.replace('USDT',''))}</span>
+        <span class="badge-pill ${r.bias==='bullish'?'score-hi':'score-lo'}">${r.bias==='bullish'?'LONG':'SHORT'}</span>
+        <span class="widget-row-meta">${r.points}/${r.maxPoints} poin</span>
+      </div>`).join('');
+
+  // 2) Volatility Squeeze
+  document.getElementById('squeezeCount').textContent = squeezeResults.length;
+  document.getElementById('squeezeWidgetBody').innerHTML = squeezeResults.length===0
+    ? `<div class="widget-empty">Belum ada Bollinger Band yang menyempit ekstrem</div>`
+    : squeezeResults.slice(0,5).map(r=>`
+      <div class="widget-row">
+        <span class="widget-row-sym">${escapeHtml(r.symbol.replace('USDT',''))}</span>
+        <span class="widget-row-meta">Bandwidth ${r.bandwidth.toFixed(2)}% (${r.percentileRank.toFixed(0)} persentil)</span>
+      </div>`).join('');
+
+  // 3) Divergence Scanner
+  document.getElementById('divergenceCount').textContent = divergenceResults.length;
+  document.getElementById('divergenceWidgetBody').innerHTML = divergenceResults.length===0
+    ? `<div class="widget-empty">Belum ada divergence RSI vs harga terdeteksi</div>`
+    : divergenceResults.slice(0,5).map(r=>`
+      <div class="widget-row">
+        <span class="widget-row-sym">${escapeHtml(r.symbol.replace('USDT',''))}</span>
+        <span class="badge-pill ${r.type==='bullish'?'score-hi':'score-lo'}">${r.type==='bullish'?'BULLISH':'BEARISH'} DIV</span>
+      </div>`).join('');
+
+  // 4) Structure Break Feed
+  document.getElementById('structBreakCount').textContent = structureBreakFeed.length;
+  document.getElementById('structBreakWidgetBody').innerHTML = structureBreakFeed.length===0
+    ? `<div class="widget-empty">Belum ada break struktur (BOS) baru</div>`
+    : structureBreakFeed.slice(0,5).map(r=>{
+      const minsAgo = Math.max(0, Math.floor((Date.now()-r.time)/60000));
+      return `
+      <div class="widget-row">
+        <span class="widget-row-sym">${escapeHtml(r.symbol.replace('USDT',''))}</span>
+        <span class="badge-pill ${r.direction==='bullish'?'score-hi':'score-lo'}">BOS ${r.direction==='bullish'?'▲':'▼'}</span>
+        <span class="widget-row-meta">${minsAgo<1?'baru saja':minsAgo+'m lalu'}</span>
+      </div>`;
+    }).join('');
 }
 
 // ===== EVENTS =====
@@ -2037,11 +2579,6 @@ function applyFilter(filter){
   document.querySelectorAll('.tab-row .tab-item').forEach(b=>b.classList.toggle('active', b.dataset.filter===filter));
   document.querySelectorAll('.filter-row .btn').forEach(b=>b.classList.toggle('active', b.dataset.filter===filter));
   document.querySelectorAll('.sort-row .sort-pill').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.hero-mode-pill').forEach(b=>b.classList.remove('active'));
-  document.getElementById('modeResultsSection').classList.remove('show');
-  const bnAllEl = document.getElementById('bnAll'), bnWlEl = document.getElementById('bnWatchlist');
-  if(bnAllEl) bnAllEl.classList.toggle('active', filter==='all');
-  if(bnWlEl) bnWlEl.classList.toggle('active', filter==='watchlist');
   renderTable();
 }
 
@@ -2063,11 +2600,6 @@ document.querySelectorAll('.sort-row .sort-pill').forEach(pill=>{
     document.querySelectorAll('.tab-row .tab-item').forEach(b=>b.classList.remove('active'));
     document.querySelectorAll('.filter-row .btn').forEach(b=>b.classList.remove('active'));
     document.querySelectorAll('.sort-row .sort-pill').forEach(b=>b.classList.remove('active'));
-    document.querySelectorAll('.hero-mode-pill').forEach(b=>b.classList.remove('active'));
-    document.getElementById('modeResultsSection').classList.remove('show');
-    const bnAllEl = document.getElementById('bnAll'), bnWlEl = document.getElementById('bnWatchlist');
-    if(bnAllEl) bnAllEl.classList.remove('active');
-    if(bnWlEl) bnWlEl.classList.remove('active');
     pill.classList.add('active');
     renderTable();
   });
@@ -2092,8 +2624,9 @@ document.getElementById('autoBtn').addEventListener('click', function(){
 
 // ===== ALERT DRAWER & SETTINGS DRAWER (full-screen panel) =====
 document.getElementById('alertBtn').addEventListener('click', ()=>{
-  document.getElementById('settingsDrawer').classList.remove('show');
-  document.getElementById('alertDrawer').classList.toggle('show');
+  const willOpen = !document.getElementById('alertDrawer').classList.contains('show');
+  closeOtherFullscreenPanels('alertDrawer');
+  document.getElementById('alertDrawer').classList.toggle('show', willOpen);
   syncDrawerNavState();
 });
 document.getElementById('alertDrawerClose').addEventListener('click', ()=>{
@@ -2108,6 +2641,7 @@ document.getElementById('clearAlertBtn').addEventListener('click', ()=>{
   saveAlertLog([]);
   renderAlertLog();
   updateAlertBadge();
+  renderTicker();
 });
 document.getElementById('saveSettingsBtn').addEventListener('click', ()=>{
   const s = {
@@ -2136,6 +2670,21 @@ document.getElementById('toggleMarketAlignBtn').addEventListener('click', ()=>{
   syncMarketAlignToggleUI();
   setStatus(s.marketAlignEnabled ? "✓ Alarm mayoritas timeframe diaktifkan" : "Alarm mayoritas timeframe dimatikan", "ok");
 });
+document.getElementById('paAddBtn').addEventListener('click', ()=>{
+  let symbol = document.getElementById('paSymbol').value.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+  const direction = document.getElementById('paDirection').value;
+  const price = parseFloat(document.getElementById('paPrice').value);
+  if(!symbol){ setStatus('Isi nama pair dulu.', 'err'); return; }
+  if(!price || price<=0){ setStatus('Isi harga target dulu.', 'err'); return; }
+  if(!symbol.endsWith('USDT')) symbol += 'USDT';
+  const list = loadPriceAlerts();
+  list.push({ id:'pa_'+Date.now()+'_'+Math.random().toString(36).slice(2,6), symbol, direction, price, triggered:false });
+  savePriceAlerts(list);
+  renderPriceAlertList();
+  document.getElementById('paSymbol').value = '';
+  document.getElementById('paPrice').value = '';
+  setStatus('✓ Alert harga ditambahkan', 'ok');
+});
 function refreshNotifStatus(){
   const el = document.getElementById('notifStatus');
   if(!window.Notification){ el.textContent = "Browser ini tidak mendukung notifikasi."; return; }
@@ -2149,41 +2698,73 @@ document.getElementById('notifPermBtn').addEventListener('click', ()=>{
 });
 
 // ===== BOTTOM NAV (app-style quick switcher) =====
+// Cuma boleh 1 full-screen panel yang kebuka bersamaan (Mode Results / Alert / Pengaturan / Jurnal).
+// Dipanggil sebelum buka panel manapun, biar nggak numpuk kalau user pindah-pindah cepat.
+function closeOtherFullscreenPanels(exceptId){
+  ['modeResultsSection','alertDrawer','settingsDrawer','journalSection','marketPanel','menuPanel','calcPanel','historyPanel'].forEach(id=>{
+    if(id !== exceptId) document.getElementById(id).classList.remove('show');
+  });
+}
+
 function syncDrawerNavState(){
   const alertOpen = document.getElementById('alertDrawer').classList.contains('show');
   const settingsOpen = document.getElementById('settingsDrawer').classList.contains('show');
-  document.getElementById('bnAlert').classList.toggle('active', alertOpen);
   document.getElementById('bnSettings').classList.toggle('active', settingsOpen);
   document.getElementById('alertBtn').classList.toggle('active', alertOpen);
 }
 document.getElementById('bnAll').addEventListener('click', ()=>{
-  document.getElementById('alertDrawer').classList.remove('show');
-  document.getElementById('settingsDrawer').classList.remove('show');
+  closeOtherFullscreenPanels(null);
   syncDrawerNavState();
-  applyFilter('all');
   window.scrollTo({top:0, behavior:'smooth'});
 });
 document.getElementById('bnWatchlist').addEventListener('click', ()=>{
-  document.getElementById('alertDrawer').classList.remove('show');
-  document.getElementById('settingsDrawer').classList.remove('show');
+  closeOtherFullscreenPanels('marketPanel');
   syncDrawerNavState();
+  document.getElementById('marketPanel').classList.add('show');
   applyFilter('watchlist');
-  document.querySelector('.coin-list').scrollIntoView({behavior:'smooth', block:'start'});
 });
 document.getElementById('bnJournal').addEventListener('click', ()=>{
-  document.getElementById('alertDrawer').classList.remove('show');
-  document.getElementById('settingsDrawer').classList.remove('show');
+  closeOtherFullscreenPanels('journalSection');
   syncDrawerNavState();
-  document.getElementById('journalSection').scrollIntoView({behavior:'smooth', block:'start'});
+  document.getElementById('journalSection').classList.add('show');
 });
-document.getElementById('bnAlert').addEventListener('click', ()=>{
-  document.getElementById('settingsDrawer').classList.remove('show');
-  document.getElementById('alertDrawer').classList.toggle('show');
+document.getElementById('journalSectionClose').addEventListener('click', ()=>{
+  document.getElementById('journalSection').classList.remove('show');
+});
+document.getElementById('bnMenu').addEventListener('click', ()=>{
+  closeOtherFullscreenPanels('menuPanel');
   syncDrawerNavState();
+  document.getElementById('menuPanel').classList.add('show');
+});
+document.getElementById('menuPanelClose').addEventListener('click', ()=>{
+  document.getElementById('menuPanel').classList.remove('show');
+});
+document.getElementById('menuMarketBtn').addEventListener('click', ()=>{
+  closeOtherFullscreenPanels('marketPanel');
+  document.getElementById('marketPanel').classList.add('show');
+});
+document.getElementById('marketPanelClose').addEventListener('click', ()=>{
+  document.getElementById('marketPanel').classList.remove('show');
+});
+document.getElementById('menuCalcBtn').addEventListener('click', ()=>{
+  closeOtherFullscreenPanels('calcPanel');
+  document.getElementById('calcPanel').classList.add('show');
+});
+document.getElementById('calcPanelClose').addEventListener('click', ()=>{
+  document.getElementById('calcPanel').classList.remove('show');
+});
+document.getElementById('menuHistoryBtn').addEventListener('click', ()=>{
+  closeOtherFullscreenPanels('historyPanel');
+  document.getElementById('historyPanel').classList.add('show');
+  renderScoreHistory();
+});
+document.getElementById('historyPanelClose').addEventListener('click', ()=>{
+  document.getElementById('historyPanel').classList.remove('show');
 });
 document.getElementById('bnSettings').addEventListener('click', ()=>{
-  document.getElementById('alertDrawer').classList.remove('show');
-  document.getElementById('settingsDrawer').classList.toggle('show');
+  const willOpen = !document.getElementById('settingsDrawer').classList.contains('show');
+  closeOtherFullscreenPanels('settingsDrawer');
+  document.getElementById('settingsDrawer').classList.toggle('show', willOpen);
   syncDrawerNavState();
 });
 
@@ -2664,6 +3245,7 @@ function renderDetail(d){
       <div class="spbar-long" style="width:${longPct}%"></div>
       <div class="spbar-short" style="width:${shortPct}%"></div>
     </div>
+    <button class="btn" id="saveScoreHistoryBtn" onclick="saveScoreSnapshot()" style="width:100%; margin-top:10px;">📌 Simpan ke Histori Skor</button>
     <div class="sop-note" style="margin-top:8px;">Tiap syarat di bawah bernilai <b>1 poin</b> ke arah LONG atau SHORT — nggak ada pembobotan. ${maxPoints-longPoints-shortPoints} dari ${maxPoints} syarat netral/nggak charge ke arah manapun.</div>
 
     <div class="ind-section-title">RINCIAN SYARAT (${maxPoints} KRITERIA)</div>
@@ -3147,6 +3729,8 @@ document.getElementById('introTipClose').addEventListener('click', ()=>{
 });
 
 renderJournal();
+renderPriceAlertList();
+renderTicker();
 refreshAll();
 
 // ===== PWA: register service worker =====
