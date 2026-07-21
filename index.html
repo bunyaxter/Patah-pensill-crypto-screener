@@ -7,7 +7,7 @@
 
 <!-- PWA -->
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0E0E10">
+<meta name="theme-color" content="#0A0B07">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -583,8 +583,8 @@
     box-shadow:0 10px 32px rgba(178,155,255,0.08), 0 2px 10px rgba(0,0,0,0.35);
   }
   .jfh-sub{font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--text-3); letter-spacing:0.02em;}
-  .journal-frame-actions{display:flex; gap:8px; margin-bottom:16px;}
-  .journal-frame-actions .btn{flex:1; text-align:center;}
+  .journal-frame-actions{display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;}
+  .journal-frame-actions .btn{flex:1 1 auto; min-width:130px; text-align:center;}
   .journal-add-btn{
     font-family:'JetBrains Mono',monospace; font-weight:700; font-size:11px;
     background:var(--violet); border:1px solid var(--violet); color:#1C1030;
@@ -861,33 +861,17 @@
         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
         <span class="sni-text"><span class="sni-title">Scanner Market</span></span>
       </button>
-      <button class="sidebar-nav-item" data-ws="wsAnalysis">
-        <svg viewBox="0 0 24 24"><path d="M4 20V12M9 20V4M14 20v-9M19 20v-5"/></svg>
-        <span class="sni-text"><span class="sni-title">Analysis</span></span>
+      <button class="sidebar-nav-item" data-ws="wsScannerPairHub" id="navScannerPair">
+        <svg viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg>
+        <span class="sni-text"><span class="sni-title">Scanner Pair</span></span>
       </button>
-      <button class="sidebar-nav-item" data-ws="wsValidation">
-        <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
-        <span class="sni-text"><span class="sni-title">Validation</span></span>
-      </button>
-      <button class="sidebar-nav-item" data-ws="wsDecision">
-        <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4.5L6 21l1.5-7.5L2 9h7z"/></svg>
-        <span class="sni-text"><span class="sni-title">Decision</span></span>
-      </button>
-      <button class="sidebar-nav-item" data-ws="wsTrading">
-        <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>
-        <span class="sni-text"><span class="sni-title">Trading</span></span>
-      </button>
-      <button class="sidebar-nav-item" data-ws="wsReview">
-        <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
-        <span class="sni-text"><span class="sni-title">Review</span></span>
-      </button>
+      <button class="sidebar-quick-item" id="sqHistory">📈 Histori Skor</button>
+      <button class="sidebar-quick-item" id="sqSettings">⚙ Pengaturan Alert</button>
 
       <div class="sidebar-section-label">Quick Access</div>
       <button class="sidebar-quick-item" id="sqWatchlist">⭐ My Watchlist</button>
       <button class="sidebar-quick-item" id="sqAlerts">🔔 AI Alerts</button>
       <button class="sidebar-quick-item" id="sqFunding">📡 Funding Monitor</button>
-      <button class="sidebar-quick-item" id="sqHistory">📈 Histori Skor</button>
-      <button class="sidebar-quick-item" id="sqSettings">⚙ Pengaturan Alert</button>
 
       <div class="sidebar-ai-card">
         <div class="sac-brain">🧠</div>
@@ -1080,12 +1064,55 @@
       <div class="ws-card-title">📡 STATUS SCAN OTOMATIS</div>
       <div id="dcScannerStatus"></div>
     </div>
-    <div class="ws-note">ℹ️ Angka "Momentum" di tabel ini <b>bukan</b> AI Confluence Score — cuma skor cepat (0-100) dari momentum &amp; volatilitas harga yang sudah ter-fetch, dipakai buat sortir/lirik cepat 400+ pair. Satu-satunya sistem skor resmi di app ini adalah <b>AI Confluence Score</b> di Analysis/Validation/Decision Workspace (12 kategori berbobot). Buka pair-nya di sana buat skor yang sebenarnya. <span class="sim-tag">CEPAT, BUKAN SKOR RESMI</span></div>
+    <div class="ws-note">ℹ️ Harga &amp; funding rate di tabel ini update <b>real-time via WebSocket Binance</b> (~1 detik sekali) kalau koneksi WS berhasil — kalau gagal/putus, otomatis fallback ke REST polling tiap 45 detik, nggak ada data yang macet. Angka "Momentum" <b>bukan</b> AI Confluence Score — cuma skor cepat (0-100) dari momentum &amp; volatilitas harga, dipakai buat sortir/lirik cepat 400+ pair. Satu-satunya sistem skor resmi di app ini adalah <b>AI Confluence Score</b> di Analysis/Validation/Decision Workspace (12 kategori berbobot). <span class="sim-tag">CEPAT, BUKAN SKOR RESMI</span></div>
+  </div>
+
+  <!-- ===== SCANNER PAIR (folder berisi Analysis/Validation/Decision/Trading/Review) ===== -->
+  <div class="workspace" id="wsScannerPairHub">
+    <div class="ws-header"><span class="ws-title">SCANNER PAIR</span></div>
+    <div class="ws-sub">Alat analisa mendalam untuk 1 pair — pilih salah satu tools di bawah</div>
+    <div class="widget-grid" style="grid-template-columns:repeat(2,1fr);">
+      <div class="widget-card" onclick="showWorkspace('wsAnalysis')">
+        <div class="widget-card-head">
+          <span class="widget-icon wi-mint">📊</span>
+          <span class="widget-title">Analysis</span>
+        </div>
+        <div class="mono" style="font-size:10.5px; color:var(--text-3); margin-top:6px;">Market Structure, Multi-Timeframe, Momentum</div>
+      </div>
+      <div class="widget-card" onclick="showWorkspace('wsValidation')">
+        <div class="widget-card-head">
+          <span class="widget-icon wi-violet">✅</span>
+          <span class="widget-title">Validation</span>
+        </div>
+        <div class="mono" style="font-size:10.5px; color:var(--text-3); margin-top:6px;">Confidence Meter, Checklist, Futures Metrics</div>
+      </div>
+      <div class="widget-card" onclick="showWorkspace('wsDecision')">
+        <div class="widget-card-head">
+          <span class="widget-icon wi-amber">⭐</span>
+          <span class="widget-title">Decision</span>
+        </div>
+        <div class="mono" style="font-size:10.5px; color:var(--text-3); margin-top:6px;">AI Score, Risk Gate, Trade Approval Committee</div>
+      </div>
+      <div class="widget-card" onclick="showWorkspace('wsTrading')">
+        <div class="widget-card-head">
+          <span class="widget-icon wi-crimson">📈</span>
+          <span class="widget-title">Trading</span>
+        </div>
+        <div class="mono" style="font-size:10.5px; color:var(--text-3); margin-top:6px;">Trade Setup, Kalkulator Position Size</div>
+      </div>
+      <div class="widget-card" onclick="showWorkspace('wsReview')">
+        <div class="widget-card-head">
+          <span class="widget-icon wi-mint">📝</span>
+          <span class="widget-title">Review</span>
+        </div>
+        <div class="mono" style="font-size:10.5px; color:var(--text-3); margin-top:6px;">Jurnal Trading, Win Rate, Equity Curve</div>
+      </div>
+    </div>
   </div>
 
   <!-- ===== 03. ANALYSIS WORKSPACE ===== -->
   <div class="workspace" id="wsAnalysis">
-    <button class="back-to-home-btn" onclick="goHome()">← Kembali ke Home</button>
+    <button class="back-to-home-btn" onclick="backToScannerPair()">← Back</button>
     <div class="ws-header"><span class="ws-title">ANALYSIS WORKSPACE</span></div>
     <div class="ws-sub">Tahap Workflow: Market Structure → Multi Timeframe Alignment → Momentum Confirmation</div>
     <div class="ws-symbol-picker">
@@ -1107,7 +1134,7 @@
 
   <!-- ===== 04. VALIDATION WORKSPACE ===== -->
   <div class="workspace" id="wsValidation">
-    <button class="back-to-home-btn" onclick="goHome()">← Kembali ke Home</button>
+    <button class="back-to-home-btn" onclick="backToScannerPair()">← Back</button>
     <div class="ws-header"><span class="ws-title">VALIDATION WORKSPACE</span></div>
     <div class="ws-sub">Tahap Workflow: Futures Orderflow → Liquidity Engine → Risk Management (validasi sebelum Final Gate)</div>
     <div id="wsValidationBody"><div class="empty-state">Buka pair dulu di Analysis Workspace.</div></div>
@@ -1116,7 +1143,7 @@
 
   <!-- ===== 05. DECISION ENGINE ===== -->
   <div class="workspace" id="wsDecision">
-    <button class="back-to-home-btn" onclick="backToAksiCepat()">← Kembali ke Aksi Cepat</button>
+    <button class="back-to-home-btn" onclick="backToScannerPair()">← Back</button>
     <div class="ws-header"><span class="ws-title">DECISION ENGINE</span></div>
     <div class="ws-sub">Tahap Workflow: AI Confluence Score → Execution Qualifier → Final Gate (Trade Approval Committee)</div>
     <div id="wsDecisionBody"><div class="empty-state">Buka pair dulu di Analysis Workspace.</div></div>
@@ -1124,7 +1151,7 @@
 
   <!-- ===== 06. TRADING WORKSPACE ===== -->
   <div class="workspace" id="wsTrading">
-    <button class="back-to-home-btn" onclick="goHome()">← Kembali ke Home</button>
+    <button class="back-to-home-btn" onclick="backToScannerPair()">← Back</button>
     <div class="ws-header"><span class="ws-title">TRADING WORKSPACE</span></div>
     <div class="ws-sub">Tahap Workflow: Live Position Management — kelola posisi & risiko setelah Final Gate approve</div>
     <div class="ws-note" style="margin-bottom:14px;">ℹ️ App ini <b>read-only</b> — nggak eksekusi order beneran ke Binance. "Open Positions" di sini diambil dari entry Jurnal yang statusnya kamu tandai Open/Floating.</div>
@@ -1156,14 +1183,18 @@
 
   <!-- ===== 07. REVIEW WORKSPACE ===== -->
   <div class="workspace" id="wsReview">
-    <button class="back-to-home-btn" onclick="goHome()">← Kembali ke Home</button>
+    <button class="back-to-home-btn" onclick="backToScannerPair()">← Back</button>
     <div class="ws-header"><span class="ws-title">REVIEW WORKSPACE</span></div>
     <div class="ws-sub">Tahap Workflow: Post Trade Review → Learning Engine — evaluasi & catatan pribadi, tersimpan lokal di HP kamu</div>
     <div class="journal-frame-actions">
       <button class="btn journal-clear-btn" id="journalClearBtn" style="display:none;">Hapus Semua</button>
       <button class="btn journal-add-btn" id="journalAddBtn">+ Tambah Entry</button>
       <button class="btn" id="reviewHistoryBtn">📈 Histori Skor</button>
+      <button class="btn" id="exportDataBtn">⬇ Export Data</button>
+      <button class="btn" id="importDataBtn">⬆ Import Data</button>
+      <input type="file" id="importDataFile" accept="application/json" style="display:none;">
     </div>
+    <div class="ws-note" style="margin-bottom:14px;">Export/Import mencakup <b>Jurnal Trading</b> &amp; <b>Watchlist</b> — cocok buat backup atau pindah HP. Semua data lokal di browser kamu, nggak pernah dikirim ke server manapun.</div>
     <div class="journal-stats" id="journalStats"></div>
     <div id="equityCurveWrap" style="margin-bottom:14px;"></div>
     <div class="journal-list" id="journalList"></div>
@@ -2020,6 +2051,107 @@ function computeQuickScore(row){
   let s = Math.min(10, (Math.abs(chg)/2) + Math.min(volatility/3, 4));
   row.quickScore = Math.round(s*10)/10;
   return row;
+}
+
+// ===== WEBSOCKET BINANCE — TRUE REAL-TIME =====
+// Lapisan TAMBAHAN di atas REST polling (bukan pengganti) — kalau WS putus/gagal, app tetap jalan normal
+// pakai refreshAll() tiap 45 detik seperti sebelumnya. WS cuma bikin update harga/funding jadi hampir instan
+// (tiap ~1 detik dari Binance) daripada nunggu siklus 45 detik.
+// !ticker@arr = 24hr ticker SEMUA pair (harga, %perubahan, volume) — push tiap ~1 detik.
+// !markPrice@arr@1s = mark price SEMUA pair, termasuk funding rate real-time — push tiap 1 detik.
+let wsConn = null;
+let wsReconnectDelay = 2000;
+let wsConnected = false;
+let wsDataDirty = false;
+let wsReconnectTimer = null;
+
+function setWsStatus(connected){
+  wsConnected = connected;
+  const el = document.getElementById('sidebarPingStatus');
+  if(el && connected){
+    el.style.color = 'var(--mint)';
+    el.textContent = `🟢 WebSocket Live — real-time`;
+  }
+  // Kalau WS putus, biarkan pingBinance() (REST) yang isi status-nya lagi di siklus berikutnya
+}
+
+function connectBinanceWS(){
+  if(wsConn && (wsConn.readyState === WebSocket.OPEN || wsConn.readyState === WebSocket.CONNECTING)) return;
+  try{
+    wsConn = new WebSocket('wss://fstream.binance.com/stream?streams=!ticker@arr/!markPrice@arr@1s');
+    wsConn.onopen = () => {
+      wsReconnectDelay = 2000;
+      setWsStatus(true);
+      console.log('Binance WebSocket tersambung — real-time aktif');
+    };
+    wsConn.onmessage = (evt) => {
+      try{
+        const msg = JSON.parse(evt.data);
+        if(!msg || !msg.stream || !msg.data) return;
+        if(msg.stream === '!ticker@arr') applyTickerStream(msg.data);
+        else if(msg.stream === '!markPrice@arr@1s') applyMarkPriceStream(msg.data);
+      }catch(e){ /* pesan korup/nggak lengkap — abaikan, tunggu pesan berikutnya */ }
+    };
+    wsConn.onerror = () => { try{ wsConn.close(); }catch(e){} };
+    wsConn.onclose = () => {
+      setWsStatus(false);
+      scheduleWsReconnect();
+    };
+  }catch(e){
+    console.warn('Gagal membuka WebSocket Binance:', e);
+    scheduleWsReconnect();
+  }
+}
+function scheduleWsReconnect(){
+  clearTimeout(wsReconnectTimer);
+  wsReconnectTimer = setTimeout(connectBinanceWS, wsReconnectDelay);
+  wsReconnectDelay = Math.min(wsReconnectDelay * 1.6, 30000); // exponential backoff, dibatasi maks 30 detik
+}
+
+// Update in-place ke tickerData yang SAMA (dipakai semua fungsi render lain) — jadi begitu WS kasih data
+// baru, semua tampilan yang udah ada (Scanner, Home, Top Opportunities) otomatis ikut ke-refresh.
+function applyTickerStream(arr){
+  if(!Array.isArray(arr) || tickerData.length === 0) return;
+  const map = new Map(tickerData.map(d=>[d.symbol, d]));
+  arr.forEach(t=>{
+    const row = map.get(t.s);
+    if(!row) return; // pair di luar daftar USDT-M perpetual yang kita lacak — abaikan
+    row.lastPrice = t.c;
+    row.priceChangePercent = t.P;
+    row.highPrice = t.h;
+    row.lowPrice = t.l;
+    row.quoteVolume = parseFloat(t.q);
+    computeQuickScore(row);
+  });
+  wsDataDirty = true;
+}
+function applyMarkPriceStream(arr){
+  if(!Array.isArray(arr) || tickerData.length === 0) return;
+  const map = new Map(tickerData.map(d=>[d.symbol, d]));
+  arr.forEach(m=>{
+    const rate = parseFloat(m.r);
+    if(isNaN(rate)) return;
+    fundingData[m.s] = rate;
+    const row = map.get(m.s);
+    if(row) row.fundingRate = rate;
+  });
+  wsDataDirty = true;
+}
+
+// Render di-throttle: WS ngirim data tiap ~1 detik buat 400+ pair, kalau re-render FULL UI tiap pesan
+// itu bakal bikin HP lag. Jadi cuma tandai "ada data baru" (dirty flag), lalu render beneran cuma tiap 2 detik.
+function startWsRenderLoop(){
+  setInterval(()=>{
+    if(!wsDataDirty) return;
+    wsDataDirty = false;
+    renderTicker();
+    renderScoreboard();
+    renderTopSignals();
+    renderMovers();
+    renderScannerStats();
+    renderTable();
+    renderSearchResults();
+  }, 2000);
 }
 
 async function refreshAll(){
@@ -3393,10 +3525,14 @@ function syncDrawerNavState(){
 }
 
 let currentWorkspace = 'wsHome';
-const WS_IDS = ['wsHome','wsScanner','wsAnalysis','wsValidation','wsDecision','wsTrading','wsReview'];
+const WS_IDS = ['wsHome','wsScanner','wsScannerPairHub','wsAnalysis','wsValidation','wsDecision','wsTrading','wsReview'];
+const SCANNER_PAIR_CHILDREN = ['wsScannerPairHub','wsAnalysis','wsValidation','wsDecision','wsTrading','wsReview'];
 function showWorkspace(id){
   WS_IDS.forEach(w=>document.getElementById(w).classList.toggle('active', w===id));
-  document.querySelectorAll('.sidebar-nav-item[data-ws]').forEach(b=>b.classList.toggle('active', b.dataset.ws===id));
+  document.querySelectorAll('.sidebar-nav-item[data-ws]').forEach(b=>{
+    const isActive = SCANNER_PAIR_CHILDREN.includes(id) ? b.dataset.ws==='wsScannerPairHub' : b.dataset.ws===id;
+    b.classList.toggle('active', isActive);
+  });
   currentWorkspace = id;
   closeOtherFullscreenPanels(null);
   window.scrollTo({top:0, behavior:'smooth'});
@@ -3462,11 +3598,93 @@ function backToAksiCepat(){
 function goHome(){
   showWorkspace('wsHome');
 }
+function backToScannerPair(){
+  showWorkspace('wsScannerPairHub');
+}
 document.getElementById('reviewHistoryBtn').addEventListener('click', ()=>{
   closeOtherFullscreenPanels('historyPanel');
   document.getElementById('historyPanel').classList.add('show');
   renderScoreHistory();
 });
+
+// ===== EXPORT / IMPORT DATA — Jurnal Trading + Watchlist =====
+// Semua data lokal di browser (localStorage), nggak pernah dikirim ke server manapun.
+// Export = download 1 file JSON. Import = upload file JSON yang sama, data digabung (bukan ditimpa paksa).
+function exportUserData(){
+  const payload = {
+    exportedAt: new Date().toISOString(),
+    app: 'Patah Pensill Screener',
+    version: 2,
+    journal: loadJournal(),
+    watchlist: loadWatchlist(),
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const dateStr = new Date().toISOString().slice(0,10);
+  a.href = url;
+  a.download = `patah-pensill-backup-${dateStr}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  setStatus('✓ Data diexport (Jurnal + Watchlist)', 'ok');
+}
+
+function importUserData(file){
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    let payload;
+    try{ payload = JSON.parse(e.target.result); }
+    catch(err){ setStatus('Gagal import: file bukan JSON yang valid.', 'err'); return; }
+
+    if(!payload || (!Array.isArray(payload.journal) && !Array.isArray(payload.watchlist))){
+      setStatus('Gagal import: format file nggak dikenali (bukan backup Patah Pensill).', 'err');
+      return;
+    }
+
+    let journalAdded = 0, watchlistAdded = 0;
+    if(Array.isArray(payload.journal)){
+      const existing = loadJournal();
+      const existingIds = new Set(existing.map(x=>x.id));
+      const merged = [...existing];
+      payload.journal.forEach(entry=>{
+        if(entry && entry.id && !existingIds.has(entry.id)){
+          merged.push(entry);
+          existingIds.add(entry.id);
+          journalAdded++;
+        }
+      });
+      saveJournalEntries(merged);
+    }
+    if(Array.isArray(payload.watchlist)){
+      const existing = new Set(loadWatchlist());
+      payload.watchlist.forEach(sym=>{
+        if(typeof sym === 'string' && !existing.has(sym)){ existing.add(sym); watchlistAdded++; }
+      });
+      saveWatchlist([...existing]);
+    }
+
+    renderJournal();
+    renderEquityCurve();
+    renderTable();
+    setStatus(`✓ Import selesai — ${journalAdded} entry jurnal baru, ${watchlistAdded} pair watchlist baru ditambahkan (data lama tetap aman, nggak ditimpa)`, 'ok');
+  };
+  reader.onerror = () => setStatus('Gagal membaca file.', 'err');
+  reader.readAsText(file);
+}
+
+document.getElementById('exportDataBtn').addEventListener('click', exportUserData);
+document.getElementById('importDataBtn').addEventListener('click', ()=>{
+  document.getElementById('importDataFile').click();
+});
+document.getElementById('importDataFile').addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  importUserData(file);
+  e.target.value = ''; // reset biar bisa import file yang sama lagi kalau perlu
+});
+
 document.getElementById('historyPanelClose').addEventListener('click', ()=>{
   document.getElementById('historyPanel').classList.remove('show');
 });
@@ -4309,7 +4527,7 @@ function renderScannerStats(){
   document.getElementById('scStrongCount').textContent = tickerData.filter(d=>computeMomentumScore(d)>=80).length;
   const totalVol = tickerData.reduce((s,d)=>s+(d.quoteVolume||0),0);
   document.getElementById('scTotalVol').textContent = totalVol ? '$'+fmtNum(totalVol) : '-';
-  document.getElementById('scLastScan').textContent = new Date().toLocaleTimeString('id-ID');
+  document.getElementById('scLastScan').innerHTML = `${new Date().toLocaleTimeString('id-ID')}<br><span style="font-size:9px; color:${wsConnected?'var(--mint)':'var(--text-3)'};">${wsConnected?'🟢 WS Live':'○ REST Polling'}</span>`;
   const el = document.getElementById('dcScannerStatus');
   if(el) el.innerHTML = `
     <div class="checklist-row"><span class="cl-name">Auto-Refresh (harga &amp; funding)</span><span class="cl-result ${autoTimer?'pass':'neutral'}">${autoTimer?'● Aktif':'○ Nonaktif'}</span></div>
@@ -4843,8 +5061,13 @@ document.getElementById('introTipClose').addEventListener('click', ()=>{
 renderJournal();
 renderPriceAlertList();
 renderTicker();
-refreshAll();
 startAutoRefresh();
+refreshAll().then(()=>{
+  // WS baru disambung SETELAH data awal dari REST termuat (biar ada tickerData buat di-mapping).
+  // Kalau ini gagal (browser/jaringan nolak WS), app tetap jalan normal murni via REST 45 detik.
+  connectBinanceWS();
+  startWsRenderLoop();
+});
 
 // ===== PWA: register service worker =====
 if ('serviceWorker' in navigator){
