@@ -340,7 +340,6 @@
   .crow-symtext{overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0;}
   .crow-sub{font-family:'JetBrains Mono',monospace; font-weight:400; font-size:9.5px; color:var(--text-3); flex-shrink:0;}
   .crow-badges{display:flex; align-items:center; gap:7px; flex-wrap:wrap;}
-  .crow-vol{font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text-3);}
   .crow-right{text-align:right; flex-shrink:0;}
   .crow-price{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:13px; color:var(--text-1);}
   .crow-change{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:12px; margin-top:2px;}
@@ -861,9 +860,13 @@
         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
         <span class="sni-text"><span class="sni-title">Scanner Market</span></span>
       </button>
-      <button class="sidebar-nav-item" data-ws="wsScannerPairHub" id="navScannerPair">
-        <svg viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg>
-        <span class="sni-text"><span class="sni-title">Scanner Pair</span></span>
+      <button class="sidebar-nav-item" data-ws="wsTrading">
+        <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>
+        <span class="sni-text"><span class="sni-title">Trading Workspace</span></span>
+      </button>
+      <button class="sidebar-nav-item" data-ws="wsReview">
+        <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+        <span class="sni-text"><span class="sni-title">Review</span></span>
       </button>
       <button class="sidebar-quick-item" id="sqHistory">📈 Histori Skor</button>
       <button class="sidebar-quick-item" id="sqSettings">⚙ Pengaturan Alert</button>
@@ -978,46 +981,6 @@
     <div class="ws-card-title">🏆 TOP OPPORTUNITIES <span class="mono" style="color:var(--text-3); font-weight:500; text-transform:none;">— pair skor tertinggi</span></div>
     <div class="top-signal-grid" id="topSignalGrid"></div>
   </div>
-
-  <div class="ws-card">
-    <div class="ws-card-title">🔬 SCAN SINYAL</div>
-    <div class="widget-grid">
-      <div class="widget-card" onclick="openWidgetDetail('confluence')">
-        <div class="widget-card-head">
-          <span class="widget-icon wi-mint">🎯</span>
-          <span class="widget-title">Alarm Konfluensi</span>
-          <span class="widget-count" id="confluenceCount">0</span>
-        </div>
-      </div>
-      <div class="widget-card" onclick="openWidgetDetail('squeeze')">
-        <div class="widget-card-head">
-          <span class="widget-icon wi-violet">📉</span>
-          <span class="widget-title">Volatility Squeeze</span>
-          <span class="widget-count" id="squeezeCount">0</span>
-        </div>
-      </div>
-      <div class="widget-card" onclick="openWidgetDetail('divergence')">
-        <div class="widget-card-head">
-          <span class="widget-icon wi-amber">🔀</span>
-          <span class="widget-title">Divergence Scanner</span>
-          <span class="widget-count" id="divergenceCount">0</span>
-        </div>
-      </div>
-      <div class="widget-card" onclick="openWidgetDetail('structbreak')">
-        <div class="widget-card-head">
-          <span class="widget-icon wi-crimson">📐</span>
-          <span class="widget-title">Structure Break</span>
-          <span class="widget-count" id="structBreakCount">0</span>
-        </div>
-      </div>
-      <div style="display:none;">
-        <div id="confluenceWidgetBody"></div>
-        <div id="squeezeWidgetBody"></div>
-        <div id="divergenceWidgetBody"></div>
-        <div id="structBreakWidgetBody"></div>
-      </div>
-    </div>
-  </div>
   </div><!-- /wsHome -->
 
   <!-- ===== 02. SCANNER WORKSPACE ===== -->
@@ -1068,53 +1031,11 @@
   </div>
 
   <!-- ===== SCANNER PAIR (folder berisi Analysis/Validation/Decision/Trading/Review) ===== -->
-  <div class="workspace" id="wsScannerPairHub">
-    <div class="ws-header"><span class="ws-title">SCANNER PAIR</span></div>
-    <div class="ws-sub">Alat analisa mendalam untuk 1 pair — pilih salah satu tools di bawah</div>
-    <div class="widget-grid" style="grid-template-columns:repeat(2,1fr);">
-      <div class="widget-card" onclick="showWorkspace('wsAnalysis')">
-        <div class="widget-card-head">
-          <span class="widget-icon wi-mint">📊</span>
-          <span class="widget-title">Analysis</span>
-        </div>
-        <div class="mono" style="font-size:10.5px; color:var(--text-3); margin-top:6px;">Market Structure, Multi-Timeframe, Momentum</div>
-      </div>
-      <div class="widget-card" onclick="showWorkspace('wsValidation')">
-        <div class="widget-card-head">
-          <span class="widget-icon wi-violet">✅</span>
-          <span class="widget-title">Validation</span>
-        </div>
-        <div class="mono" style="font-size:10.5px; color:var(--text-3); margin-top:6px;">Confidence Meter, Checklist, Futures Metrics</div>
-      </div>
-      <div class="widget-card" onclick="showWorkspace('wsDecision')">
-        <div class="widget-card-head">
-          <span class="widget-icon wi-amber">⭐</span>
-          <span class="widget-title">Decision</span>
-        </div>
-        <div class="mono" style="font-size:10.5px; color:var(--text-3); margin-top:6px;">AI Score, Risk Gate, Trade Approval Committee</div>
-      </div>
-      <div class="widget-card" onclick="showWorkspace('wsTrading')">
-        <div class="widget-card-head">
-          <span class="widget-icon wi-crimson">📈</span>
-          <span class="widget-title">Trading</span>
-        </div>
-        <div class="mono" style="font-size:10.5px; color:var(--text-3); margin-top:6px;">Trade Setup, Kalkulator Position Size</div>
-      </div>
-      <div class="widget-card" onclick="showWorkspace('wsReview')">
-        <div class="widget-card-head">
-          <span class="widget-icon wi-mint">📝</span>
-          <span class="widget-title">Review</span>
-        </div>
-        <div class="mono" style="font-size:10.5px; color:var(--text-3); margin-top:6px;">Jurnal Trading, Win Rate, Equity Curve</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== 03. ANALYSIS WORKSPACE ===== -->
-  <div class="workspace" id="wsAnalysis">
-    <button class="back-to-home-btn" onclick="backToScannerPair()">← Back</button>
-    <div class="ws-header"><span class="ws-title">ANALYSIS WORKSPACE</span></div>
-    <div class="ws-sub">Tahap Workflow: Market Structure → Multi Timeframe Alignment → Momentum Confirmation</div>
+  <!-- ===== TRADING WORKSPACE (gabungan Analysis + Validation + Decision + Trading) ===== -->
+  <div class="workspace" id="wsTrading">
+    <button class="back-to-home-btn" onclick="goHome()">← Back</button>
+    <div class="ws-header"><span class="ws-title">TRADING WORKSPACE</span></div>
+    <div class="ws-sub">Analisa lengkap 1 pair — struktur market, skor AI, sampai rencana entry, satu halaman scroll</div>
     <div class="ws-symbol-picker">
       <input type="text" id="wsAnalysisSymbolInput" placeholder="Pair (contoh: BTC, ETH, SOL)…" autocomplete="off">
       <button class="btn btn-primary" id="wsAnalysisSymbolBtn">Analisa</button>
@@ -1129,33 +1050,16 @@
       <button class="tf-btn" data-tf="1d">Daily</button>
       <button class="tf-btn" data-tf="1w">Weekly</button>
     </div>
+
     <div id="wsAnalysisBody"><div class="empty-state"><span class="loader"></span>Pilih pair buat mulai analisa…</div></div>
-  </div>
 
-  <!-- ===== 04. VALIDATION WORKSPACE ===== -->
-  <div class="workspace" id="wsValidation">
-    <button class="back-to-home-btn" onclick="backToScannerPair()">← Back</button>
-    <div class="ws-header"><span class="ws-title">VALIDATION WORKSPACE</span></div>
-    <div class="ws-sub">Tahap Workflow: Futures Orderflow → Liquidity Engine → Risk Management (validasi sebelum Final Gate)</div>
-    <div id="wsValidationBody"><div class="empty-state">Buka pair dulu di Analysis Workspace.</div></div>
-    <div class="ws-note">ℹ️ On-Chain Analytics (Glassnode/CryptoQuant) dan News & Sentiment belum terhubung ke sumber data manapun — jadi belum ditampilkan di sini, biar nggak ada angka karangan. Validasi di bawah murni dari data Binance Futures publik (funding, open interest, long/short ratio) plus struktur teknikal.</div>
-  </div>
+    <div id="wsValidationBody"></div>
+    <div class="ws-note">ℹ️ On-Chain Analytics (Glassnode/CryptoQuant) dan News & Sentiment belum terhubung ke sumber data manapun — jadi belum ditampilkan di sini, biar nggak ada angka karangan. Validasi di atas murni dari data Binance Futures publik (funding, open interest, long/short ratio) plus struktur teknikal.</div>
 
-  <!-- ===== 05. DECISION ENGINE ===== -->
-  <div class="workspace" id="wsDecision">
-    <button class="back-to-home-btn" onclick="backToScannerPair()">← Back</button>
-    <div class="ws-header"><span class="ws-title">DECISION ENGINE</span></div>
-    <div class="ws-sub">Tahap Workflow: AI Confluence Score → Execution Qualifier → Final Gate (Trade Approval Committee)</div>
-    <div id="wsDecisionBody"><div class="empty-state">Buka pair dulu di Analysis Workspace.</div></div>
-  </div>
+    <div id="wsDecisionBody"></div>
 
-  <!-- ===== 06. TRADING WORKSPACE ===== -->
-  <div class="workspace" id="wsTrading">
-    <button class="back-to-home-btn" onclick="backToScannerPair()">← Back</button>
-    <div class="ws-header"><span class="ws-title">TRADING WORKSPACE</span></div>
-    <div class="ws-sub">Tahap Workflow: Live Position Management — kelola posisi & risiko setelah Final Gate approve</div>
-    <div class="ws-note" style="margin-bottom:14px;">ℹ️ App ini <b>read-only</b> — nggak eksekusi order beneran ke Binance. "Open Positions" di sini diambil dari entry Jurnal yang statusnya kamu tandai Open/Floating.</div>
-    <div id="wsTradingSetupBody"><div class="empty-state">Buka pair dulu di Analysis Workspace untuk isi rencana entry otomatis.</div></div>
+    <div class="ws-note" style="margin:14px 0;">ℹ️ App ini <b>read-only</b> — nggak eksekusi order beneran ke Binance. "Open Positions" di bawah diambil dari entry Jurnal yang statusnya kamu tandai Open/Floating.</div>
+    <div id="wsTradingSetupBody"></div>
 
     <div class="ws-card">
       <div class="ws-card-title">🧮 KALKULATOR POSITION SIZE</div>
@@ -1181,9 +1085,9 @@
     </div>
   </div>
 
-  <!-- ===== 07. REVIEW WORKSPACE ===== -->
+  <!-- ===== REVIEW WORKSPACE ===== -->
   <div class="workspace" id="wsReview">
-    <button class="back-to-home-btn" onclick="backToScannerPair()">← Back</button>
+    <button class="back-to-home-btn" onclick="goHome()">← Back</button>
     <div class="ws-header"><span class="ws-title">REVIEW WORKSPACE</span></div>
     <div class="ws-sub">Tahap Workflow: Post Trade Review → Learning Engine — evaluasi & catatan pribadi, tersimpan lokal di HP kamu</div>
     <div class="journal-frame-actions">
@@ -1202,20 +1106,6 @@
 
       </div><!-- /main-col -->
     </div><!-- /app-shell -->
-
-  <div class="fullscreen-panel" id="widgetDetailPanel">
-    <div class="fsp-header">
-      <div class="fsp-header-inner">
-        <span class="fsp-title" id="widgetDetailTitle">Detail Scan</span>
-        <button class="fsp-close" id="widgetDetailClose">✕</button>
-      </div>
-    </div>
-    <div class="fsp-body">
-      <div class="fsp-body-inner">
-        <div id="widgetDetailBody"></div>
-      </div>
-    </div>
-  </div>
 
   <div class="fullscreen-panel" id="modeResultsSection">
     <div class="fsp-header">
@@ -1261,17 +1151,7 @@
       <div class="fsp-body-inner">
         <div class="ws-note" style="margin-top:0; margin-bottom:16px;">Untuk saat ini app cuma pakai <b>1 alarm aktif</b>: Alert Harga (Price Cross) di bawah. Alarm otomatis lain (scan mayoritas timeframe, alert watchlist RSI/funding/level) untuk sementara dimatikan biar nggak berisik dobel.</div>
         <div style="display:none;">
-        <div class="drawer-title">🚨 Scan Pasar Otomatis (Alarm Mayoritas Timeframe + Alarm Konfluensi)</div>
-        <div class="sop-note" style="margin-top:0; margin-bottom:14px;">Satu tombol ini menghidupkan SEMUA scan otomatis latar belakang: cek tren 1H/4H/1D tiap pair paling likuid tiap 3 menit (waktu Auto-Refresh nyala), lalu lanjut ke Alarm Konfluensi, Volatility Squeeze, Divergence Scanner, dan Structure Break Feed di halaman Home. Alarm getar+bunyi+notifikasi persisten kalau kena, <b>walaupun pair-nya nggak ada di Watchlist kamu</b>.</div>
-        <div class="settings-grid">
-          <div class="setting-field">
-            <label>Nyala / Mati</label>
-            <button class="btn quick-card" id="toggleMarketAlignBtn" style="width:100%; min-height:auto; padding:9px 12px;">ON</button>
-          </div>
-          <div class="setting-field"><label>Jumlah Pair Dipantau (paling likuid)</label><input type="number" id="setMarketAlignPool" value="30" min="5" max="100" step="5"></div>
-        </div>
-
-        <div class="drawer-title" style="margin-top:20px;">⭐ Alert Watchlist — Ambang Batas</div>
+        <div class="drawer-title" style="margin-top:0;">⭐ Alert Watchlist — Ambang Batas</div>
         <div class="sop-note" style="margin-top:0; margin-bottom:12px;">Khusus pair yang kamu tandai bintang. Dicek tiap Auto-Refresh: RSI ekstrem (1H), funding rate ekstrem, harga mendekati level struktural (EMA/MA200/AVWAP/Fibonacci di 4H), dan pergantian struktur (CHoCH) di 4H.</div>
         <div class="settings-grid">
           <div class="setting-field"><label>RSI Oversold (di bawah/sama dengan)</label><input type="number" id="setRsiOs" value="30"></div>
@@ -1387,6 +1267,15 @@
   </button>
 
 <script>
+/* =====================================================================
+   01-storage-alerts.js
+   Konfigurasi dasar, safeFetch (rate limit handling), state global,
+   localStorage (watchlist/jurnal/histori skor/alert harga/alert log),
+   sistem alarm (beep/getar/banner), kalkulator position size.
+   Dokumentasi terkait: 03_Binance_Integration.md, 07_Trading_Workspace.md,
+   08_Review_Engine.md, 10_Risk_Management.md, 11_Database_Schema.md
+   ===================================================================== */
+
 const FAPI = "https://fapi.binance.com";
 
 // ===== FIX: Error handling rate limit — sebelumnya semua status HTTP diperlakukan sama,
@@ -1417,17 +1306,11 @@ let tickerData = [];      // merged 24hr data
 let deepData = {};        // symbol -> {rsi1h, trend4h, deepScore, label}
 let fundingData = {};     // symbol -> fundingRate (decimal, e.g. 0.0001)
 let modeQualifyData = {}; // symbol -> {bias, rsi, reason} — hasil scan "layak entry" per Mode Trading
-let marketAlignData = {}; // symbol -> 'bullish'/'bearish'/null — hasil terakhir scanMarketTrendAlignment, dipakai ulang oleh Alarm Konfluensi
-let confluenceResults = []; // [{symbol, bias, points, maxPoints}] — pair yang tren-nya selaras DAN skor entry-nya menang
-let squeezeResults = [];    // [{symbol, percentileRank, bandwidth}] — pair yang Bollinger Band-nya lagi menyempit ekstrem
-let divergenceResults = []; // [{symbol, type:'bullish'/'bearish'}] — pair yang lagi divergence RSI vs harga
-let structureBreakFeed = []; // [{symbol, direction, level, time}] — feed BOS/CHoCH terbaru dari seluruh pair yang discan
 let modeScanToken = 0; // dinaikkan tiap scan baru dimulai — dipakai buat batalkan scan lama yang masih jalan (cegah race condition)
 let currentFilter = "all";
 let sortKey = "quoteVolume";
 let sortDir = -1;
 let autoTimer = null;
-let marketAlignTimer = null;
 
 // ===== LOCAL STORAGE: WATCHLIST, ALERT LOG, ALERT SETTINGS =====
 const LS_WATCHLIST = "pp_watchlist";
@@ -1801,7 +1684,7 @@ function openJournalForm(id){
 }
 
 function loadAlertSettings(){
-  const defaults = { rsiOs:30, rsiOb:70, fundingExt:0.05, levelProximity:0.5, marketAlignEnabled:true, marketAlignPool:30 };
+  const defaults = { rsiOs:30, rsiOb:70, fundingExt:0.05, levelProximity:0.5 };
   try{
     return Object.assign({}, defaults, JSON.parse(localStorage.getItem(LS_ALERTSETTINGS) || "{}"));
   }catch(e){ return defaults; }
@@ -2053,6 +1936,14 @@ function computeQuickScore(row){
   return row;
 }
 
+/* =====================================================================
+   02-binance-api.js
+   Fetcher REST Binance (exchangeInfo, ticker 24hr, funding, OI,
+   long/short ratio), skor Momentum cepat, WebSocket real-time
+   (ticker + markPrice stream), refreshAll (siklus REST 45 detik).
+   Dokumentasi terkait: 03_Binance_Integration.md, 04_Market_Scanner.md
+   ===================================================================== */
+
 // ===== WEBSOCKET BINANCE — TRUE REAL-TIME =====
 // Lapisan TAMBAHAN di atas REST polling (bukan pengganti) — kalau WS putus/gagal, app tetap jalan normal
 // pakai refreshAll() tiap 45 detik seperti sebelumnya. WS cuma bikin update harga/funding jadi hampir instan
@@ -2283,18 +2174,21 @@ function getFiltered(){
 
 // Badge kecil di tiap baris: kalau pair sudah di-deep-scan manual, tampilkan sinyal aslinya (RSI+trend).
 // Kalau belum, tampilkan tingkat "Momentum" dari Quick Score — istilah yang lebih gampang dipahami orang awam daripada angka mentah.
-function rowBadgeHtml(d){
-  const deep = deepData[d.symbol];
-  if(deep === "loading"){
-    return `<span class="badge-pill score-mid"><span class="loader" style="width:8px;height:8px;margin-right:2px;"></span>Scan…</span>`;
-  }
-  if(deep && deep.trendLabel){
-    const cls = deep.bias === "long" ? "score-hi" : deep.bias === "short" ? "score-lo" : "score-mid";
-    return `<span class="badge-pill ${cls}">${deep.trendLabel} · RSI ${deep.rsi.toFixed(0)}</span>`;
-  }
-  const tier = scoreClass(d.quickScore, 10);
-  const label = tier==="score-hi" ? "Momentum Tinggi" : tier==="score-mid" ? "Momentum Sedang" : "Momentum Rendah";
-  return `<span class="badge-pill ${tier}">${label}</span>`;
+// ADX & Arah (Long/Short/Sideways) per-row — diisi oleh queueRowScan()/doRowScan() begitu pair itu
+// discroll masuk layar. Sebelum ke-scan, keduanya balikin string kosong (nggak ada badge kosong/loading nempel).
+function adxBadgeHtml(symbol){
+  const deep = deepData[symbol];
+  if(!deep || typeof deep !== 'object' || deep.adx == null) return '';
+  const val = deep.adx;
+  const cls = val >= 40 ? 'score-hi' : val >= ADX_TREND_THRESHOLD ? 'score-mid' : 'score-lo';
+  return `<span class="badge-pill ${cls}">ADX ${val.toFixed(0)}</span>`;
+}
+function directionBadgeHtml(symbol){
+  const deep = deepData[symbol];
+  if(!deep || typeof deep !== 'object' || !deep.bias) return '';
+  const map = { long:{label:'Long', cls:'score-hi'}, short:{label:'Short', cls:'score-lo'}, sideways:{label:'Sideways', cls:'score-mid'} };
+  const m = map[deep.bias] || map.sideways;
+  return `<span class="badge-pill ${m.cls}">${m.label}</span>`;
 }
 
 // Cuma tampil kalau funding rate lagi ekstrem — biar nggak jadi noise buat pair yang normal-normal saja
@@ -2315,16 +2209,13 @@ function renderTopSignals(){
   if(tickerData.length === 0){ el.innerHTML = ''; return; }
 
   // Top Opportunities: 8 pair dengan skor Momentum (computeMomentumScore, 0-100) paling tinggi — bukan AI Confluence Score, cuma buat sortir cepat.
-  const confMap = new Map(confluenceResults.map(r=>[r.symbol, r]));
   const top7 = [...tickerData].sort((a,b)=>computeMomentumScore(b)-computeMomentumScore(a)).slice(0,8);
 
   el.innerHTML = top7.map(d=>{
     const chg = parseFloat(d.priceChangePercent);
     const up = chg >= 0;
     const score = computeMomentumScore(d);
-    const conf = confMap.get(d.symbol);
-    const label = conf ? `${conf.bias==='bullish'?'LONG':'SHORT'}${conf.fundingAgrees?' 💍':''}` : 'Sinyal';
-    const sub = conf ? `Konfluensi ${conf.points}/${conf.maxPoints} · 3 TF selaras${conf.fundingAgrees?' · funding searah':''}` : `Momentum ${score}/100 (skor cepat, bukan AI Confluence Score)`;
+    const sub = `Momentum ${score}/100 (skor cepat, bukan AI Confluence Score)`;
     return `
     <div class="signal-card" onclick="openDetail('${d.symbol}')">
       <div class="sc-top">
@@ -2343,13 +2234,16 @@ function coinRowHtml(d, wl, badgeHtmlStr){
   const up = parseFloat(d.priceChangePercent) >= 0;
   const starred = wl.has(d.symbol);
   const aiScore = computeMomentumScore(d);
+  // Slot Arah (Long/Short/Sideways) cuma ditampilkan kalau nggak ada badge custom yang udah nyebut bias-nya sendiri
+  // (mis. hasil Deep Scan Top 20 yang udah nulis "LONG · Skor.. · RR..") — biar nggak dobel/kontradiksi metode.
+  const dirSlot = badgeHtmlStr ? '' : `<span class="dir-slot" data-symbol="${d.symbol}">${directionBadgeHtml(d.symbol)}</span>`;
   return `
-    <div class="coin-row" onclick="openDetail('${d.symbol}')">
+    <div class="coin-row" data-symbol="${d.symbol}" onclick="openDetail('${d.symbol}')">
       <button class="crow-star ${starred?'active':''}" onclick="event.stopPropagation(); onStarClick('${d.symbol}')">${starred?'★':'☆'}</button>
       <div class="crow-avatar" style="background:${symbolColor(d.symbol)}">${symbolInitials(d.symbol)}</div>
       <div class="crow-info">
         <div class="crow-name"><span class="crow-symtext">${d.symbol.replace('USDT','')}</span><span class="crow-sub">USDT-M</span><span class="ai-score-pill ${scoreBadgeCls(aiScore)}">MOM ${aiScore}</span></div>
-        <div class="crow-badges">${badgeHtmlStr}${fundingBadgeHtml(d.fundingRate)}<span class="crow-vol">Vol $${fmtNum(d.quoteVolume)}</span></div>
+        <div class="crow-badges">${badgeHtmlStr}<span class="adx-slot" data-symbol="${d.symbol}">${adxBadgeHtml(d.symbol)}</span>${dirSlot}${fundingBadgeHtml(d.fundingRate)}</div>
       </div>
       <div class="crow-right">
         <div class="crow-price">${fmtPrice(d.lastPrice)}</div>
@@ -2372,7 +2266,8 @@ function renderTable(){
     tbody.innerHTML = `<div class="empty-state">Tidak ada pair yang cocok dengan filter/pencarian ini.</div>`;
     return;
   }
-  tbody.innerHTML = list.slice(0,150).map(d => coinRowHtml(d, wl, rowBadgeHtml(d))).join('');
+  tbody.innerHTML = list.slice(0,150).map(d => coinRowHtml(d, wl, '')).join('');
+  observeVisibleRows();
 }
 
 function onStarClick(symbol){
@@ -2380,6 +2275,14 @@ function onStarClick(symbol){
   renderTable();
   if(currentDetailSymbol === symbol) updateModalStarBtn(symbol);
 }
+
+/* =====================================================================
+   03-market-structure.js
+   Deep scan lama (per-row badge), struktur market (fractal swing,
+   HH/HL, BOS/CHoCH), divergence RSI vs harga, klasifikasi tren
+   Open Interest, cache dedupe request candle (klineCache).
+   Dokumentasi terkait: 05_Analysis_Engine.md
+   ===================================================================== */
 
 // ===== DEEP SCAN (RSI 1H + EMA trend 4H) =====
 // Cek arah (naik/turun) suatu deret angka dibanding beberapa candle lalu — dasar buat semua kriteria
@@ -2680,6 +2583,14 @@ function classifyOiTrend(oiChangePct, priceChangePct){
 // dipakai ulang (termasuk yang masih in-flight), bukan nembak Binance berkali-kali. TTL 40 detik —
 // lebih pendek dari siklus refresh 45s, jadi data tetap segar tiap siklus.
 const klineCache = new Map();
+/* =====================================================================
+   04-scanner-engine.js
+   fetchKlines/fetchKlinesFull, Deep Scan Top 20 (seleksi ketat),
+   Mode Trading Scan (Scalping/Intraday/Swing), Alert Watchlist
+   (RSI/funding/level struktural), Alarm Mayoritas Timeframe.
+   Dokumentasi terkait: 04_Market_Scanner.md, 10_Risk_Management.md
+   ===================================================================== */
+
 const KLINE_CACHE_TTL = 40000;
 // ===== LOG REQUEST API — dipakai Data Center Workspace buat nunjukin aktivitas fetch beneran =====
 let apiCallLog = [];
@@ -2718,32 +2629,76 @@ async function fetchKlines(symbol, interval, limit){
   });
 }
 
-async function scanOne(symbol){
+// ===== LAZY ROW SCAN — ADX + Arah per pair, dipicu pas baris discroll masuk layar =====
+// Ganti total dari scanOne() versi lama (dead code, nggak pernah dipanggil — dan masih pakai pairing
+// EMA21/50 yang harusnya udah dipensiunkan di fix konsistensi EMA21/30 sebelumnya). Arah sekarang
+// dihitung dari +DI/-DI ADX, persis metode & ambang batas yang sama dengan confluence engine
+// (ADX_TREND_THRESHOLD + gap>=3), bukan rumus baru — biar "Arah" nggak beda tergantung fitur mana yang ngecek.
+const ROW_SCAN_MAX_CONCURRENT = 4;
+let rowScanInFlight = 0;
+const rowScanQueue = [];
+
+function queueRowScan(symbol){
+  if(deepData[symbol]) return; // udah discan, lagi discan, atau udah keantri
   deepData[symbol] = "loading";
-  renderTable();
-  try{
-    const [closes1h, closes4h] = await Promise.all([
-      fetchKlines(symbol, "1h", 60),
-      fetchKlines(symbol, "4h", 60),
-    ]);
-    const rsi1h = rsi(closes1h, 14);
-    const emaFast = ema(closes4h, 21);
-    const emaSlow = ema(closes4h, 50);
-    const lastFast = emaFast[emaFast.length-1], lastSlow = emaSlow[emaSlow.length-1];
-    const trendUp = lastFast > lastSlow;
+  rowScanQueue.push(symbol);
+  pumpRowScanQueue();
+}
 
-    let bias = "neutral", trendLabel = "Sideways";
-    if(trendUp && rsi1h < 70){ bias="long"; trendLabel="Bullish 4H"; }
-    else if(!trendUp && rsi1h > 30){ bias="short"; trendLabel="Bearish 4H"; }
-    else if(trendUp && rsi1h >= 70){ bias="neutral"; trendLabel="Bullish·OB"; }
-    else if(!trendUp && rsi1h <= 30){ bias="neutral"; trendLabel="Bearish·OS"; }
-
-    deepData[symbol] = { rsi: rsi1h, trendLabel, bias };
-  }catch(err){
-    console.error(err);
-    deepData[symbol] = { rsi:0, trendLabel:"Gagal", bias:"neutral" };
+function pumpRowScanQueue(){
+  while(rowScanInFlight < ROW_SCAN_MAX_CONCURRENT && rowScanQueue.length){
+    const symbol = rowScanQueue.shift();
+    rowScanInFlight++;
+    doRowScan(symbol).finally(()=>{ rowScanInFlight--; pumpRowScanQueue(); });
   }
-  renderTable();
+}
+
+async function doRowScan(symbol){
+  try{
+    const candles4h = await fetchKlinesFull(symbol, "4h", 60);
+    const a = adx(candles4h, 14);
+    let bias = "sideways";
+    if(a && a.adx >= ADX_TREND_THRESHOLD && Math.abs(a.plusDI - a.minusDI) >= 3){
+      bias = a.plusDI > a.minusDI ? "long" : "short";
+    }
+    deepData[symbol] = { adx: a ? a.adx : null, bias };
+  }catch(err){
+    console.error("Row scan gagal:", symbol, err);
+    deepData[symbol] = { adx: null, bias: null };
+  }
+  patchRowBadges(symbol);
+}
+
+// Update badge ADX/Arah langsung di tempat (tanpa render ulang seluruh list) — aman dipanggil biarpun
+// simbol yang sama lagi tampil di dua tempat sekaligus (list utama & hasil Deep Scan Top 20).
+function patchRowBadges(symbol){
+  document.querySelectorAll(`.adx-slot[data-symbol="${symbol}"]`).forEach(el=>{ el.innerHTML = adxBadgeHtml(symbol); });
+  document.querySelectorAll(`.dir-slot[data-symbol="${symbol}"]`).forEach(el=>{ el.innerHTML = directionBadgeHtml(symbol); });
+}
+
+let rowObserver = null;
+function ensureRowObserver(){
+  if(rowObserver) return rowObserver;
+  rowObserver = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        const symbol = entry.target.getAttribute("data-symbol");
+        if(symbol) queueRowScan(symbol);
+        rowObserver.unobserve(entry.target);
+      }
+    });
+  }, { rootMargin: "200px 0px", threshold: 0.01 });
+  return rowObserver;
+}
+
+// Dipanggil tiap habis render baris (.coin-row) baru — di list utama maupun hasil Deep Scan Top 20 —
+// biar baris yang belum ke-scan otomatis diobservasi begitu ada di DOM.
+function observeVisibleRows(){
+  const obs = ensureRowObserver();
+  document.querySelectorAll(".coin-row[data-symbol]").forEach(el=>{
+    const symbol = el.getAttribute("data-symbol");
+    if(!deepData[symbol]) obs.observe(el);
+  });
 }
 
 // Deep Scan Top 20 — BUKAN cuma "20 pair teratas dari list", tapi diseleksi KETAT:
@@ -2788,7 +2743,7 @@ async function runDeepScanTop20(){
         if(candles.length < 50){ done++; continue; }
         const closes = candles.map(c=>c.close);
         const structure = analyzeMarketStructure(candles);
-        const ema21arr = ema(closes,21), ema30arr = ema(closes,30);
+        const ema21arr = ema(closes,21), ema30arr = ema(closes,30), ema50arr = ema(closes,50);
         const rsiVal = rsi(closes,14);
         const rsiSeriesArr = rsiSeries(closes,14);
         const macdVal = macd(closes,12,26,9);
@@ -2803,9 +2758,9 @@ async function runDeepScanTop20(){
         const fundingRow = tickerData.find(x=>x.symbol===item.symbol);
         const fundingRate = fundingRow && fundingRow.fundingRate!==undefined ? fundingRow.fundingRate : null;
         const lastPrice = closes[closes.length-1];
-        const ema21 = ema21arr[ema21arr.length-1], ema30 = ema30arr[ema30arr.length-1];
+        const ema21 = ema21arr[ema21arr.length-1], ema30 = ema30arr[ema30arr.length-1], ema50 = ema50arr[ema50arr.length-1];
         const es = computeEntryScore({
-          lastPrice, emaFast: ema21, emaSlow: ema30, emaFastLabel:'21', emaSlowLabel:'30',
+          lastPrice, emaFast: ema21, emaSlow: ema30, emaThird: ema50, emaFastLabel:'21', emaSlowLabel:'30', emaThirdLabel:'50',
           emaFastSlope: computeSlope(ema21arr, 3), rsiVal, rsiSlope: computeSlope(rsiSeriesArr, 3),
           macdVal, avwap, fib, volRatio, priceUp, fundingRate, structure, adxVal, candles, tf:'4h',
         });
@@ -2849,6 +2804,7 @@ async function runDeepScanTop20(){
     const badge = `<span class="badge-pill ${cls}">${r.bias==='long'?'LONG':'SHORT'} · Skor ${r.score} · RR 1:${r.rr.toFixed(2)}</span>`;
     return coinRowHtml(row, wl, badge);
   }).join('');
+  observeVisibleRows();
 }
 
 // Timeframe yang lebih tinggi buat gate konfirmasi tren — dicek juga di scan Mode Trading (bukan cuma di modal detail),
@@ -2869,7 +2825,7 @@ async function qualifyForMode(symbol, tf){
     const closes = candles.map(c=>c.close);
     if(closes.length < 31) return { bias:null, longPoints:0, shortPoints:0, maxPoints:0 }; // data historis kurang (pair baru listing), jangan tebak
     const lastPrice = closes[closes.length-1];
-    const ema21arr = ema(closes,21), ema30arr = ema(closes,30);
+    const ema21arr = ema(closes,21), ema30arr = ema(closes,30), ema50arr = ema(closes,50);
     const rsiVal = rsi(closes,14);
     const rsiSeriesArr = rsiSeries(closes,14);
     const macdVal = macd(closes,12,26,9);
@@ -2886,7 +2842,8 @@ async function qualifyForMode(symbol, tf){
     const fundingRate = fundingRow && fundingRow.fundingRate!==undefined ? fundingRow.fundingRate : null;
 
     const es = computeEntryScore({
-      lastPrice, emaFast: ema21arr[ema21arr.length-1], emaSlow: ema30arr[ema30arr.length-1], emaFastLabel:'21', emaSlowLabel:'30',
+      lastPrice, emaFast: ema21arr[ema21arr.length-1], emaSlow: ema30arr[ema30arr.length-1], emaThird: ema50arr[ema50arr.length-1],
+      emaFastLabel:'21', emaSlowLabel:'30', emaThirdLabel:'50',
       emaFastSlope: computeSlope(ema21arr, 3), rsiVal, rsiSlope: computeSlope(rsiSeriesArr, 3),
       macdVal, avwap, fib, volRatio, priceUp, fundingRate, structure, adxVal, candles, tf,
     });
@@ -2895,11 +2852,12 @@ async function qualifyForMode(symbol, tf){
     if(es.longPoints > es.shortPoints && es.longPoints >= es.maxPoints/2) bias='long';
     else if(es.shortPoints > es.longPoints && es.shortPoints >= es.maxPoints/2) bias='short';
 
-    // GATE TREN TIMEFRAME LEBIH TINGGI: kalau bias di timeframe utama berlawanan sama tren di timeframe
-    // yang lebih besar, batalkan — jangan sampai screener nyaranin Long padahal tren besarnya lagi turun.
-    if(bias && higherCloses && higherCloses.length >= 55){
-      const he21 = ema(higherCloses,21), he50 = ema(higherCloses,50);
-      const higherBias = he21[he21.length-1] > he50[he50.length-1] ? 'long' : 'short';
+    // GATE TREN TIMEFRAME LEBIH TINGGI: kalau bias di timeframe utama berlawanan (ATAU ribbon EMA di timeframe
+    // lebih tinggi belum jelas/mixed), batalkan — jangan sampai screener nyaranin Long padahal tren besarnya
+    // lagi turun atau belum jelas arahnya. Pakai computeEmaTrend yang sama biar "Trend" nggak beda definisi.
+    if(bias && higherCloses && higherCloses.length >= 51){
+      const higherTrend = computeEmaTrend(higherCloses);
+      const higherBias = higherTrend.bias==='bullish' ? 'long' : higherTrend.bias==='bearish' ? 'short' : null;
       if(higherBias !== bias) bias = null;
     }
 
@@ -2974,6 +2932,7 @@ async function runModeScan(mode){
     const badge = `<span class="badge-pill ${cls}">${mq.bias==='long'?'LONG':'SHORT'} ${winPoints}/${mq.maxPoints} poin</span>`;
     return coinRowHtml(d, wl, badge);
   }).join('');
+  observeVisibleRows();
 }
 document.getElementById('modeResultsClose').addEventListener('click', ()=>{
   document.getElementById('modeResultsSection').classList.remove('show');
@@ -3086,277 +3045,36 @@ async function checkWatchlistAlerts(){
   await Promise.all(Array.from({length:CONCURRENCY}, worker));
 }
 
-// ===== ALARM: PAIR DENGAN MAYORITAS TIMEFRAME SELARAS — jalan ke SEMUA pair likuid, bukan cuma watchlist =====
-// Cek tren cepat (EMA21 vs EMA30 — samain sama definisi "Trend" di Skor Entry, biar nggak ada dua standar beda)
-// di 1H/4H/1D buat tiap pair paling likuid. Kalau ketiganya kompak satu arah (atau minimal 2 dari 3),
-// itu dianggap "mayoritas timeframe sejalan" dan langsung alarm.
-const MARKET_ALIGN_TFS = ['1h','4h','1d'];
+// ===== TREND EMA — definisi kanonik TUNGGAL, dipakai di SEMUA tempat yang butuh bias arah dari EMA =====
+// (quickTrendBias, kriteria "Trend" di computeEntryScore, vote EMA di computeConfluence, gate timeframe
+// lebih tinggi di qualifyForMode). EMA21/30/50 harus berurutan rapi (ribbon) buat dapat bias tegas —
+// EMA21>EMA30>EMA50 = bullish, EMA21<EMA30<EMA50 = bearish. Kalau urutannya nggak rapi (mis. EMA21>EMA30
+// tapi EMA30<EMA50), dianggap "mixed" (bias:null) — tren lagi transisi/nggak jelas, bukan dipaksa nebak.
+function computeEmaTrend(closes){
+  if(!closes || closes.length < 51) return { bias:null, ema21:null, ema30:null, ema50:null };
+  const e21arr = ema(closes,21), e30arr = ema(closes,30), e50arr = ema(closes,50);
+  const e21 = e21arr[e21arr.length-1], e30 = e30arr[e30arr.length-1], e50 = e50arr[e50arr.length-1];
+  let bias = null;
+  if(e21 > e30 && e30 > e50) bias = 'bullish';
+  else if(e21 < e30 && e30 < e50) bias = 'bearish';
+  return { bias, ema21:e21, ema30:e30, ema50:e50 };
+}
+
+// quickTrendBias: cek tren cepat (ribbon EMA21/30/50, lihat computeEmaTrend) di 1 timeframe — dipakai
+// Deep Scan Top 20 & Mode Trading buat cek keselarasan 1H/4H/1D sebelum lanjut hitung skor lengkap.
 async function quickTrendBias(symbol, tf){
   try{
-    const closes = await fetchKlines(symbol, tf, 60);
-    if(!closes || closes.length < 31) return null; // data historis kurang dari kebutuhan EMA30 — jangan tebak, anggap tidak valid
-    const e21 = ema(closes,21), e30 = ema(closes,30);
-    if(!e21.length || !e30.length) return null;
-    return e21[e21.length-1] > e30[e30.length-1] ? 'bullish' : 'bearish';
+    const closes = await fetchKlines(symbol, tf, 90); // dinaikkan dari 60->90 candle biar EMA50 lebih stabil
+    const t = computeEmaTrend(closes);
+    return t.bias; // 'bullish' | 'bearish' | null (data kurang ATAU ribbon belum selaras)
   }catch(e){ return null; }
 }
-
-async function scanMarketTrendAlignment(){
-  const settings = loadAlertSettings();
-  if(!settings.marketAlignEnabled || tickerData.length===0) return;
-
-  const poolSize = Math.max(5, Math.min(100, settings.marketAlignPool || 30));
-  const candidates = [...tickerData].sort((a,b)=>b.quoteVolume-a.quoteVolume).slice(0, poolSize);
-  marketAlignData = {};
-
-  const CONCURRENCY = 5;
-  let idx = 0;
-  async function worker(){
-    while(idx < candidates.length){
-      const item = candidates[idx++];
-      const biases = await Promise.all(MARKET_ALIGN_TFS.map(tf => quickTrendBias(item.symbol, tf)));
-      const valid = biases.filter(Boolean);
-      if(valid.length < MARKET_ALIGN_TFS.length) continue; // skip kalau ada timeframe yang gagal dimuat
-
-      const bullCount = valid.filter(b=>b==='bullish').length;
-      const bearCount = valid.filter(b=>b==='bearish').length;
-      const total = valid.length;
-      let aligned = null;
-      if(bullCount===total) aligned = 'bullish';
-      else if(bearCount===total) aligned = 'bearish';
-      marketAlignData[item.symbol] = aligned;
-
-      const keyBull = `${item.symbol}|marketalign|bullish`, keyBear = `${item.symbol}|marketalign|bearish`;
-      if(aligned==='bullish'){
-        if(!alertFiredThisSession.has(keyBull)){
-          alertFiredThisSession.add(keyBull);
-          pushAlert(`Mayoritas timeframe (${MARKET_ALIGN_TFS.map(t=>t.toUpperCase()).join('/')}) SELARAS BULLISH — cek peluang LONG`, item.symbol, false);
-        }
-        alertFiredThisSession.delete(keyBear);
-      } else if(aligned==='bearish'){
-        if(!alertFiredThisSession.has(keyBear)){
-          alertFiredThisSession.add(keyBear);
-          pushAlert(`Mayoritas timeframe (${MARKET_ALIGN_TFS.map(t=>t.toUpperCase()).join('/')}) SELARAS BEARISH — cek peluang SHORT`, item.symbol, false);
-        }
-        alertFiredThisSession.delete(keyBull);
-      } else {
-        alertFiredThisSession.delete(keyBull);
-        alertFiredThisSession.delete(keyBear);
-      }
-    }
-  }
-  await Promise.all(Array.from({length:CONCURRENCY}, worker));
-  runAdvancedScan(); // lanjut ke scan konfluensi/squeeze/divergence/structure-break, reuse hasil marketAlignData di atas
-}
-
-// Bollinger Bandwidth SEKARANG dibandingkan ke histori bandwidth-nya SENDIRI (bukan angka mutlak) —
-// band dianggap "squeeze" kalau lebar sekarang ada di 15% paling sempit dari 50 candle terakhir buat pair itu.
-// Pakai ulang fungsi bollinger() yang sudah ada (dipanggil berulang buat dapetin bandwidth di tiap titik) —
-// biar cuma ada SATU sumber kebenaran buat rumus Bollinger Band di seluruh app, nggak ada implementasi ganda yang bisa beda hasil.
-function computeBBSqueeze(closes){
-  if(closes.length < 50) return null;
-  const period = 20, mult = 2;
-  const bwSeries = [];
-  for(let i=period-1; i<closes.length; i++){
-    const bb = bollinger(closes.slice(0, i+1), period, mult);
-    bwSeries.push(bb.bandwidthPct);
-  }
-  if(bwSeries.length < 20) return null;
-  const current = bwSeries[bwSeries.length-1];
-  const sorted = [...bwSeries].sort((a,b)=>a-b);
-  const percentileRank = (sorted.indexOf(current) / sorted.length) * 100;
-  return { bandwidth: current, percentileRank };
-}
-
-// ===== SCAN LANJUTAN: gabung 4 hal dalam SATU scan biar hemat request —
-// tiap pair cuma di-fetch candle-nya SEKALI, dipakai bareng buat Konfluensi + Squeeze + Divergence + Structure Break.
-// Ini murni MEMANFAATKAN ULANG indikator yang udah ada, bukan nambah indikator baru. =====
-let advancedScanRunning = false;
-async function runAdvancedScan(){
-  if(advancedScanRunning || tickerData.length===0) return;
-  advancedScanRunning = true;
-  try{
-    const poolSize = 25; // dijaga kecil karena tiap pair butuh 1 full-candle fetch (lebih berat dari cek tren doang)
-    const candidates = [...tickerData].sort((a,b)=>b.quoteVolume-a.quoteVolume).slice(0, poolSize);
-
-    const newConfluence = [], newSqueeze = [], newDivergence = [];
-    const CONCURRENCY = 5;
-    let idx = 0;
-    async function worker(){
-      while(idx < candidates.length){
-        const item = candidates[idx++];
-        try{
-          const candles = await fetchKlinesFull(item.symbol, '4h', 150);
-          if(candles.length < 50) continue;
-          const closes = candles.map(c=>c.close);
-          const structure = analyzeMarketStructure(candles);
-          const divergence = detectDivergence(candles, closes);
-          const squeeze = computeBBSqueeze(closes);
-          const trendBias = marketAlignData[item.symbol];
-
-          // Data bersama, dipakai ULANG di beberapa sinyal sekaligus di bawah — ini yang bikin sinyalnya "kawin"
-          const vols = candles.map(c=>c.volume);
-          const prevVols = vols.slice(-21,-1);
-          const avgVol20 = prevVols.length>0 ? prevVols.reduce((a,b)=>a+b,0)/prevVols.length : 0;
-          const volRatio = avgVol20>0 ? vols[vols.length-1]/avgVol20 : 1;
-          const priceUp = closes.length>1 ? closes[closes.length-1] >= closes[closes.length-2] : true;
-          const fundingRow = tickerData.find(x=>x.symbol===item.symbol);
-          const fundingRate = fundingRow && fundingRow.fundingRate!==undefined ? fundingRow.fundingRate : null;
-
-          // ===== STRUCTURE BREAK FEED × VOLUME — BOS tanpa lonjakan volume sering breakout palsu =====
-          if(structure && structure.event && structure.event.type === 'BOS'){
-            const key = `${item.symbol}|structbreak|${structure.event.level}`;
-            if(!alertFiredThisSession.has(key)){
-              alertFiredThisSession.add(key);
-              const volConfirmed = volRatio >= 1.2;
-              structureBreakFeed.unshift({ symbol:item.symbol, direction:structure.event.direction, level:structure.event.level, time: Date.now(), volConfirmed, volRatio });
-              structureBreakFeed = structureBreakFeed.slice(0, 30);
-            }
-          }
-
-          // ===== DIVERGENCE × STRUCTURE BREAK — divergence doang cuma peringatan dini, break struktur searah = konfirmasi harga beneran belok =====
-          if(divergence && (divergence.bearishDiv || divergence.bullishDiv)){
-            const divType = divergence.bearishDiv ? 'bearish' : 'bullish';
-            const structConfirms = !!(structure && structure.event && structure.event.direction === divType);
-            newDivergence.push({ symbol:item.symbol, type:divType, confirmed: structConfirms });
-          }
-
-          // ===== VOLATILITY SQUEEZE × TREND ARAH — squeeze doang nggak bilang ke mana, tren kasih arahnya =====
-          if(squeeze && squeeze.percentileRank <= 15){
-            newSqueeze.push({ symbol:item.symbol, percentileRank:squeeze.percentileRank, bandwidth:squeeze.bandwidth, bias: trendBias || null });
-          }
-
-          // ===== ALARM KONFLUENSI × FUNDING RATE — tren selaras + skor menang + funding searah (kontrarian) = 3 sinyal sepakat =====
-          if(trendBias){
-            const ema21arr = ema(closes,21), ema30arr = ema(closes,30);
-            const rsiVal = rsi(closes,14);
-            const rsiSeriesArr = rsiSeries(closes,14);
-            const macdVal = macd(closes,12,26,9);
-            const avwap = computeAnchoredVWAP(candles, 90, 0.5);
-            const fib = computeFibonacci(candles, 90);
-            const adxVal = adx(candles,14);
-            const es = computeEntryScore({
-              lastPrice: closes[closes.length-1], emaFast: ema21arr[ema21arr.length-1], emaSlow: ema30arr[ema30arr.length-1], emaFastLabel:'21', emaSlowLabel:'30',
-              emaFastSlope: computeSlope(ema21arr, 3), rsiVal, rsiSlope: computeSlope(rsiSeriesArr, 3),
-              macdVal, avwap, fib, volRatio, priceUp, fundingRate, structure, adxVal, candles, tf:'4h',
-            });
-            const scoreWins = trendBias==='bullish'
-              ? (es.longPoints > es.shortPoints && es.longPoints >= es.maxPoints/2)
-              : (es.shortPoints > es.longPoints && es.shortPoints >= es.maxPoints/2);
-            if(scoreWins){
-              const points = trendBias==='bullish' ? es.longPoints : es.shortPoints;
-              // Funding "searah" (kontrarian): konfluensi bullish didukung funding negatif (crowded short, potensi squeeze naik), bearish didukung funding positif
-              const fundingAgrees = fundingRate!=null && ((trendBias==='bullish' && fundingRate<0) || (trendBias==='bearish' && fundingRate>0));
-              newConfluence.push({ symbol:item.symbol, bias:trendBias, points, maxPoints:es.maxPoints, fundingAgrees });
-              const key = `${item.symbol}|confluence|${trendBias}`;
-              if(!alertFiredThisSession.has(key)){
-                alertFiredThisSession.add(key);
-                pushAlert(`🎯 Konfluensi kuat: tren 1H/4H/1D SELARAS ${trendBias==='bullish'?'BULLISH':'BEARISH'} + skor entry ${points}/${es.maxPoints}${fundingAgrees?' + funding searah':''} — sinyal sepakat`, item.symbol, false);
-              }
-            }
-          }
-        }catch(e){ /* skip pair kalau fetch gagal */ }
-      }
-    }
-    await Promise.all(Array.from({length:CONCURRENCY}, worker));
-    confluenceResults = newConfluence.sort((a,b)=> (b.fundingAgrees - a.fundingAgrees) || (b.points-a.points));
-    squeezeResults = newSqueeze.sort((a,b)=>a.percentileRank-b.percentileRank);
-    divergenceResults = newDivergence.sort((a,b)=> (b.confirmed - a.confirmed));
-    renderAdvancedWidgets();
-  } finally {
-    advancedScanRunning = false;
-  }
-}
-
-// Baris widget dipakai bareng buat tampilan compact (5 teratas) DAN detail full-screen (semua) —
-// nunjukin juga badge "kawin" (💍) kalau sinyal itu didukung indikator lain.
-function widgetRowHtml(type, r){
-  if(type === 'confluence'){
-    return `
-      <div class="widget-row" onclick="event.stopPropagation(); openDetail('${r.symbol}')">
-        <span class="widget-row-sym">${escapeHtml(r.symbol.replace('USDT',''))}</span>
-        <span class="badge-pill ${r.bias==='bullish'?'score-hi':'score-lo'}">${r.bias==='bullish'?'LONG':'SHORT'}</span>
-        ${r.fundingAgrees ? `<span class="badge-pill wi-married">💍 funding</span>` : ''}
-        <span class="widget-row-meta">${r.points}/${r.maxPoints} poin</span>
-      </div>`;
-  }
-  if(type === 'squeeze'){
-    const biasBadge = r.bias ? `<span class="badge-pill ${r.bias==='bullish'?'score-hi':'score-lo'}">${r.bias==='bullish'?'▲ BULLISH':'▼ BEARISH'}</span>` : `<span class="badge-pill score-mid">NETRAL</span>`;
-    return `
-      <div class="widget-row" onclick="event.stopPropagation(); openDetail('${r.symbol}')">
-        <span class="widget-row-sym">${escapeHtml(r.symbol.replace('USDT',''))}</span>
-        ${biasBadge}
-        <span class="widget-row-meta">BW ${r.bandwidth.toFixed(2)}% (${r.percentileRank.toFixed(0)}%ile)</span>
-      </div>`;
-  }
-  if(type === 'divergence'){
-    return `
-      <div class="widget-row" onclick="event.stopPropagation(); openDetail('${r.symbol}')">
-        <span class="widget-row-sym">${escapeHtml(r.symbol.replace('USDT',''))}</span>
-        <span class="badge-pill ${r.type==='bullish'?'score-hi':'score-lo'}">${r.type==='bullish'?'BULLISH':'BEARISH'} DIV</span>
-        ${r.confirmed ? `<span class="badge-pill wi-married">💍 struktur</span>` : `<span class="widget-row-meta">peringatan dini</span>`}
-      </div>`;
-  }
-  if(type === 'structbreak'){
-    const minsAgo = Math.max(0, Math.floor((Date.now()-r.time)/60000));
-    return `
-      <div class="widget-row" onclick="event.stopPropagation(); openDetail('${r.symbol}')">
-        <span class="widget-row-sym">${escapeHtml(r.symbol.replace('USDT',''))}</span>
-        <span class="badge-pill ${r.direction==='bullish'?'score-hi':'score-lo'}">BOS ${r.direction==='bullish'?'▲':'▼'}</span>
-        ${r.volConfirmed ? `<span class="badge-pill wi-married">💍 vol ${r.volRatio.toFixed(1)}x</span>` : ''}
-        <span class="widget-row-meta">${minsAgo<1?'baru saja':minsAgo+'m lalu'}</span>
-      </div>`;
-  }
-  return '';
-}
-
-function renderAdvancedWidgets(){
-  renderTopSignals(); // Featured Setup di Home ikut update begitu hasil konfluensi masuk
-  // 1) Alarm Konfluensi
-  document.getElementById('confluenceCount').textContent = confluenceResults.length;
-  document.getElementById('confluenceWidgetBody').innerHTML = confluenceResults.length===0
-    ? `<div class="widget-empty">Belum ada sinyal konfluensi (tren selaras + skor entry menang)</div>`
-    : confluenceResults.slice(0,5).map(r=>widgetRowHtml('confluence', r)).join('');
-
-  // 2) Volatility Squeeze
-  document.getElementById('squeezeCount').textContent = squeezeResults.length;
-  document.getElementById('squeezeWidgetBody').innerHTML = squeezeResults.length===0
-    ? `<div class="widget-empty">Belum ada Bollinger Band yang menyempit ekstrem</div>`
-    : squeezeResults.slice(0,5).map(r=>widgetRowHtml('squeeze', r)).join('');
-
-  // 3) Divergence Scanner
-  document.getElementById('divergenceCount').textContent = divergenceResults.length;
-  document.getElementById('divergenceWidgetBody').innerHTML = divergenceResults.length===0
-    ? `<div class="widget-empty">Belum ada divergence RSI vs harga terdeteksi</div>`
-    : divergenceResults.slice(0,5).map(r=>widgetRowHtml('divergence', r)).join('');
-
-  // 4) Structure Break Feed
-  document.getElementById('structBreakCount').textContent = structureBreakFeed.length;
-  document.getElementById('structBreakWidgetBody').innerHTML = structureBreakFeed.length===0
-    ? `<div class="widget-empty">Belum ada break struktur (BOS) baru</div>`
-    : structureBreakFeed.slice(0,5).map(r=>widgetRowHtml('structbreak', r)).join('');
-}
-
-// ===== Klik kartu widget (bukan baris pair-nya) -> buka full-screen nunjukin SEMUA yang kedeteksi =====
-const WIDGET_META = {
-  confluence: { title: '🎯 Alarm Konfluensi', emptyMsg: 'Belum ada sinyal konfluensi (tren selaras + skor entry menang + funding searah)', data: () => confluenceResults },
-  squeeze: { title: '📉 Volatility Squeeze', emptyMsg: 'Belum ada Bollinger Band yang menyempit ekstrem', data: () => squeezeResults },
-  divergence: { title: '🔀 Divergence Scanner', emptyMsg: 'Belum ada divergence RSI vs harga terdeteksi', data: () => divergenceResults },
-  structbreak: { title: '📐 Structure Break Feed', emptyMsg: 'Belum ada break struktur (BOS) baru', data: () => structureBreakFeed },
-};
-
-function openWidgetDetail(type){
-  const meta = WIDGET_META[type];
-  if(!meta) return;
-  closeOtherFullscreenPanels('widgetDetailPanel');
-  document.getElementById('widgetDetailTitle').textContent = meta.title;
-  const items = meta.data();
-  const bodyEl = document.getElementById('widgetDetailBody');
-  bodyEl.innerHTML = items.length === 0
-    ? `<div class="empty-state">${meta.emptyMsg}</div>`
-    : `<div class="widget-detail-list">${items.map(r => widgetRowHtml(type, r)).join('')}</div>`;
-  document.getElementById('widgetDetailPanel').classList.add('show');
-}
+/* =====================================================================
+   05-advanced-scan-events.js
+   Event wiring (search, filter, sort, mode pills), auto-refresh
+   scheduler, drawer Alert/Settings.
+   Dokumentasi terkait: 04_Market_Scanner.md, 06_Decision_Engine.md
+   ===================================================================== */
 
 // ===== EVENTS =====
 document.getElementById('scanTopBtn').addEventListener('click', ()=>runDeepScanTop20());
@@ -3392,8 +3110,9 @@ function renderSearchResults(){
     return;
   }
   const wl = new Set(loadWatchlist());
-  resultsEl.innerHTML = matches.map(d => coinRowHtml(d, wl, rowBadgeHtml(d))).join('');
+  resultsEl.innerHTML = matches.map(d => coinRowHtml(d, wl, '')).join('');
   resultsEl.classList.add('show');
+  observeVisibleRows();
 }
 
 function applyFilter(filter){
@@ -3430,9 +3149,6 @@ document.querySelectorAll('.sort-row .sort-pill').forEach(pill=>{
 // App ini merefresh dirinya sendiri terus-menerus TANPA perlu tombol — nyala otomatis begitu halaman dibuka.
 function startAutoRefresh(){
   autoTimer = setInterval(refreshAll, 45000);
-  // Scan alarm "mayoritas timeframe selaras" jalan lebih jarang (tiap 3 menit) karena lebih berat (banyak request per siklus)
-  marketAlignTimer = setInterval(scanMarketTrendAlignment, 180000);
-  scanMarketTrendAlignment(); // langsung scan sekali pas halaman kebuka, nggak nunggu 3 menit pertama
 }
 
 // ===== ALERT DRAWER & SETTINGS DRAWER (full-screen panel) =====
@@ -3462,26 +3178,11 @@ document.getElementById('saveSettingsBtn').addEventListener('click', ()=>{
     rsiOb: parseFloat(document.getElementById('setRsiOb').value) || 70,
     fundingExt: parseFloat(document.getElementById('setFundingExt').value) || 0.05,
     levelProximity: parseFloat(document.getElementById('setLevelProx').value) || 0.5,
-    marketAlignEnabled: loadAlertSettings().marketAlignEnabled,
-    marketAlignPool: parseInt(document.getElementById('setMarketAlignPool').value) || 30,
   };
   saveAlertSettings(s);
   alertFiredThisSession.clear(); // reset dedupe biar threshold baru langsung berlaku
   setStatus("✓ Pengaturan alert disimpan", "ok");
   renderTable();
-});
-function syncMarketAlignToggleUI(){
-  const s = loadAlertSettings();
-  const btn = document.getElementById('toggleMarketAlignBtn');
-  btn.textContent = s.marketAlignEnabled ? '🚨 ON' : 'OFF';
-  btn.classList.toggle('active', s.marketAlignEnabled);
-}
-document.getElementById('toggleMarketAlignBtn').addEventListener('click', ()=>{
-  const s = loadAlertSettings();
-  s.marketAlignEnabled = !s.marketAlignEnabled;
-  saveAlertSettings(s);
-  syncMarketAlignToggleUI();
-  setStatus(s.marketAlignEnabled ? "✓ Alarm mayoritas timeframe diaktifkan" : "Alarm mayoritas timeframe dimatikan", "ok");
 });
 document.getElementById('paAddBtn').addEventListener('click', ()=>{
   let symbol = document.getElementById('paSymbol').value.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
@@ -3510,10 +3211,19 @@ document.getElementById('notifPermBtn').addEventListener('click', ()=>{
   Notification.requestPermission().then(()=>refreshNotifStatus());
 });
 
+/* =====================================================================
+   06-router-detail-setup.js
+   Router 8-workspace (showWorkspace), sidebar responsif, Quick Access,
+   Export/Import Data, setup indikator lanjutan (Anchored VWAP,
+   Fibonacci), konfluensi multi-timeframe (1H/4H/1D/1W), loadDetail.
+   Dokumentasi terkait: 02_System_Architecture.md, 05_Analysis_Engine.md,
+   08_Review_Engine.md
+   ===================================================================== */
+
 // ===== 7-WORKSPACE ROUTER =====
 // Cuma boleh 1 full-screen panel (drawer) yang kebuka bersamaan.
 function closeOtherFullscreenPanels(exceptId){
-  ['modeResultsSection','alertDrawer','settingsDrawer','historyPanel','widgetDetailPanel'].forEach(id=>{
+  ['modeResultsSection','alertDrawer','settingsDrawer','historyPanel'].forEach(id=>{
     if(id !== exceptId) document.getElementById(id).classList.remove('show');
   });
 }
@@ -3525,24 +3235,22 @@ function syncDrawerNavState(){
 }
 
 let currentWorkspace = 'wsHome';
-const WS_IDS = ['wsHome','wsScanner','wsScannerPairHub','wsAnalysis','wsValidation','wsDecision','wsTrading','wsReview'];
-const SCANNER_PAIR_CHILDREN = ['wsScannerPairHub','wsAnalysis','wsValidation','wsDecision','wsTrading','wsReview'];
+const WS_IDS = ['wsHome','wsScanner','wsTrading','wsReview'];
 function showWorkspace(id){
   WS_IDS.forEach(w=>document.getElementById(w).classList.toggle('active', w===id));
   document.querySelectorAll('.sidebar-nav-item[data-ws]').forEach(b=>{
-    const isActive = SCANNER_PAIR_CHILDREN.includes(id) ? b.dataset.ws==='wsScannerPairHub' : b.dataset.ws===id;
-    b.classList.toggle('active', isActive);
+    b.classList.toggle('active', b.dataset.ws===id);
   });
   currentWorkspace = id;
   closeOtherFullscreenPanels(null);
   window.scrollTo({top:0, behavior:'smooth'});
   closeSidebarMobile();
   if(id==='wsScanner') applyFilter(currentFilter||'all');
-  if(id==='wsTrading') renderOpenPositions();
-  if(id==='wsReview') renderEquityCurve();
-  if((id==='wsAnalysis'||id==='wsValidation'||id==='wsDecision'||id==='wsTrading') && !currentDetailSymbol){
-    selectWorkspaceSymbol('BTCUSDT');
+  if(id==='wsTrading'){
+    renderOpenPositions();
+    if(!currentDetailSymbol) selectWorkspaceSymbol('BTCUSDT');
   }
+  if(id==='wsReview') renderEquityCurve();
 }
 document.querySelectorAll('.sidebar-nav-item[data-ws]').forEach(btn=>{
   btn.addEventListener('click', ()=>showWorkspace(btn.dataset.ws));
@@ -3586,7 +3294,7 @@ document.getElementById('marketQuickBtn').addEventListener('click', ()=>{
   showWorkspace('wsScanner');
 });
 document.getElementById('decisionQuickBtn').addEventListener('click', ()=>{
-  showWorkspace('wsDecision');
+  showWorkspace('wsTrading');
 });
 function backToAksiCepat(){
   showWorkspace('wsHome');
@@ -3597,9 +3305,6 @@ function backToAksiCepat(){
 }
 function goHome(){
   showWorkspace('wsHome');
-}
-function backToScannerPair(){
-  showWorkspace('wsScannerPairHub');
 }
 document.getElementById('reviewHistoryBtn').addEventListener('click', ()=>{
   closeOtherFullscreenPanels('historyPanel');
@@ -3687,9 +3392,6 @@ document.getElementById('importDataFile').addEventListener('change', (e)=>{
 
 document.getElementById('historyPanelClose').addEventListener('click', ()=>{
   document.getElementById('historyPanel').classList.remove('show');
-});
-document.getElementById('widgetDetailClose').addEventListener('click', ()=>{
-  document.getElementById('widgetDetailPanel').classList.remove('show');
 });
 
 // ===== DETAIL MODAL: EMA21/EMA30/MA200/VWAP/Fibonacci + Long/Short Score =====
@@ -3796,7 +3498,7 @@ async function openDetail(symbol){
   await loadDetail(symbol, currentDetailTf);
 }
 
-// Konfluensi multi-timeframe: cek bias trend (EMA21 vs EMA50 + posisi vs MA200) + area kunci di 1H/4H/1D/1W sekaligus
+// Konfluensi multi-timeframe: cek bias trend (ribbon EMA21/30/50, lihat computeEmaTrend + posisi vs MA200) + area kunci di 1H/4H/1D/1W sekaligus
 // Level kunci per timeframe — swing high/low struktural, Fibonacci 50/61.8%, dan AVWAP.
 // Dipakai buat nunjukin "area penting" di tiap timeframe, bukan cuma bias arahnya doang.
 function computeKeyZones(candles){
@@ -3832,12 +3534,11 @@ async function computeConfluence(symbol){
     if(!candles || candles.length < 30) return { tf:t, bias:"neutral", label:"Data kurang", structure:null, zones:null };
     const closes = candles.map(c=>c.close);
     const lastPrice = closes[closes.length-1];
-    const e21arr = ema(closes,21), e30arr = ema(closes,30);
-    const lastE21 = e21arr[e21arr.length-1], lastE30 = e30arr[e30arr.length-1];
+    const emaTrend = computeEmaTrend(closes);
     let ma200v = null;
     if(closes.length >= 200){ const s = sma(closes,200); ma200v = s[s.length-1]; }
     let score = 0, n = 0;
-    score += lastE21>lastE30 ? 1 : -1; n++;
+    score += emaTrend.bias==='bullish' ? 1 : emaTrend.bias==='bearish' ? -1 : 0; n++;
     if(ma200v){ score += lastPrice>ma200v ? 1 : -1; n++; }
     const avg = score/n;
     const emaBias = avg>0.3 ? "bullish" : avg<-0.3 ? "bearish" : "neutral";
@@ -3873,9 +3574,11 @@ async function loadDetail(symbol, tf){
 
     const ema21arr = ema(closes, 21);
     const ema30arr = ema(closes, 30);
+    const ema50arr = ema(closes, 50);
     const sma200arr = sma(closes, 200);
     const ema21 = ema21arr[ema21arr.length-1];
     const ema30 = ema30arr[ema30arr.length-1];
+    const ema50 = ema50arr[ema50arr.length-1];
     const ma200 = sma200arr[sma200arr.length-1];
     const avwap = computeAnchoredVWAP(candles, 90, 0.5); // Anchored VWAP, band multiplier 0.5
     const rsiVal = rsi(closes, 14);
@@ -3883,7 +3586,7 @@ async function loadDetail(symbol, tf){
     const macdVal = macd(closes, 12, 26, 9);
     const stoch = stochRSI(closes, 14, 14, 3, 3);
     const atrVal = atr(candles, 14);
-    const bb = bollinger(closes, 20, 2);
+    const bbVal = bollinger(closes, 20, 2);
     const adxVal = adx(candles, 14);
     const structure = analyzeMarketStructure(candles);
     const divergence = detectDivergence(candles, closes);
@@ -3913,7 +3616,7 @@ async function loadDetail(symbol, tf){
     const lsLatest = lsRatio && lsRatio.length ? lsRatio[lsRatio.length-1] : null;
     const topLatest = topRatio && topRatio.length ? topRatio[topRatio.length-1] : null;
 
-    renderDetail({symbol, tf, lastPrice, ema21, ema30, ma200, avwap, rsiVal, fib, macdVal, stoch, atrVal, bb, adxVal, structure, divergence, volRatio, priceUp, oi, oiChangePct, oiTrend, lsLatest, topLatest, fundingRate, confluence, candles});
+    renderDetail({symbol, tf, lastPrice, ema21, ema30, ema50, ma200, avwap, rsiVal, fib, macdVal, stoch, atrVal, bb:bbVal, adxVal, structure, divergence, volRatio, priceUp, oi, oiChangePct, oiTrend, lsLatest, topLatest, fundingRate, confluence, candles});
   }catch(err){
     console.error(err);
     const errHtml = `
@@ -3931,6 +3634,15 @@ async function loadDetail(symbol, tf){
 }
 
 // ===== VERDICT TREN MULTI-TIMEFRAME — hal PALING PENTING buat keputusan entry =====
+/* =====================================================================
+   07-confluence-score-render.js
+   Verdict tren multi-timeframe, pola candlestick, FVG, AI Confluence
+   Score (12 kategori + Risk Gate + News Guard) — INI JANTUNG SKOR APP,
+   renderDetail (render lengkap ke modal + 4 workspace sekaligus).
+   Dokumentasi terkait: 06_Decision_Engine.md, 09_AI_Confluence.md,
+   10_Risk_Management.md
+   ===================================================================== */
+
 // Prinsipnya sederhana: kalau semua timeframe (1H/4H/1D/1W) kompak satu arah, itu sinyal paling kuat.
 // Kalau campuran, itu tanda market lagi transisi/nggak jelas — risiko entry naik, apapun kata indikator lain.
 function evaluateTrendAlignment(confluence){
@@ -4002,6 +3714,9 @@ function detectCandlePattern(candles){
 // Bobot hasil re-weighting (total 100%): Market Structure 17, Multi Timeframe 15, Momentum 11,
 // Divergence RSI 5 (berdiri sendiri, biar sinyal reversal-nya nggak ketelen rata-rata Momentum),
 // Volume 8, Funding 8, Open Interest 8, Orderflow 8, Liquidity 7, Pattern 5, Risk 5, News 3 (netral).
+// Satu ambang batas ADX dipakai di SEMUA tempat (skor kriteria, label tampilan, catatan, ringkasan AI) —
+// sebelumnya nggak sinkron: kriteria skor pakai >=15, label tampilan pakai >=25. Sekarang cuma 1 angka.
+const ADX_TREND_THRESHOLD = 25;
 const RR_THRESHOLD_BY_TF = { '15m':1.2, '30m':1.2, '1h':1.2, '2h':1.5, '4h':1.5, '12h':2.0, '1d':2.0, '1w':2.0 };
 function computeConfluenceCategories(d, criteria, winSide, entryPlan, pattern, fvg){
   const critSide = (name) => { const f = criteria.find(c=>c.name===name); return f ? f.side : undefined; };
@@ -4025,7 +3740,7 @@ function computeConfluenceCategories(d, criteria, winSide, entryPlan, pattern, f
     cats.push({name:'Multi Timeframe', weight:15, real:true, score: Math.round(match/d.confluence.length*100)});
   } else cats.push({name:'Multi Timeframe', weight:15, real:true, score:50});
 
-  cats.push({name:'Momentum', weight:11, real:true, score: avgSide(['Trend (EMA21 vs EMA30)','Momentum EMA21 (Arah)','Momentum (RSI)','Momentum RSI (Arah)','MACD','Momentum MACD (Histogram)','ADX Direction','Momentum ADX (DI Gap)'])});
+  cats.push({name:'Momentum', weight:11, real:true, score: avgSide(['Trend (EMA21/30/50)','Momentum EMA21 (Arah)','Momentum (RSI)','Momentum RSI (Arah)','MACD','Momentum MACD (Histogram)','ADX Direction','Momentum ADX (DI Gap)'])});
   cats.push({name:'Divergence RSI', weight:5, real:true, score: sideScore(critSide('Divergence RSI'))});
   cats.push({name:'Volume', weight:8, real:true, score: sideScore(critSide('Volume'))});
   cats.push({name:'Funding', weight:8, real:true, score: sideScore(critSide('Funding Rate'))});
@@ -4083,7 +3798,7 @@ function renderDetail(d){
   // ==== SKOR ENTRY BERBASIS POIN — tiap syarat 1 poin ke LONG atau SHORT ====
   const entryScore = computeEntryScore({
     lastPrice: d.lastPrice,
-    emaFast: d.ema21, emaSlow: d.ema30, emaFastLabel:'21', emaSlowLabel:'30', emaFastSlope,
+    emaFast: d.ema21, emaSlow: d.ema30, emaThird: d.ema50, emaFastLabel:'21', emaSlowLabel:'30', emaThirdLabel:'50', emaFastSlope,
     rsiVal: d.rsiVal, rsiSlope, macdVal: d.macdVal, avwap: d.avwap, fib: d.fib,
     volRatio: d.volRatio, priceUp: d.priceUp, fundingRate: d.fundingRate,
     structure: d.structure, adxVal: d.adxVal, candles: d.candles, tf: d.tf, confluence: d.confluence,
@@ -4136,6 +3851,7 @@ function renderDetail(d){
     <div class="ind-grid">
       <div class="ind-cell"><div class="il">EMA 21</div><div class="iv">${fmtPrice(d.ema21)}</div>${posBadge(d.ema21)}</div>
       <div class="ind-cell"><div class="il">EMA 30</div><div class="iv">${fmtPrice(d.ema30)}</div>${posBadge(d.ema30)}</div>
+      <div class="ind-cell"><div class="il">EMA 50</div><div class="iv">${fmtPrice(d.ema50)}</div>${posBadge(d.ema50)}</div>
       <div class="ind-cell"><div class="il">MA 200</div><div class="iv">${d.ma200?fmtPrice(d.ma200):'Data kurang'}</div>${posBadge(d.ma200)}</div>
       <div class="ind-cell"><div class="il">Anchored VWAP</div><div class="iv">${d.avwap?fmtPrice(d.avwap.avwap):'-'}</div>${d.avwap?posBadge(d.avwap.avwap):''}</div>
       <div class="ind-cell"><div class="il">AVWAP Upper Band (0.5σ)</div><div class="iv">${d.avwap?fmtPrice(d.avwap.upper):'-'}</div>${d.avwap?posBadge(d.avwap.upper):''}</div>
@@ -4197,7 +3913,7 @@ function renderDetail(d){
       <div class="ind-cell">
         <div class="il">ADX (14)</div>
         <div class="iv">${d.adxVal ? d.adxVal.adx.toFixed(1) : '-'}</div>
-        <div class="ib ${d.adxVal && d.adxVal.adx>=25 ? 'pos-above' : ''}">${d.adxVal ? (d.adxVal.adx<20?'Lemah/Sideways':d.adxVal.adx<25?'Mulai Menguat':d.adxVal.adx<40?'Tren Kuat':'Sangat Kuat') : 'Data kurang'}</div>
+        <div class="ib ${d.adxVal && d.adxVal.adx>=ADX_TREND_THRESHOLD ? 'pos-above' : ''}">${d.adxVal ? (d.adxVal.adx<ADX_TREND_THRESHOLD?'Lemah/Sideways':d.adxVal.adx<40?'Tren Kuat':'Sangat Kuat') : 'Data kurang'}</div>
       </div>
       <div class="ind-cell">
         <div class="il">+DI / -DI</div>
@@ -4205,7 +3921,7 @@ function renderDetail(d){
         <div class="ib ${d.adxVal && d.adxVal.plusDI>d.adxVal.minusDI ? 'pos-above':'pos-below'}">${d.adxVal ? (d.adxVal.plusDI>d.adxVal.minusDI?'Buyer dominan':'Seller dominan') : ''}</div>
       </div>
     </div>
-    ${d.adxVal && d.adxVal.adx<20 ? `<div class="sop-note" style="margin-top:8px;"><b>Catatan ADX:</b> Tren sedang lemah/sideways (ADX ${d.adxVal.adx.toFixed(1)} < 20). Sinyal Trend & MACD di bawah otomatis diredam karena kurang bisa diandalkan di kondisi ini — pertimbangkan tunggu breakout dengan ADX naik di atas 20-25 sebelum entry berbasis tren.</div>` : ''}
+    ${d.adxVal && d.adxVal.adx<ADX_TREND_THRESHOLD ? `<div class="sop-note" style="margin-top:8px;"><b>Catatan ADX:</b> Tren sedang lemah/sideways (ADX ${d.adxVal.adx.toFixed(1)} < ${ADX_TREND_THRESHOLD}). Sinyal Trend & MACD di bawah otomatis diredam karena kurang bisa diandalkan di kondisi ini — pertimbangkan tunggu breakout dengan ADX naik di atas ${ADX_TREND_THRESHOLD} sebelum entry berbasis tren.</div>` : ''}
 
     <div class="ind-section-title">STRUKTUR MARKET (${d.tf.toUpperCase()})</div>
     <div class="ind-grid">
@@ -4531,11 +4247,7 @@ function renderScannerStats(){
   const el = document.getElementById('dcScannerStatus');
   if(el) el.innerHTML = `
     <div class="checklist-row"><span class="cl-name">Auto-Refresh (harga &amp; funding)</span><span class="cl-result ${autoTimer?'pass':'neutral'}">${autoTimer?'● Aktif':'○ Nonaktif'}</span></div>
-    <div class="checklist-row"><span class="cl-name">Alarm Mayoritas Timeframe + Konfluensi</span><span class="cl-result ${marketAlignTimer?'pass':'neutral'}">${marketAlignTimer?'● Aktif':'○ Nonaktif'}</span></div>
-    <div class="checklist-row"><span class="cl-name">Widget: Alarm Konfluensi</span><span class="cl-result neutral">${confluenceResults.length} pair</span></div>
-    <div class="checklist-row"><span class="cl-name">Widget: Volatility Squeeze</span><span class="cl-result neutral">${squeezeResults.length} pair</span></div>
-    <div class="checklist-row"><span class="cl-name">Widget: Divergence Scanner</span><span class="cl-result neutral">${divergenceResults.length} pair</span></div>
-    <div class="checklist-row"><span class="cl-name">Widget: Structure Break Feed</span><span class="cl-result neutral">${structureBreakFeed.length} event</span></div>`;
+    <div class="checklist-row"><span class="cl-name">WebSocket Real-Time</span><span class="cl-result ${wsConnected?'pass':'neutral'}">${wsConnected?'● Live':'○ REST Polling'}</span></div>`;
 }
 
 // ===== 06. Open Positions dari Jurnal (status open/floating) =====
@@ -4610,12 +4322,24 @@ function computeBreakRetest(candles, structure){
 // Tiap syarat bernilai TEPAT 1 poin ke arah LONG atau SHORT (atau 0 kalau netral). Nggak ada pembobotan lagi —
 // murni hitung berapa syarat yang berpihak ke long vs short. Kalau data suatu syarat nggak tersedia
 // (misal di scan cepat Mode Trading yang datanya lebih ringkas), syarat itu dilewati begitu saja dari perhitungan.
+/* =====================================================================
+   08-entry-plan-init.js
+   Sistem Skor Entry (17 kriteria), Rencana Entry/SL/TP (SOP),
+   generator ringkasan buat AI eksternal, event wiring Jurnal &
+   Modal, inisialisasi aplikasi (semua pemanggilan awal & interval).
+   Dokumentasi terkait: 05_Analysis_Engine.md, 07_Trading_Workspace.md,
+   08_Review_Engine.md
+   ===================================================================== */
+
 function computeEntryScore(ctx){
   const criteria = [];
 
-  if(ctx.emaFast!=null && ctx.emaSlow!=null){
-    const side = ctx.emaFast > ctx.emaSlow ? 'long' : 'short';
-    criteria.push({name:`Trend (EMA${ctx.emaFastLabel||''} vs EMA${ctx.emaSlowLabel||''})`, side, note:`EMA${ctx.emaFastLabel||''} ${side==='long'?'di atas':'di bawah'} EMA${ctx.emaSlowLabel||''}`});
+  if(ctx.emaFast!=null && ctx.emaSlow!=null && ctx.emaThird!=null){
+    let side = null;
+    if(ctx.emaFast > ctx.emaSlow && ctx.emaSlow > ctx.emaThird) side = 'long';
+    else if(ctx.emaFast < ctx.emaSlow && ctx.emaSlow < ctx.emaThird) side = 'short';
+    criteria.push({name:`Trend (EMA${ctx.emaFastLabel||''}/${ctx.emaSlowLabel||''}/${ctx.emaThirdLabel||''})`, side,
+      note: side ? `EMA${ctx.emaFastLabel} ${side==='long'?'>':'<'} EMA${ctx.emaSlowLabel} ${side==='long'?'>':'<'} EMA${ctx.emaThirdLabel} berurutan rapi — tren ${side==='long'?'naik':'turun'} terkonfirmasi 3 EMA` : `EMA${ctx.emaFastLabel}/${ctx.emaSlowLabel}/${ctx.emaThirdLabel} belum berurutan rapi — tren campuran/transisi`});
   }
 
   // EMA Momentum (Arah) — EMA yang lagi NAIK/TURUN itu petunjuk lebih awal dibanding nunggu dia beneran
@@ -4677,11 +4401,11 @@ function computeEntryScore(ctx){
   }
 
   if(ctx.adxVal && ctx.adxVal.plusDI!=null){
-    // Deadband ganda: ADX sendiri harus minimal 15 (ada tren beneran, bukan sideways total),
+    // Deadband ganda: ADX sendiri harus minimal ADX_TREND_THRESHOLD (25 — standar Wilder buat "tren cukup kuat"),
     // DAN selisih +DI/-DI harus minimal 3 poin — kalau dua-duanya nyaris sama, itu noise, bukan dominasi buyer/seller.
     const gap = Math.abs(ctx.adxVal.plusDI - ctx.adxVal.minusDI);
     let side = null;
-    if(ctx.adxVal.adx >= 15 && gap >= 3) side = ctx.adxVal.plusDI > ctx.adxVal.minusDI ? 'long' : 'short';
+    if(ctx.adxVal.adx >= ADX_TREND_THRESHOLD && gap >= 3) side = ctx.adxVal.plusDI > ctx.adxVal.minusDI ? 'long' : 'short';
     criteria.push({name:'ADX Direction', side, note:`+DI ${ctx.adxVal.plusDI.toFixed(1)} vs -DI ${ctx.adxVal.minusDI.toFixed(1)}, ADX ${ctx.adxVal.adx.toFixed(1)}${side?'':' — belum cukup kuat/jelas'}`});
 
     // ADX Momentum (DI Gap) — selisih +DI/-DI yang MAKIN LEBAR nunjukin dominasi buyer/seller lagi
@@ -4867,7 +4591,7 @@ MOMENTUM:
 - StochRSI %K/%D: ${d.stoch && d.stoch.k!=null ? d.stoch.k.toFixed(1) : '-'} / ${d.stoch && d.stoch.d!=null ? d.stoch.d.toFixed(1) : '-'}
 
 KEKUATAN TREN:
-- ADX(14): ${d.adxVal ? d.adxVal.adx.toFixed(1) : '-'} (${d.adxVal ? (d.adxVal.adx<20?'lemah/sideways':d.adxVal.adx<25?'mulai menguat':d.adxVal.adx<40?'tren kuat':'sangat kuat') : 'data kurang'})
+- ADX(14): ${d.adxVal ? d.adxVal.adx.toFixed(1) : '-'} (${d.adxVal ? (d.adxVal.adx<ADX_TREND_THRESHOLD?'lemah/sideways':d.adxVal.adx<40?'tren kuat':'sangat kuat') : 'data kurang'})
 - +DI/-DI: ${d.adxVal ? d.adxVal.plusDI.toFixed(1)+' / '+d.adxVal.minusDI.toFixed(1) : '-'} (${d.adxVal ? (d.adxVal.plusDI>d.adxVal.minusDI?'buyer dominan':'seller dominan') : '-'})
 
 VOLATILITAS:
@@ -5028,8 +4752,6 @@ document.getElementById('mhStarBtn').addEventListener('click', ()=>{
   document.getElementById('setRsiOb').value = s.rsiOb;
   document.getElementById('setFundingExt').value = s.fundingExt;
   document.getElementById('setLevelProx').value = s.levelProximity;
-  document.getElementById('setMarketAlignPool').value = s.marketAlignPool;
-  syncMarketAlignToggleUI();
   renderAlertLog();
   updateAlertBadge();
   refreshNotifStatus();
