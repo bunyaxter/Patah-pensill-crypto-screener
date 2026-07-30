@@ -659,12 +659,25 @@
   @media(min-width:520px){ .mtf-zone-grid{grid-template-columns:repeat(4,1fr);} }
 
   /* ===== AI COPY BUTTON ===== */
-  .ai-row{padding:12px 20px 0;}
+  .ai-row{padding:12px 20px 0; display:flex; gap:8px;}
   .btn-ai{
-    width:100%; background:linear-gradient(90deg, var(--mint-dim), var(--surface-2));
+    flex:1; background:linear-gradient(90deg, var(--mint-dim), var(--surface-2));
     border-color:var(--mint); color:var(--mint); padding:11px 16px; font-size:12px; border-radius:var(--r-pill);
   }
   .btn-ai.copied{background:var(--mint); color:#04120C; border-color:var(--mint);}
+  .btn-tv{
+    flex:1; background:linear-gradient(90deg, rgba(245,185,66,0.16), var(--surface-2));
+    border-color:var(--amber); color:var(--amber); padding:11px 16px; font-size:12px; border-radius:var(--r-pill);
+  }
+  .btn-tv.active{background:var(--amber); color:#1A1200; border-color:var(--amber);}
+
+  /* ===== TRADINGVIEW BRIDGE PANEL (chart lokal via tradingview-mcp) ===== */
+  .tv-bridge-row{display:none; padding:10px 20px 0;}
+  .tv-bridge-row.show{display:block;}
+  .tv-bridge-status{font-size:11px; color:var(--text-2); padding:2px 0 6px;}
+  .tv-bridge-status.err{color:var(--crimson);}
+  .tv-bridge-img{width:100%; border-radius:10px; border:1px solid var(--border-soft); display:none;}
+  .tv-bridge-img.show{display:block;}
 
   /* ===== SCROLL TO TOP (muncul pas udah scroll lumayan jauh) ===== */
   .scroll-top-btn{
@@ -860,6 +873,10 @@
         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
         <span class="sni-text"><span class="sni-title">Scanner Market</span></span>
       </button>
+      <button class="sidebar-nav-item" data-ws="wsMarkov">
+        <svg viewBox="0 0 24 24"><circle cx="6" cy="7" r="2.2"/><circle cx="18" cy="7" r="2.2"/><circle cx="12" cy="19" r="2.2"/><path d="M7.7 8.7L11 17M16.3 8.7L13 17M8.2 7h7.6"/></svg>
+        <span class="sni-text"><span class="sni-title">Markov Screener</span></span>
+      </button>
       <button class="sidebar-nav-item" data-ws="wsTrading">
         <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>
         <span class="sni-text"><span class="sni-title">Trading Workspace</span></span>
@@ -1028,6 +1045,36 @@
       <div id="dcScannerStatus"></div>
     </div>
     <div class="ws-note">ℹ️ Harga &amp; funding rate di tabel ini update <b>real-time via WebSocket Binance</b> (~1 detik sekali) kalau koneksi WS berhasil — kalau gagal/putus, otomatis fallback ke REST polling tiap 45 detik, nggak ada data yang macet. Angka "Momentum" <b>bukan</b> AI Confluence Score — cuma skor cepat (0-100) dari momentum &amp; volatilitas harga, dipakai buat sortir/lirik cepat 400+ pair. Satu-satunya sistem skor resmi di app ini adalah <b>AI Confluence Score</b> di Analysis/Validation/Decision Workspace (12 kategori berbobot). <span class="sim-tag">CEPAT, BUKAN SKOR RESMI</span></div>
+  </div>
+
+  <!-- ===== 02b. MARKOV SCREENER WORKSPACE (add-on) ===== -->
+  <div class="workspace" id="wsMarkov">
+    <button class="back-to-home-btn" onclick="goHome()">← Kembali ke Home</button>
+    <div class="ws-header"><span class="ws-title">MARKOV SCREENER WORKSPACE</span></div>
+    <div class="ws-sub">Probabilitas transisi state pasar (Markov Chain) per pair — otomatis begitu dibuka, nggak perlu cari/filter manual</div>
+
+    <div class="mini-stat-grid" style="margin-bottom:14px;">
+      <div class="mini-stat"><div class="mini-stat-label">Pair Lolos Filter</div><div class="mini-stat-value" id="mkTotalPairs">-</div></div>
+      <div class="mini-stat"><div class="mini-stat-label">State Bullish</div><div class="mini-stat-value up" id="mkBullishCount">-</div></div>
+      <div class="mini-stat"><div class="mini-stat-label">State Bearish</div><div class="mini-stat-value down" id="mkBearishCount">-</div></div>
+      <div class="mini-stat"><div class="mini-stat-label">⚠ Overheated</div><div class="mini-stat-value" id="mkOverheatedCount" style="color:var(--amber);">-</div></div>
+    </div>
+
+    <div class="ws-card" style="padding:16px 22px;">
+      <div class="ws-card-title" id="markovRegime">Regime pasar: belum tersedia</div>
+      <div id="markovStatus" class="mono" style="font-size:11.5px; color:var(--text-3); margin:6px 0 12px;">Menyiapkan scan…</div>
+      <button class="btn" id="markovRescanBtn" onclick="runMarkovScreening()">🔄 Scan Ulang</button>
+    </div>
+
+    <div class="section-head">
+      <span>Hasil Screening — diurutkan skor tertinggi</span>
+      <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+    </div>
+    <div class="coin-list" id="markovList">
+      <div class="empty-state"><span class="loader"></span>Menyiapkan scan Markov…</div>
+    </div>
+
+    <div class="ws-note">ℹ️ Metode ini murni statistik: state historis tiap pair (Bearish/Netral/Bullish/Overheated) dibangun dari data candle sendiri (4H), lalu dihitung <b>Markov Chain Transition Matrix</b> (Laplace smoothing) buat estimasi peluang lanjut ke state berikutnya. Confidence pakai <b>Wilson Lower Bound</b> biar sample historis kecil nggak dikasih kepercayaan diri palsu — kalau <code>n</code> di badge kecil (di bawah 20), anggap "belum cukup andal". RSI di modul ini pakai fungsi RSI yang sama dengan seluruh app (Wilder's, canonical), bukan RSI custom terpisah. <b>Output ini murni buat MONITORING</b>, bukan sinyal entry otomatis dan bukan eksekusi order — validasi dulu ke SOP/Analysis Workspace sebelum ambil keputusan manual. <span class="sim-tag">STATISTIK, BUKAN SKOR RESMI AI CONFLUENCE</span></div>
   </div>
 
   <!-- ===== SCANNER PAIR (folder berisi Analysis/Validation/Decision/Trading/Review) ===== -->
@@ -1255,6 +1302,11 @@
       </div>
       <div class="ai-row">
         <button class="btn btn-ai" id="aiCopyBtn">🤖 Copy Ringkasan buat AI</button>
+        <button class="btn btn-tv" id="tvOpenBtn">📈 Lihat di TradingView</button>
+      </div>
+      <div class="tv-bridge-row" id="tvBridgeRow">
+        <div class="tv-bridge-status" id="tvBridgeStatus"></div>
+        <img class="tv-bridge-img" id="tvBridgeImg" alt="Chart TradingView">
       </div>
       <div class="modal-body" id="modalBody">
         <div class="modal-loading">Memuat indikator…</div>
@@ -1277,6 +1329,9 @@
    ===================================================================== */
 
 const FAPI = "https://fapi.binance.com";
+// URL bridge lokal tradingview-mcp (npm run bridge di PC yang sama dengan TradingView Desktop).
+// Override lewat DevTools kalau bridge-nya di IP LAN lain: localStorage.setItem('pp_tv_bridge_url','http://192.168.x.x:8787')
+const TV_BRIDGE_URL = localStorage.getItem('pp_tv_bridge_url') || "http://127.0.0.1:8787";
 
 // ===== FIX: Error handling rate limit — sebelumnya semua status HTTP diperlakukan sama,
 // nggak ada penanganan khusus 429 (terlalu banyak request) / 418 (IP diblokir Binance sementara).
@@ -2074,7 +2129,8 @@ async function refreshAll(){
     renderScannerStats();
     renderTable();
     renderSearchResults();
-    checkPriceAlerts(); // satu-satunya alarm aktif: alert harga (price cross) — alert lain dimatikan sementara
+    checkPriceAlerts(); // alert harga (price cross)
+    checkWatchlistAlerts(); // alert RSI ekstrem/funding ekstrem/dekat level struktural/CHoCH — diaktifkan lagi (sebelumnya sengaja dimatikan)
     autoValidateScoreHistory();
   }catch(err){
     console.error(err);
@@ -2121,13 +2177,6 @@ function renderScoreboard(){
   const heroDeltaEl = document.getElementById('heroDelta');
   if(heroValueEl) heroValueEl.textContent = `$${fmtNum(totalVol)}`;
   if(heroDeltaEl) heroDeltaEl.innerHTML = `<span style="color:${netUp?'var(--mint)':'var(--crimson)'}; font-weight:700;">${netUp?'▲ Gainers dominan':'▼ Losers dominan'}</span>`;
-}
-
-function scoreClass(n, max){
-  const pct = n/max;
-  if(pct >= 0.66) return "score-hi";
-  if(pct >= 0.33) return "score-mid";
-  return "score-lo";
 }
 
 // Warna avatar konsisten per simbol (hash sederhana -> hue), biar tiap koin gampang dikenali sekilas kayak ikon di app exchange
@@ -2940,6 +2989,269 @@ document.getElementById('modeResultsClose').addEventListener('click', ()=>{
   backToAksiCepat();
 });
 
+/* =====================================================================
+   MARKOV SCREENER MODULE (add-on) — adaptasi dari markov-screener-v2.js
+   Beda dari Deep Scan/Mode Trading (skor poin/kriteria), modul ini murni
+   statistik: bangun urutan state historis tiap pair (Bearish/Netral/
+   Bullish/Overheated) dari candle sendiri, hitung Transition Matrix
+   (Markov Chain, Laplace smoothing), confidence-adjust pakai Wilson
+   Lower Bound biar sample kecil nggak dikasih kepercayaan diri palsu.
+   OUTPUT = probabilitas + confidence untuk MONITORING SAJA — TIDAK ada
+   eksekusi order otomatis, keputusan tetap manual.
+   CATATAN KONSISTENSI: RSI di modul ini sengaja pakai rsi()/ema() yang
+   sama dengan seluruh app (definisi kanonik) — bukan RSI custom versi
+   asli modul — biar nggak ada 2 definisi RSI/EMA berbeda untuk pair yang
+   sama. Filter spread dari modul asli DIHILANGKAN karena app ini nggak
+   punya data bid/ask spread real-time — dipaksain isi bakal cuma
+   karangan; filter likuiditas cuma pakai data yang beneran ada
+   (quoteVolume + fundingRate).
+   ===================================================================== */
+
+const MK_STATES = ['Bearish', 'Netral', 'Bullish', 'Overheated'];
+const MK_BULLISH_TARGET = ['Bullish'];
+const MK_RISK_TARGET = ['Bearish'];
+const MK_WINDOW = 60; // rolling window fitur per titik (candle 4H)
+
+function mkSma(values, period){
+  if(values.length < period) return null;
+  const slice = values.slice(-period);
+  return slice.reduce((a,b)=>a+b,0)/period;
+}
+function mkStdev(values){
+  if(values.length===0) return 0;
+  const mean = values.reduce((a,b)=>a+b,0)/values.length;
+  const variance = values.reduce((a,b)=>a+(b-mean)**2,0)/values.length;
+  return Math.sqrt(variance);
+}
+
+// candles: [{open,high,low,close,volume}, ...] ascending waktu (format sama persis kayak fetchKlinesFull)
+// Fitur di titik index `i` dari histori penuh — BUKAN dihitung ulang dari window kecil tiap titik.
+// PENTING (fix konsistensi indikator): EMA50 & RSI(14) itu indikator REKURSIF — butuh histori
+// panjang buat "warm-up" stabil. Kalau dihitung ulang dari nol tiap kali cuma pakai window
+// 61-candle (versi awal modul ini), EMA50 kebawa bias cold-start (~9% bobot masih nempel ke
+// harga awal window yang sembarangan) — terbukti bikin ~3% titik salah baca arah tren pas
+// dites numerik. Makanya ema50Full/rsiFull dihitung SEKALI dari seluruh histori candle yang
+// di-fetch, baru di-index per titik — sama persis pola yang dipakai computeEmaTrend/computeEntryScore
+// di fitur lain, biar EMA50 & RSI di Markov Screener nggak beda bacaan sama fitur lain untuk pair yang sama.
+function mkComputeFeaturesAt(i, closes, volumes, returns, ema50Full, rsiFull, window){
+  const returnPct = returns[i-1]; // return dari candle i-1 ke i
+  const windowReturns = returns.slice(Math.max(0, i-window), i); // window return terakhir s/d titik ini (termasuk returnPct sendiri)
+  const sortedReturns = [...windowReturns].sort((a,b)=>a-b);
+  const returnPercentileRank = sortedReturns.length ? sortedReturns.filter(r=>r<=returnPct).length / sortedReturns.length : 0.5;
+
+  const rsiVal = (rsiFull && rsiFull[i]!=null) ? rsiFull[i] : 50; // rsiSeries() kanonik app — kontinu, bukan RSI custom
+  const windowVolumes = volumes.slice(Math.max(0, i-19), i+1); // 20 candle volume terakhir s/d titik ini
+  const avgVolume = mkSma(windowVolumes, windowVolumes.length);
+  const volumeRatio = avgVolume ? volumes[i] / avgVolume : 1;
+  const volatility = mkStdev(windowReturns);
+  const ema50Last = ema50Full ? ema50Full[i] : null;
+  const ema50Prev = ema50Full ? ema50Full[i-1] : null;
+  const emaTrendUp = (ema50Last!=null && ema50Prev!=null) ? ema50Last > ema50Prev : (closes[i] > closes[i-1]);
+
+  return { returnPct, returnPercentileRank, rsi: rsiVal, volumeRatio, volatility, emaTrendUp };
+}
+
+function mkClassifyState(f){
+  // Overheated: euforia/parabolic, RSI ekstrem + volume+return spike -> peluang reversal tinggi
+  if(f.rsi >= 75 && f.volumeRatio >= 2 && f.returnPercentileRank >= 0.9) return 'Overheated';
+  if(f.emaTrendUp && f.rsi > 50 && f.returnPct > 0) return 'Bullish';
+  if(!f.emaTrendUp && f.rsi < 50 && f.returnPct < 0) return 'Bearish';
+  return 'Netral';
+}
+
+function mkBuildStateSequence(candles, window){
+  const closes = candles.map(c=>c.close);
+  const volumes = candles.map(c=>c.volume);
+  const returns = [];
+  for(let i=1;i<closes.length;i++) returns.push((closes[i]-closes[i-1])/closes[i-1]);
+  // Precompute SEKALI dari seluruh histori (lihat catatan di mkComputeFeaturesAt di atas)
+  const ema50Full = closes.length >= 51 ? ema(closes, 50) : null;
+  const rsiFull = closes.length > 14 ? rsiSeries(closes, 14) : null;
+
+  const sequence = [];
+  for(let i=window; i<candles.length; i++){
+    const f = mkComputeFeaturesAt(i, closes, volumes, returns, ema50Full, rsiFull, window);
+    sequence.push(mkClassifyState(f));
+  }
+  return sequence;
+}
+
+function mkBuildTransitionMatrix(stateSequence, smoothing=1){
+  const counts = {};
+  MK_STATES.forEach(s=>{ counts[s]={}; MK_STATES.forEach(s2=>counts[s][s2]=0); });
+  for(let i=0;i<stateSequence.length-1;i++) counts[stateSequence[i]][stateSequence[i+1]]++;
+  const matrix = {};
+  MK_STATES.forEach(s=>{
+    const total = MK_STATES.reduce((sum,s2)=>sum+counts[s][s2],0) + smoothing*MK_STATES.length;
+    matrix[s]={};
+    MK_STATES.forEach(s2=>{ matrix[s][s2] = (counts[s][s2]+smoothing)/total; });
+  });
+  return { matrix, counts };
+}
+
+function mkWilsonLowerBound(p, n, z=1.96){
+  if(n===0) return 0;
+  const denominator = 1 + (z*z)/n;
+  const centre = p + (z*z)/(2*n);
+  const margin = z*Math.sqrt((p*(1-p))/n + (z*z)/(4*n*n));
+  return (centre-margin)/denominator;
+}
+
+function mkGetTransitionScore(matrix, counts, currentState){
+  const row = matrix[currentState];
+  const rowCounts = counts[currentState];
+  const sampleSize = MK_STATES.reduce((sum,s)=>sum+rowCounts[s],0);
+  const pBullish = MK_BULLISH_TARGET.reduce((sum,s)=>sum+row[s],0);
+  const pBearish = MK_RISK_TARGET.reduce((sum,s)=>sum+row[s],0);
+  const pOverheated = row['Overheated'];
+  const confBullish = mkWilsonLowerBound(pBullish, sampleSize);
+  const confBearish = mkWilsonLowerBound(pBearish, sampleSize);
+  return {
+    currentState,
+    pBullishRaw: +(pBullish*100).toFixed(1),
+    pBearishRaw: +(pBearish*100).toFixed(1),
+    pOverheatedRaw: +(pOverheated*100).toFixed(1),
+    confidenceBullish: +(confBullish*100).toFixed(1),
+    confidenceBearish: +(confBearish*100).toFixed(1),
+    sampleSize,
+    reliable: sampleSize >= 20,
+    score: +((confBullish-confBearish)*100).toFixed(1),
+  };
+}
+
+// row: item dari tickerData ({quoteVolume, fundingRate, ...})
+function mkPassLiquidityFilter(row, opts={}){
+  const { minQuoteVolume24h = 5_000_000, maxAbsFundingRate = 0.03 } = opts;
+  const reasons = [];
+  if(row.quoteVolume < minQuoteVolume24h) reasons.push('Volume 24h terlalu rendah');
+  if(row.fundingRate!=null && Math.abs(row.fundingRate) > maxAbsFundingRate) reasons.push('Funding rate ekstrem');
+  return { pass: reasons.length===0, reasons };
+}
+
+let markovResults = null;      // cache hasil scan terakhir — dipakai biar buka workspace berikutnya nggak nunggu scan ulang
+let markovRegimeState = null;  // proxy regime pasar dari state BTCUSDT sendiri
+let markovScanToken = 0;
+
+async function runMarkovScreening(){
+  if(tickerData.length === 0){ setStatus('Tunggu data pair dimuat dulu.', 'err'); return; }
+  const myToken = ++markovScanToken;
+  const btn = document.getElementById('markovRescanBtn');
+  if(btn) btn.disabled = true;
+  const statusEl = document.getElementById('markovStatus');
+  const listEl = document.getElementById('markovList');
+  listEl.innerHTML = `<div class="empty-state"><span class="loader"></span>Menyiapkan scan Markov…</div>`;
+
+  const POOL = 40; // kandidat awal, pair paling likuid — sama pola dengan Deep Scan/Mode Trading
+  const candidates = [...tickerData].sort((a,b)=>b.quoteVolume-a.quoteVolume).slice(0, POOL);
+  const results = [];
+  let done = 0;
+  statusEl.textContent = `Membangun state sequence & transition matrix ${candidates.length} pair paling likuid… 0/${candidates.length}`;
+
+  // Regime pasar: proxy dari state BTCUSDT sendiri di timeframe 4H
+  try{
+    const btcCandles = await fetchKlinesFull('BTCUSDT', '4h', MK_WINDOW + 5);
+    if(myToken === markovScanToken && btcCandles.length >= MK_WINDOW + 2){
+      markovRegimeState = mkClassifyState(mkComputeFeatures(btcCandles.slice(-(MK_WINDOW+1)), MK_WINDOW));
+    }
+  }catch(e){ /* regime tetap null kalau gagal, nggak fatal buat scan pair */ }
+  if(myToken !== markovScanToken) return;
+
+  const CONCURRENCY = 5;
+  let idx = 0;
+  async function worker(){
+    while(idx < candidates.length){
+      const item = candidates[idx++];
+      try{
+        const candles = await fetchKlinesFull(item.symbol, '4h', MK_WINDOW + 130); // ~130 titik historis buat isi transition matrix
+        if(myToken !== markovScanToken) return;
+        if(candles.length >= MK_WINDOW + 20){
+          const sequence = mkBuildStateSequence(candles, MK_WINDOW);
+          if(sequence.length >= 10){
+            const { matrix, counts } = mkBuildTransitionMatrix(sequence);
+            const currentState = sequence[sequence.length-1];
+            const scoreResult = mkGetTransitionScore(matrix, counts, currentState);
+            const liq = mkPassLiquidityFilter(item);
+            if(liq.pass) results.push({ symbol:item.symbol, ...scoreResult });
+          }
+        }
+      }catch(e){ /* skip pair kalau fetch gagal */ }
+      done++;
+      statusEl.textContent = `Membangun state sequence & transition matrix ${candidates.length} pair paling likuid… ${done}/${candidates.length}`;
+    }
+  }
+  await Promise.all(Array.from({length:CONCURRENCY}, worker));
+  if(myToken !== markovScanToken) return; // scan ini udah usang — jangan render, biarin scan yang lebih baru yang nulis hasil
+  if(btn) btn.disabled = false;
+
+  results.sort((a,b)=>b.score-a.score);
+  markovResults = results;
+  renderMarkovResults();
+}
+
+// Pesan human-readable per pair — port dari formatScreeningLabel() versi asli modul.
+// Sengaja ditampilkan sebagai tag KEDUA yang kelihatan langsung di baris (bukan cuma di title/tooltip),
+// karena di HP nggak ada hover — kalau cuma taruh di tooltip, pesan "belum cukup andal" nggak bakal
+// pernah kebaca sama user yang scroll pakai jari.
+function mkFormatLabel(r){
+  if(!r.reliable) return `Sample historis terbatas (n=${r.sampleSize}) — belum cukup andal`;
+  if(r.score > 15) return `Peluang lanjut Bullish ${r.confidenceBullish}%`;
+  if(r.score < -15) return `Peluang lanjut Bearish ${r.confidenceBearish}%`;
+  return 'Netral / tidak dominan';
+}
+
+function renderMarkovResults(){
+  const listEl = document.getElementById('markovList');
+  const statusEl = document.getElementById('markovStatus');
+  const regimeEl = document.getElementById('markovRegime');
+  if(regimeEl) regimeEl.textContent = markovRegimeState ? `Regime Pasar (proxy BTCUSDT 4H): ${markovRegimeState}` : 'Regime pasar: belum tersedia';
+
+  if(!markovResults || markovResults.length===0){
+    if(statusEl) statusEl.textContent = markovResults ? '✓ Selesai — belum ada pair yang lolos filter likuiditas saat ini.' : 'Menyiapkan scan…';
+    listEl.innerHTML = `<div class="empty-state">Belum ada pair yang lolos filter likuiditas/funding saat ini. Kondisi market berubah-ubah — coba Scan Ulang beberapa saat lagi.</div>`;
+    updateMarkovStats([]);
+    return;
+  }
+
+  // Regime context: TIDAK menghapus kandidat counter-trend, cuma menandai — biar tetap transparan
+  const withRegime = markovResults.map(r=>{
+    let regimeNote = 'Netral terhadap regime pasar';
+    if(markovRegimeState==='Bearish' && r.score>15) regimeNote = 'Counter-trend: sinyal bullish di tengah regime bearish — ekstra hati-hati';
+    else if(markovRegimeState==='Bullish' && r.score>15) regimeNote = 'Searah regime bullish';
+    else if(markovRegimeState==='Bullish' && r.score<-15) regimeNote = 'Counter-trend: sinyal bearish di tengah regime bullish';
+    else if(markovRegimeState==='Bearish' && r.score<-15) regimeNote = 'Searah regime bearish';
+    return { ...r, regimeNote };
+  });
+
+  statusEl.textContent = `✓ ${withRegime.length} pair lolos filter likuiditas, diproses Markov Transition Matrix (4H)`;
+  const wl = new Set(loadWatchlist());
+  listEl.innerHTML = withRegime.map(r=>{
+    const row = tickerData.find(x=>x.symbol===r.symbol);
+    if(!row) return '';
+    const cls = !r.reliable ? 'score-mid' : r.score>15 ? 'score-hi' : r.score<-15 ? 'score-lo' : 'score-mid';
+    const warnTag = r.currentState==='Overheated' ? ' ⚠' : '';
+    const stateBadge = `<span class="badge-pill ${cls}">${r.currentState}${warnTag} · Skor ${r.score>0?'+':''}${r.score} · n=${r.sampleSize}</span>`;
+    const labelTag = `<span class="sim-tag" title="${r.regimeNote}">${mkFormatLabel(r)}</span>`;
+    return coinRowHtml(row, wl, stateBadge + labelTag);
+  }).join('');
+  observeVisibleRows();
+  updateMarkovStats(withRegime);
+}
+
+function updateMarkovStats(list){
+  const set = (id,val)=>{ const el=document.getElementById(id); if(el) el.textContent = val; };
+  set('mkTotalPairs', list.length);
+  set('mkBullishCount', list.filter(r=>r.currentState==='Bullish').length);
+  set('mkBearishCount', list.filter(r=>r.currentState==='Bearish').length);
+  set('mkOverheatedCount', list.filter(r=>r.currentState==='Overheated').length);
+}
+
+// Dipanggil dari showWorkspace() pas nav "Markov Screener" di-tap — langsung tampil, nggak perlu di-search
+// kayak Scanner Market. Kalau udah pernah scan, tampilkan cache-nya dulu (instan), tombol "Scan Ulang" buat refresh.
+function openMarkovWorkspace(){
+  if(!markovResults) runMarkovScreening();
+  else renderMarkovResults();
+}
+
 // Level struktural yang biasa jadi acuan entry di SOP — dihitung dari candle 4H
 function computeStructLevels(candles){
   const closes = candles.map(c=>c.close);
@@ -3235,7 +3547,7 @@ function syncDrawerNavState(){
 }
 
 let currentWorkspace = 'wsHome';
-const WS_IDS = ['wsHome','wsScanner','wsTrading','wsReview'];
+const WS_IDS = ['wsHome','wsScanner','wsMarkov','wsTrading','wsReview'];
 function showWorkspace(id){
   WS_IDS.forEach(w=>document.getElementById(w).classList.toggle('active', w===id));
   document.querySelectorAll('.sidebar-nav-item[data-ws]').forEach(b=>{
@@ -3246,6 +3558,7 @@ function showWorkspace(id){
   window.scrollTo({top:0, behavior:'smooth'});
   closeSidebarMobile();
   if(id==='wsScanner') applyFilter(currentFilter||'all');
+  if(id==='wsMarkov') openMarkovWorkspace(); // langsung scan & tampil begitu dibuka, nggak nunggu di-search
   if(id==='wsTrading'){
     renderOpenPositions();
     if(!currentDetailSymbol) selectWorkspaceSymbol('BTCUSDT');
@@ -3479,12 +3792,6 @@ function computeFibonacci(candles, lookback){
   return { levels, maxHigh, minLow, direction };
 }
 
-function scoreClassModal(bias){
-  if(bias==="long") return "pos-above";
-  if(bias==="short") return "pos-below";
-  return "";
-}
-
 async function openDetail(symbol){
   currentDetailSymbol = symbol;
   lastDetailFull = null; // biar tombol Copy AI nggak kepakai sambil data pair lama masih nyangkut
@@ -3496,6 +3803,7 @@ async function openDetail(symbol){
   document.querySelectorAll('.tf-btn').forEach(b=>b.classList.toggle('active', b.dataset.tf===currentDetailTf));
   updateModalStarBtn(symbol);
   await loadDetail(symbol, currentDetailTf);
+  if(tvBridgeOpen) refreshTvBridge();
 }
 
 // Konfluensi multi-timeframe: cek bias trend (ribbon EMA21/30/50, lihat computeEmaTrend + posisi vs MA200) + area kunci di 1H/4H/1D/1W sekaligus
@@ -4286,12 +4594,6 @@ function renderMovers(){
     </div>`;
 }
 
-function tf_note(rsiVal){
-  if(rsiVal>=70) return "overbought";
-  if(rsiVal<=30) return "oversold";
-  return "netral";
-}
-
 // ===== ENTRY PLAN (SOP): entry di zona konfluensi, SL berbasis struktur, TP di level berikutnya =====
 // ===== BREAK AND RETEST =====
 // BOS = harga udah break level struktural. Retest = harga sempat balik mendekati level itu (dalam toleransi 0.5%)
@@ -4650,6 +4952,47 @@ async function copyAISummary(){
 }
 document.getElementById('aiCopyBtn').addEventListener('click', copyAISummary);
 
+// ===== TRADINGVIEW BRIDGE: buka simbol modal di TradingView Desktop (via tradingview-mcp) =====
+let tvBridgeOpen = false;
+
+async function refreshTvBridge(){
+  if(!currentDetailSymbol) return;
+  const statusEl = document.getElementById('tvBridgeStatus');
+  const imgEl = document.getElementById('tvBridgeImg');
+  const tf = currentDetailTf || '4h';
+  statusEl.textContent = `Membuka ${currentDetailSymbol} (${tf}) di TradingView…`;
+  statusEl.classList.remove('err');
+  imgEl.classList.remove('show');
+  try{
+    const openRes = await fetch(`${TV_BRIDGE_URL}/open?symbol=${encodeURIComponent(currentDetailSymbol)}&tf=${encodeURIComponent(tf)}`);
+    const openData = await openRes.json();
+    if(!openRes.ok || !openData.success) throw new Error(openData.error || `HTTP ${openRes.status}`);
+
+    statusEl.textContent = `Mengambil screenshot chart…`;
+    const shotUrl = `${TV_BRIDGE_URL}/screenshot?symbol=${encodeURIComponent(currentDetailSymbol)}&tf=${encodeURIComponent(tf)}&t=${Date.now()}`;
+    await new Promise((resolve, reject)=>{
+      imgEl.onload = resolve;
+      imgEl.onerror = ()=>reject(new Error('gagal memuat gambar screenshot'));
+      imgEl.src = shotUrl;
+    });
+    imgEl.classList.add('show');
+    statusEl.textContent = `${openData.tv_symbol} · ${tf.toUpperCase()} — live di TradingView Desktop`;
+  }catch(err){
+    console.error(err);
+    statusEl.textContent = `Gagal konek ke bridge TradingView (${TV_BRIDGE_URL}). Pastikan "npm run bridge" jalan dan TradingView Desktop aktif. (${err.message})`;
+    statusEl.classList.add('err');
+  }
+}
+
+document.getElementById('tvOpenBtn').addEventListener('click', ()=>{
+  tvBridgeOpen = !tvBridgeOpen;
+  const row = document.getElementById('tvBridgeRow');
+  const btn = document.getElementById('tvOpenBtn');
+  row.classList.toggle('show', tvBridgeOpen);
+  btn.classList.toggle('active', tvBridgeOpen);
+  if(tvBridgeOpen) refreshTvBridge();
+});
+
 document.getElementById('modalCloseBtn').addEventListener('click', ()=>{
   document.getElementById('modalBackdrop').classList.remove('show');
 });
@@ -4722,6 +5065,7 @@ document.querySelectorAll('.tf-btn').forEach(btn=>{
     btn.classList.add('active');
     currentDetailTf = btn.dataset.tf;
     if(currentDetailSymbol) await loadDetail(currentDetailSymbol, currentDetailTf);
+    if(tvBridgeOpen) refreshTvBridge();
   });
 });
 
