@@ -412,6 +412,24 @@
   }
   .tf-btn.active{background:var(--mint-dim); border-color:var(--mint); color:var(--mint);}
 
+  .agent-row{display:flex; gap:6px; padding:12px 20px 0; flex-wrap:wrap;}
+  .agent-chip{
+    font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:700;
+    background:var(--surface-2); border:1px solid var(--border); color:var(--text-2);
+    padding:7px 11px; cursor:pointer; flex:1 1 auto; min-width:auto; text-align:center; border-radius:var(--r-pill);
+  }
+  .agent-chip.active{background:var(--violet-dim); border-color:var(--violet); color:var(--violet);}
+  .agent-chip.copied{background:var(--mint-dim); border-color:var(--mint); color:var(--mint);}
+  .agent-launch-row{display:none; gap:6px; padding:8px 20px 0; flex-wrap:wrap; align-items:center;}
+  .agent-launch-row.show{display:flex;}
+  .agent-launch-label{font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text-3); margin-right:2px;}
+  .agent-launch-btn{
+    font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:600;
+    background:var(--surface-2); border:1px solid var(--border-soft); color:var(--text-1);
+    padding:6px 10px; cursor:pointer; border-radius:var(--r-pill); text-decoration:none; display:inline-block;
+  }
+  .agent-launch-btn:active{transform:scale(0.96);}
+
   .modal-body{padding:16px 20px 20px;}
   .modal-loading{padding:40px 0; text-align:center; color:var(--text-3); font-family:'JetBrains Mono',monospace; font-size:12px;}
 
@@ -1300,8 +1318,21 @@
         <button class="tf-btn" data-tf="1w">Weekly</button>
         <button class="tf-btn" data-tf="1M">Monthly</button>
       </div>
+      <div class="agent-row" id="agentRow">
+        <button class="agent-chip" data-agent="teknikal">🧭 Teknikal</button>
+        <button class="agent-chip" data-agent="risk">🛡️ Risk Manager</button>
+        <button class="agent-chip" data-agent="sentimen">📰 Sentimen/News</button>
+        <button class="agent-chip" data-agent="bull">🐂 Bull Case</button>
+        <button class="agent-chip" data-agent="bear">🐻 Bear Case</button>
+      </div>
+      <div class="agent-launch-row" id="agentLaunchRow">
+        <span class="agent-launch-label">✓ Tersalin — tempel ke:</span>
+        <a class="agent-launch-btn" href="https://claude.ai/new" target="_blank" rel="noopener">Claude</a>
+        <a class="agent-launch-btn" href="https://chatgpt.com/" target="_blank" rel="noopener">ChatGPT</a>
+        <a class="agent-launch-btn" href="https://gemini.google.com/app" target="_blank" rel="noopener">Gemini</a>
+        <a class="agent-launch-btn" href="https://www.kimi.com/" target="_blank" rel="noopener">Kimi</a>
+      </div>
       <div class="ai-row">
-        <button class="btn btn-ai" id="aiCopyBtn">🤖 Copy Ringkasan buat AI</button>
         <button class="btn btn-tv" id="tvOpenBtn">📈 Lihat di TradingView</button>
       </div>
       <div class="tv-bridge-row" id="tvBridgeRow">
@@ -3834,12 +3865,16 @@ function computeKeyZones(candles){
 // ===== KONFLUENSI TREN MULTI-TIMEFRAME — INI JANTUNG DARI KEPUTUSAN ENTRY =====
 // Top-down: 1H (jangka pendek) -> 4H (swing intraday) -> 1D (tren harian) -> 1W (tren makro).
 // Kalau semua timeframe kompak satu arah, itu sinyal paling kuat yang bisa ditawarkan screener ini.
+// Selain bias/struktur, sekarang tiap TF juga bawa INDIKATOR LENGKAP (EMA/RSI/MACD/StochRSI/ADX/ATR/BB/Fib/Volume)
+// — dipakai buat kirim data full per-timeframe ke prompt Multi-Agent. Semua rumus di sini manggil fungsi
+// kanonik yang sama persis dipakai di modal detail (ema/rsi/macd/stochRSI/adx/atr/bollinger/computeFibonacci),
+// jadi angkanya nggak akan pernah beda dari yang tampil di UI modal buat timeframe yang sama.
 async function computeConfluence(symbol){
   const tfs = ["1h","4h","1d","1w"];
-  const results = await Promise.all(tfs.map(t => fetchKlinesFull(symbol, t, 210).catch(()=>null)));
+  const results = await Promise.all(tfs.map(t => fetchKlinesFull(symbol, t, 250).catch(()=>null)));
   return tfs.map((t,i)=>{
     const candles = results[i];
-    if(!candles || candles.length < 30) return { tf:t, bias:"neutral", label:"Data kurang", structure:null, zones:null };
+    if(!candles || candles.length < 30) return { tf:t, bias:"neutral", label:"Data kurang", structure:null, zones:null, indicators:null };
     const closes = candles.map(c=>c.close);
     const lastPrice = closes[closes.length-1];
     const emaTrend = computeEmaTrend(closes);
@@ -3863,7 +3898,30 @@ async function computeConfluence(symbol){
     else if(structBias==="neutral" && (emaBias==="bullish"||emaBias==="bearish")) bias = emaBias; // struktur kurang data, ikuti EMA
     else bias = "mixed";
 
-    return { tf:t, bias, emaBias, structure, zones };
+    // Indikator penuh per TF — pakai fungsi kanonik yang sama persis dengan modal detail (loadDetail)
+    const ema21arr = ema(closes,21), ema30arr = ema(closes,30), ema50arr = ema(closes,50);
+    const vols = candles.map(c=>c.volume);
+    const prevVols = vols.slice(-21,-1);
+    const avgVol20 = prevVols.length>0 ? prevVols.reduce((a,b)=>a+b,0)/prevVols.length : 0;
+    const volRatio = avgVol20>0 ? vols[vols.length-1]/avgVol20 : 1;
+
+    const indicators = {
+      lastPrice,
+      ema21: ema21arr[ema21arr.length-1], ema30: ema30arr[ema30arr.length-1], ema50: ema50arr[ema50arr.length-1],
+      ma200: ma200v,
+      avwap: candles.length>=5 ? computeAnchoredVWAP(candles, Math.min(90,candles.length), 0.5) : null,
+      rsiVal: rsi(closes,14),
+      macdVal: macd(closes,12,26,9),
+      stoch: stochRSI(closes,14,14,3,3),
+      adxVal: adx(candles,14),
+      atrVal: atr(candles,14),
+      bb: bollinger(closes,20,2),
+      fib: candles.length>=10 ? computeFibonacci(candles, Math.min(90,candles.length)) : null,
+      divergence: detectDivergence(candles, closes),
+      volRatio,
+    };
+
+    return { tf:t, bias, emaBias, structure, zones, indicators };
   });
 }
 
@@ -4848,87 +4906,131 @@ function computeEntryPlan(d){
 
 // ===== "COPY RINGKASAN BUAT AI" =====
 // Merangkum semua indikator + skor + rencana entry yang lagi tampil di modal jadi satu teks siap-tempel ke Claude.
-function generateAIPrompt(){
-  const f = lastDetailFull;
-  if(!f) return null;
+// Bagian data indikator — SAMA PERSIS isinya kayak generateAIPrompt() versi lama, cuma dipisah
+// jadi fungsi sendiri biar bisa dipakai ulang oleh semua profil agent (Teknikal/Risk/Sentimen/Bull/Bear)
+// tanpa duplikasi rumus/formatting angka. Nggak ada rumus yang berubah di sini.
+// Render 1 blok indikator lengkap buat 1 timeframe (dipakai looping 1H/4H/1D/1W).
+// c = elemen dari d.confluence (hasil computeConfluence, sudah termasuk c.indicators penuh).
+function formatTFIndicatorBlock(c){
+  if(!c || !c.indicators) return `--- ${c ? c.tf.toUpperCase() : '?'} ---\nData tidak tersedia (candle kurang / gagal fetch).`;
+  const ind = c.indicators;
+  const structTxt = c.structure ? c.structure.label + (c.structure.event ? ` (${c.structure.event.type} ${c.structure.event.direction} — ${c.structure.event.desc})` : '') : 'data kurang';
+  const res = c.zones && c.zones.nearestResistance ? fmtPrice(c.zones.nearestResistance.price)+' ('+c.zones.nearestResistance.label+')' : '-';
+  const sup = c.zones && c.zones.nearestSupport ? fmtPrice(c.zones.nearestSupport.price)+' ('+c.zones.nearestSupport.label+')' : '-';
+  const biasLabel = c.bias==='bullish'?'Bullish':c.bias==='bearish'?'Bearish':c.bias==='mixed'?'Mixed (EMA & struktur beda arah)':'Netral';
+  const divTxt = ind.divergence && ind.divergence.bearishDiv ? `BEARISH — harga HH tapi RSI melemah (${ind.divergence.bearishDiv.rsiFrom.toFixed(1)}→${ind.divergence.bearishDiv.rsiTo.toFixed(1)})` : ind.divergence && ind.divergence.bullishDiv ? `BULLISH — harga LL tapi RSI menguat (${ind.divergence.bullishDiv.rsiFrom.toFixed(1)}→${ind.divergence.bullishDiv.rsiTo.toFixed(1)})` : 'tidak ada divergence terdeteksi';
+
+  return `--- ${c.tf.toUpperCase()} ---
+Bias: ${biasLabel} | Harga: ${fmtPrice(ind.lastPrice)}
+Struktur: ${structTxt} | Resistance terdekat: ${res} | Support terdekat: ${sup}
+Divergence RSI vs Harga: ${divTxt}
+EMA 21/30/50: ${fmtPrice(ind.ema21)} / ${fmtPrice(ind.ema30)} / ${fmtPrice(ind.ema50)} | MA200: ${ind.ma200?fmtPrice(ind.ma200):'data kurang'}
+Anchored VWAP: ${ind.avwap?fmtPrice(ind.avwap.avwap)+' (Band 0.5σ: '+fmtPrice(ind.avwap.lower)+' - '+fmtPrice(ind.avwap.upper)+')':'-'}
+RSI(14): ${ind.rsiVal!=null?ind.rsiVal.toFixed(1):'-'} | MACD(12,26,9): ${ind.macdVal&&ind.macdVal.macd!==undefined?ind.macdVal.macd.toFixed(4):'-'}, Signal ${ind.macdVal&&ind.macdVal.signal!=null?ind.macdVal.signal.toFixed(4):'-'}, Histogram ${ind.macdVal&&ind.macdVal.histRising===true?'menguat':ind.macdVal&&ind.macdVal.histRising===false?'melemah':'stabil'}
+StochRSI %K/%D: ${ind.stoch&&ind.stoch.k!=null?ind.stoch.k.toFixed(1):'-'} / ${ind.stoch&&ind.stoch.d!=null?ind.stoch.d.toFixed(1):'-'}
+ADX(14): ${ind.adxVal?ind.adxVal.adx.toFixed(1):'-'} (${ind.adxVal?(ind.adxVal.adx<ADX_TREND_THRESHOLD?'lemah/sideways':ind.adxVal.adx<40?'tren kuat':'sangat kuat'):'data kurang'}), +DI/-DI: ${ind.adxVal?ind.adxVal.plusDI.toFixed(1)+' / '+ind.adxVal.minusDI.toFixed(1):'-'}
+ATR(14): ${ind.atrVal!=null?fmtPrice(ind.atrVal)+' ('+((ind.atrVal/ind.lastPrice)*100).toFixed(2)+'% dari harga)':'-'} | Bollinger: Upper ${ind.bb?fmtPrice(ind.bb.upper):'-'} / Mid ${ind.bb?fmtPrice(ind.bb.mid):'-'} / Lower ${ind.bb?fmtPrice(ind.bb.lower):'-'} (bandwidth ${ind.bb?ind.bb.bandwidthPct.toFixed(2)+'%':'-'})
+Fibonacci (leg ${ind.fib?(ind.fib.direction==='up'?'naik':'turun'):'-'}): ${ind.fib?ind.fib.levels.map(l=>`${(l.ratio*100).toFixed(1)}%=${fmtPrice(l.price)}`).join(', '):'-'}
+Volume candle terakhir vs rata-rata 20 candle: ${ind.volRatio?ind.volRatio.toFixed(2)+'x':'-'}`;
+}
+
+function buildIndicatorDataBlock(f){
   const d = f.d;
   const sym = d.symbol.replace('USDT','');
-  const cf = d.confluence ? d.confluence.map(c=>{
-    const structTxt = c.structure ? c.structure.label + (c.structure.event ? ` (${c.structure.event.type} ${c.structure.event.direction})` : '') : 'data kurang';
-    const res = c.zones && c.zones.nearestResistance ? fmtPrice(c.zones.nearestResistance.price)+' ('+c.zones.nearestResistance.label+')' : '-';
-    const sup = c.zones && c.zones.nearestSupport ? fmtPrice(c.zones.nearestSupport.price)+' ('+c.zones.nearestSupport.label+')' : '-';
-    return `${c.tf.toUpperCase()}: ${c.bias==='bullish'?'Bullish':c.bias==='bearish'?'Bearish':c.bias==='mixed'?'Mixed (EMA & struktur beda arah)':'Netral'} — struktur: ${structTxt} | Resistance terdekat: ${res} | Support terdekat: ${sup}`;
-  }).join('\n') : 'tidak tersedia';
+  const tfBlocks = d.confluence ? d.confluence.map(formatTFIndicatorBlock).join('\n\n') : 'tidak tersedia';
 
-  return `Tolong bantu saya ambil keputusan trading futures untuk pair ${sym}/USDT di Binance, berdasarkan SOP saya: HAL PALING UTAMA adalah keselarasan tren di setiap timeframe (1H/4H/1D/1W) dan area kunci (support/resistance) di tiap timeframe itu — baru setelah itu konfirmasi dari indikator lain. Entry di zona konfluensi, SL berbasis struktur (bukan jarak tetap), minimum Risk:Reward 1:1.5.
-
-=== VERDICT TREN MULTI-TIMEFRAME (PALING UTAMA) ===
+  return { sym, text: `=== VERDICT TREN MULTI-TIMEFRAME (PALING UTAMA) ===
 ${f.trendAlign.label}
 ${f.trendAlign.sub}
 
-=== AREA PENTING PER TIMEFRAME (1H → 1W) ===
-${cf}
+=== INDIKATOR LENGKAP PER TIMEFRAME (1H → 4H → 1D → 1W, sumber: Binance Futures live) ===
+${tfBlocks}
 
-=== DATA SAAT INI (timeframe ${d.tf.toUpperCase()}, sumber: Binance Futures live) ===
-Harga terakhir: ${fmtPrice(d.lastPrice)}
-
-STRUKTUR MARKET (${d.tf.toUpperCase()}):
-- Bias: ${d.structure ? d.structure.label : 'data kurang'}
-- Swing High terakhir: ${d.structure && d.structure.lastSwingHigh ? fmtPrice(d.structure.lastSwingHigh) : '-'}
-- Swing Low terakhir: ${d.structure && d.structure.lastSwingLow ? fmtPrice(d.structure.lastSwingLow) : '-'}
-- Event: ${d.structure && d.structure.event ? `${d.structure.event.type} ${d.structure.event.direction} — ${d.structure.event.desc}` : 'belum ada BOS/CHoCH baru'}
-- Divergence RSI vs Harga: ${d.divergence && d.divergence.bearishDiv ? `BEARISH — harga HH tapi RSI melemah (${d.divergence.bearishDiv.rsiFrom.toFixed(1)}→${d.divergence.bearishDiv.rsiTo.toFixed(1)})` : d.divergence && d.divergence.bullishDiv ? `BULLISH — harga LL tapi RSI menguat (${d.divergence.bullishDiv.rsiFrom.toFixed(1)}→${d.divergence.bullishDiv.rsiTo.toFixed(1)})` : 'tidak ada divergence terdeteksi'}
-
-TREN & VOLUME:
-- EMA 21: ${fmtPrice(d.ema21)}
-- EMA 30: ${fmtPrice(d.ema30)}
-- MA 200: ${d.ma200 ? fmtPrice(d.ma200) : 'data kurang'}
-- Anchored VWAP: ${d.avwap ? fmtPrice(d.avwap.avwap)+' (anchor di '+(d.avwap.anchorDirection==='up'?'swing low':'swing high')+', '+d.avwap.barsFromAnchor+' candle lalu)' : '-'}
-- AVWAP Band (0.5σ): Upper ${d.avwap?fmtPrice(d.avwap.upper):'-'} / Lower ${d.avwap?fmtPrice(d.avwap.lower):'-'}
-- Volume candle terakhir vs rata-rata 20 candle: ${d.volRatio ? d.volRatio.toFixed(2)+'x' : '-'} (harga ${d.priceUp?'naik':'turun'} di candle ini)
-
-MOMENTUM:
-- RSI(14): ${d.rsiVal.toFixed(1)}
-- MACD(12,26,9): ${d.macdVal && d.macdVal.macd!==undefined ? d.macdVal.macd.toFixed(4) : '-'}, Signal: ${d.macdVal && d.macdVal.signal!=null ? d.macdVal.signal.toFixed(4) : '-'}, Histogram ${d.macdVal && d.macdVal.histRising===true?'menguat':d.macdVal && d.macdVal.histRising===false?'melemah':'stabil'}
-- StochRSI %K/%D: ${d.stoch && d.stoch.k!=null ? d.stoch.k.toFixed(1) : '-'} / ${d.stoch && d.stoch.d!=null ? d.stoch.d.toFixed(1) : '-'}
-
-KEKUATAN TREN:
-- ADX(14): ${d.adxVal ? d.adxVal.adx.toFixed(1) : '-'} (${d.adxVal ? (d.adxVal.adx<ADX_TREND_THRESHOLD?'lemah/sideways':d.adxVal.adx<40?'tren kuat':'sangat kuat') : 'data kurang'})
-- +DI/-DI: ${d.adxVal ? d.adxVal.plusDI.toFixed(1)+' / '+d.adxVal.minusDI.toFixed(1) : '-'} (${d.adxVal ? (d.adxVal.plusDI>d.adxVal.minusDI?'buyer dominan':'seller dominan') : '-'})
-
-VOLATILITAS:
-- ATR(14): ${d.atrVal!==null ? fmtPrice(d.atrVal)+' ('+((d.atrVal/d.lastPrice)*100).toFixed(2)+'% dari harga)' : '-'}
-- Bollinger Bands: Upper ${d.bb?fmtPrice(d.bb.upper):'-'} / Mid ${d.bb?fmtPrice(d.bb.mid):'-'} / Lower ${d.bb?fmtPrice(d.bb.lower):'-'} (bandwidth ${d.bb?d.bb.bandwidthPct.toFixed(2)+'%':'-'})
-
-FIBONACCI (swing 90 candle, leg ${d.fib.direction==='up'?'naik':'turun'}):
-${d.fib.levels.map(l=>`- ${(l.ratio*100).toFixed(1)}%: ${fmtPrice(l.price)}`).join('\n')}
-
-FUTURES DATA:
+=== FUTURES DATA (symbol-level, sama untuk semua timeframe) ===
 - Funding Rate: ${d.fundingRate!=null ? (d.fundingRate*100).toFixed(4)+'%' : '-'} (${d.fundingRate>0?'crowded long':d.fundingRate<0?'crowded short':'netral'})
 - Open Interest: ${d.oi!=null ? fmtNum(d.oi)+' kontrak (≈$'+fmtNum(d.oi*d.lastPrice)+')' : '-'}, perubahan 24 jam: ${d.oiChangePct!=null ? (d.oiChangePct>=0?'+':'')+d.oiChangePct.toFixed(2)+'%' : '-'} (${d.oiTrend?d.oiTrend.label:'-'})
 - Long/Short Ratio Retail: ${d.lsLatest ? d.lsLatest.ratio.toFixed(2)+' ('+d.lsLatest.longPct.toFixed(1)+'% long / '+d.lsLatest.shortPct.toFixed(1)+'% short)' : '-'}
 - Long/Short Ratio Top Trader (by posisi): ${d.topLatest ? d.topLatest.ratio.toFixed(2)+' ('+d.topLatest.longPct.toFixed(1)+'% long / '+d.topLatest.shortPct.toFixed(1)+'% short)' : '-'}
 
-SKOR ENTRY (SISTEM POIN — tiap syarat bernilai 1 poin ke LONG atau SHORT, tanpa pembobotan):
+SKOR ENTRY (dari timeframe yang sedang dibuka: ${d.tf.toUpperCase()} — SISTEM POIN, tiap syarat bernilai 1 poin ke LONG atau SHORT, tanpa pembobotan):
 - LONG: ${f.longPoints}/${f.maxPoints} poin
 - SHORT: ${f.shortPoints}/${f.maxPoints} poin
 Rincian tiap syarat:
 ${f.criteria.map(c=>`- ${c.name}: ${c.side==='long'?'+1 LONG':c.side==='short'?'+1 SHORT':'0 (netral)'} — ${c.note}`).join('\n')}
 
-RENCANA ENTRY OTOMATIS DARI SCREENER (referensi awal, bukan keputusan final):
+RENCANA ENTRY OTOMATIS DARI SCREENER (dari timeframe ${d.tf.toUpperCase()}, referensi awal — bukan keputusan final):
 - LONG → Entry ${fmtPrice(f.entryPlan.long.entry)} (${f.entryPlan.long.entryLabel}), SL ${fmtPrice(f.entryPlan.long.sl)} (${f.entryPlan.long.slLabel}), TP ${fmtPrice(f.entryPlan.long.tp)} (${f.entryPlan.long.tpLabel}), RR 1:${f.entryPlan.long.rr.toFixed(2)}
-- SHORT → Entry ${fmtPrice(f.entryPlan.short.entry)} (${f.entryPlan.short.entryLabel}), SL ${fmtPrice(f.entryPlan.short.sl)} (${f.entryPlan.short.slLabel}), TP ${fmtPrice(f.entryPlan.short.tp)} (${f.entryPlan.short.tpLabel}), RR 1:${f.entryPlan.short.rr.toFixed(2)}
+- SHORT → Entry ${fmtPrice(f.entryPlan.short.entry)} (${f.entryPlan.short.entryLabel}), SL ${fmtPrice(f.entryPlan.short.sl)} (${f.entryPlan.short.slLabel}), TP ${fmtPrice(f.entryPlan.short.tp)} (${f.entryPlan.short.tpLabel}), RR 1:${f.entryPlan.short.rr.toFixed(2)}` };
+}
 
-=== YANG SAYA BUTUHKAN ===
+// Profil 5 "agent" — beda framing/peran & pertanyaan penutup, semua pakai data block yang SAMA
+// (jadi nggak ada indikator yang beda angka antar agent, cuma sudut pandang analisisnya yang beda).
+// "sentimen" sengaja minta AI tujuan buat cari berita/sentimen terkini sendiri (app ini nggak punya
+// feed berita/API sentimen) — data funding/OI/LS ratio dikasih sebagai pelengkap "sentimen derivatif".
+const AGENT_PROFILES = {
+  teknikal: {
+    label: 'Analis Teknikal',
+    intro: (sym)=>`Kamu berperan sebagai Analis Teknikal. Tolong bantu saya ambil keputusan trading futures untuk pair ${sym}/USDT di Binance, berdasarkan SOP saya: HAL PALING UTAMA adalah keselarasan tren di setiap timeframe (1H/4H/1D/1W) dan area kunci (support/resistance) di tiap timeframe itu — baru setelah itu konfirmasi dari indikator lain. Entry di zona konfluensi, SL berbasis struktur (bukan jarak tetap), minimum Risk:Reward 1:1.5.`,
+    questions: ()=>`=== YANG SAYA BUTUHKAN DARI ANALIS TEKNIKAL ===
 1. Berdasarkan VERDICT TREN MULTI-TIMEFRAME di atas (hal paling utama), apakah kondisi sekarang layak buat entry Long, Short, atau lebih baik tunggu?
 2. Apakah rencana entry/SL/TP dari screener di atas masuk akal secara struktur & area penting per timeframe, atau ada level yang lebih baik?
 3. Risiko utama apa yang perlu saya waspadai di setup ini sekarang (termasuk funding rate & konfluensi timeframe yang campuran kalau ada)?
-4. Kalau belum layak entry, sinyal apa yang perlu saya tunggu?`;
+4. Kalau belum layak entry, sinyal apa yang perlu saya tunggu?`
+  },
+  risk: {
+    label: 'Risk Manager',
+    intro: (sym)=>`Kamu berperan sebagai Risk Manager buat trading futures saya di pair ${sym}/USDT (Binance). Fokus kamu BUKAN nyari arah entry, tapi nge-audit seberapa sehat risiko dari setup yang sudah ada di bawah ini — apakah SL-nya valid secara struktur, RR-nya cukup, dan apa saja yang bisa bikin setup ini gagal.`,
+    questions: ()=>`=== YANG SAYA BUTUHKAN DARI RISK MANAGER ===
+1. Dari rencana entry/SL/TP di atas, apakah jarak SL ke entry (berbasis struktur, bukan jarak tetap) sudah wajar dibanding volatilitas ATR saat ini? Terlalu ketat/kelonggaran?
+2. Apakah Risk:Reward di kedua sisi (Long & Short) masih memenuhi minimum 1:1.5 saya? Kalau nggak, sisi mana yang harus saya skip?
+3. Funding rate & Open Interest saat ini nunjukin risiko crowded position (rawan squeeze/koreksi tajam) di sisi mana?
+4. Kalau konfluensi timeframe di atas "Mixed" (EMA & struktur beda arah), apa artinya buat risiko false signal di setup ini?
+5. Skenario invalidasi paling mungkin — apa yang bikin setup ini harus langsung saya keluar sebelum SL kena?`
+  },
+  sentimen: {
+    label: 'Analis Sentimen/News',
+    intro: (sym)=>`Kamu berperan sebagai Analis Sentimen & News buat pair ${sym}/USDT. PENTING: screener saya TIDAK punya akses berita/feed sentimen — jadi tolong kamu cari sendiri berita & sentimen pasar terkini soal ${sym} (pakai kemampuan browsing/search kamu kalau ada), lalu gabungkan dengan data "sentimen derivatif" (funding rate, Open Interest, Long/Short Ratio) dari screener saya di bawah ini.`,
+    questions: (sym)=>`=== YANG SAYA BUTUHKAN DARI ANALIS SENTIMEN/NEWS ===
+1. Ada berita/katalis terkini (24-72 jam terakhir) soal ${sym} atau sektor/narrative-nya yang relevan buat trader futures?
+2. Funding rate & Long/Short Ratio di atas nunjukin crowd lagi condong ke arah mana? Apakah searah atau melawan sentimen berita yang kamu temukan?
+3. Kalau ada perbedaan antara "sentimen berita" vs "sentimen derivatif" (positioning), sisi mana yang lebih layak dipercaya buat horizon jangka pendek (scalping/intraday)?
+4. Ada risiko event terjadwal (macro, listing, unlock token, dll) dalam beberapa hari ke depan yang perlu saya waspadai?`
+  },
+  bull: {
+    label: 'Bull Case',
+    intro: (sym)=>`Kamu berperan sebagai advokat kasus BULLISH (LONG) buat pair ${sym}/USDT. Tugas kamu: bangun argumen SEKUAT MUNGKIN buat posisi Long, murni dari data di bawah — tapi tetap jujur, jangan maksa-maksain kalau datanya emang lemah.`,
+    questions: ()=>`=== YANG SAYA BUTUHKAN DARI BULL CASE ===
+1. Susun argumen terkuat buat Long di setup ini — indikator/data mana aja yang paling mendukung?
+2. Level entry, SL, TP mana (dari rencana screener atau versi kamu sendiri) yang paling masuk akal buat skenario bullish ini?
+3. Seberapa kuat/lemah keyakinan kamu (skala 1-10) kalau argumen ini murni dari data yang dikasih, dan kenapa?
+4. Apa 1-2 hal yang bisa langsung membatalkan bull case ini kalau terjadi?`
+  },
+  bear: {
+    label: 'Bear Case',
+    intro: (sym)=>`Kamu berperan sebagai advokat kasus BEARISH (SHORT) buat pair ${sym}/USDT. Tugas kamu: bangun argumen SEKUAT MUNGKIN buat posisi Short, murni dari data di bawah — tapi tetap jujur, jangan maksa-maksain kalau datanya emang lemah.`,
+    questions: ()=>`=== YANG SAYA BUTUHKAN DARI BEAR CASE ===
+1. Susun argumen terkuat buat Short di setup ini — indikator/data mana aja yang paling mendukung?
+2. Level entry, SL, TP mana (dari rencana screener atau versi kamu sendiri) yang paling masuk akal buat skenario bearish ini?
+3. Seberapa kuat/lemah keyakinan kamu (skala 1-10) kalau argumen ini murni dari data yang dikasih, dan kenapa?
+4. Apa 1-2 hal yang bisa langsung membatalkan bear case ini kalau terjadi?`
+  }
+};
+
+function generateAgentPrompt(agentId){
+  const f = lastDetailFull;
+  if(!f) return null;
+  const profile = AGENT_PROFILES[agentId];
+  if(!profile) return null;
+  const { sym, text: dataBlock } = buildIndicatorDataBlock(f);
+  return `${profile.intro(sym)}
+
+${dataBlock}
+
+${profile.questions(sym)}`;
 }
 
-async function copyAISummary(){
-  const btn = document.getElementById('aiCopyBtn');
-  const text = generateAIPrompt();
+async function copyAgentPrompt(agentId, chipEl){
+  const text = generateAgentPrompt(agentId);
   if(!text){ setStatus("Buka detail pair dulu sebelum copy ringkasan AI.", "err"); return; }
   try{
     if(navigator.clipboard && navigator.clipboard.writeText){
@@ -4941,16 +5043,18 @@ async function copyAISummary(){
       document.execCommand('copy');
       document.body.removeChild(ta);
     }
-    btn.textContent = "✓ Tersalin! Membuka Claude…";
-    btn.classList.add('copied');
-    window.open('https://claude.ai/new', '_blank');
-    setTimeout(()=>{ btn.textContent = "🤖 Copy Ringkasan buat AI"; btn.classList.remove('copied'); }, 2500);
+    document.querySelectorAll('.agent-chip').forEach(b=>b.classList.remove('active','copied'));
+    chipEl.classList.add('copied');
+    document.getElementById('agentLaunchRow').classList.add('show');
+    setTimeout(()=>chipEl.classList.remove('copied'), 2500);
   }catch(err){
     console.error(err);
     setStatus("Gagal copy ke clipboard — coba manual select teks.", "err");
   }
 }
-document.getElementById('aiCopyBtn').addEventListener('click', copyAISummary);
+document.querySelectorAll('.agent-chip').forEach(chip=>{
+  chip.addEventListener('click', ()=>copyAgentPrompt(chip.dataset.agent, chip));
+});
 
 // ===== TRADINGVIEW BRIDGE: buka simbol modal di TradingView Desktop (via tradingview-mcp) =====
 let tvBridgeOpen = false;
